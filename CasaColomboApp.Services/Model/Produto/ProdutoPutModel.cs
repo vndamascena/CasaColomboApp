@@ -43,5 +43,9 @@ namespace CasaColomboApp.Services.Model.Produto
         public Guid? FornecedorId { get; set; }
 
         public int? DepositoId { get; set; }
+
+        // Novo campo para a URL da imagem
+        [MaxLength(255, ErrorMessage = "Informe no maximo {1} caracteres")]
+        public string? ImagemUrl { get; set; }
     }
 }

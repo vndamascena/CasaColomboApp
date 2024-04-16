@@ -22,7 +22,7 @@ namespace CasaColomboApp.Services.Model.Produto
 
         public DepositoGetModel? Deposito { get; set; }
 
-        
+        public string? ImagemUrl { get; set; }
 
 
     }

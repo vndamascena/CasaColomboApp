@@ -43,6 +43,8 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(p => p.DepositoId).HasColumnName("DEPOSITOID").IsRequired();
 
+            builder.Property(p => p.ImagemUrl).HasColumnName("IMAGEMURL").HasMaxLength(255);
+
 
 
             #region Relacionamentos

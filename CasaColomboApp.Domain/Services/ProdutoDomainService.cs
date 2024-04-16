@@ -49,6 +49,7 @@ namespace CasaColomboApp.Domain.Services
                 DataHoraCadastro = registro.DataHoraCadastro,
                 DataHoraAlteracao = DateTime.Now,
                 DepositoId = produto.DepositoId,
+                ImagemUrl = produto.ImagemUrl,
 
 
             };

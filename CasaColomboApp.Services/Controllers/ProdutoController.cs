@@ -14,9 +14,10 @@ namespace CasaColomboApp.Services.Controllers
         private readonly IProdutoDomainService? _produtoDomainService;
         private readonly IMapper? _mapper;
 
+
         public ProdutoController(IProdutoDomainService? produtoDomainService, IMapper? mapper)
         {
-            _produtoDomainService = produtoDomainService;
+            _produtoDomainService = produtoDomainService;   
             _mapper = mapper;
         }
 
@@ -29,6 +30,8 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
+
+
                 //cadastrando o produto
                 var produto = _mapper?.Map<Produto>(model);
                 var result = _produtoDomainService?.Cadastrar(produto);
@@ -64,6 +67,7 @@ namespace CasaColomboApp.Services.Controllers
                     CategoriaId = model.CategoriaId,
                     FornecedorId = model.FornecedorId,
                     DepositoId = model.DepositoId,
+                    ImagemUrl = model.ImagemUrl,
                     
                     
                 };

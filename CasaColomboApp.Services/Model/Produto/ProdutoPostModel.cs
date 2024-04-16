@@ -43,6 +43,9 @@ namespace CasaColomboApp.Services.Model.Produto
         [Required(ErrorMessage = "Por favor, informe o ID do deposito para o produto.")]
         public int? DepositoId { get; set; }
 
-       
+        // Novo campo para a URL da imagem
+        [MaxLength(255, ErrorMessage = "Informe no maximo {1} caracteres")]
+        public string? ImagemUrl { get; set; }
+
     }
 }
