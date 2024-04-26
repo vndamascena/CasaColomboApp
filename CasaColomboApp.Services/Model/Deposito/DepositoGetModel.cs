@@ -4,7 +4,7 @@
     {
         public int DepositoId { get; set; }
 
-        public string Nome { get; set; }
+        public string NomeDeposito { get; set; }
 
     }
 

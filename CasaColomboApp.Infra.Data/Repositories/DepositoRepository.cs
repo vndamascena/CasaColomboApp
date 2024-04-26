@@ -15,7 +15,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
         {
             using (var dataContext = new DataContext())
             {
-                return dataContext.Set<Deposito>().OrderBy(c => c.Nome).ToList();
+                return dataContext.Set<Deposito>().OrderBy(c => c.NomeDeposito).ToList();
             }
         }
 
