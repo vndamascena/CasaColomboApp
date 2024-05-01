@@ -12,6 +12,10 @@ namespace CasaColomboApp.Infra.Data.Repositories
 {
     public class ProdutoRepository : BaseRepository<Produto, Guid>, IProdutoRepository
     {
+        protected readonly DataContext _dataContext;
+
+
+
         public override List<Produto> GetAll()
         {
             using (var dataContext = new DataContext())
@@ -20,10 +24,10 @@ namespace CasaColomboApp.Infra.Data.Repositories
                     .Set<Produto>()
                     .Include(p => p.Categoria) //JOIN
                     .Include(p => p.Fornecedor) //JOIN
-                   
+
                     .Include(p => p.Deposito)
                     .OrderBy(p => p.Nome)
-                    
+
                     .ToList();
             }
         }
@@ -43,6 +47,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
         }
 
 
+
         public override Produto GetById(Guid id)
         {
             using (var dataContext = new DataContext())
@@ -52,12 +57,20 @@ namespace CasaColomboApp.Infra.Data.Repositories
                     .Include(p => p.Categoria) //JOIN
                     .Include(p => p.Fornecedor) //JOIN
                     .Include(p => p.Deposito)
+                    .Include(p => p.Lote)
                     .FirstOrDefault(p => p.Id == id);
             }
         }
 
-       
-
-
+        public List<Lote> GetLotesByProdutoId(Guid produtoId)
+        {
+            using (var dataContext = new DataContext())
+            {
+                return dataContext
+                    .Set<Lote>()
+                    .Where(l => l.ProdutoId == produtoId)
+                    .ToList();
+            }
+        }
     }
 }

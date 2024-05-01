@@ -9,6 +9,7 @@ ServicesExtension.AddServicesConfig(builder.Services);
 CorsConfigExtension.AddCorsConfig(builder.Services);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

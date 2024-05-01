@@ -13,7 +13,7 @@ namespace CasaColomboApp.Infra.Data.Contexts
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BDCasaColomboApp;Integrated Security=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BDCasaColomboDeposito;Integrated Security=True;");
 
 
         }
@@ -22,8 +22,10 @@ namespace CasaColomboApp.Infra.Data.Contexts
             modelBuilder.ApplyConfiguration(new CategoriaMap());
             modelBuilder.ApplyConfiguration(new ProdutoMap());
             modelBuilder.ApplyConfiguration(new FornecedorMap());
-            
+
             modelBuilder.ApplyConfiguration(new DepositoMap());
+            modelBuilder.ApplyConfiguration(new LoteMap());
+            modelBuilder.ApplyConfiguration(new VendaMap());
         }
     }
 }

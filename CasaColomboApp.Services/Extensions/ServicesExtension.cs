@@ -16,12 +16,15 @@ namespace CasaColomboApp.Services.Extensions
             services.AddTransient<IProdutoDomainService, ProdutoDomainService>();
             
             services.AddTransient<IDepositoDomainService, DepositoDomainService>();
+            
 
             services.AddTransient<IFornecedorRepository, FornecedorRepository>();
             services.AddTransient<ICategoriaRepository, CategoriaRepository>();
             services.AddTransient<IProdutoRepository, ProdutoRepository>();
             
             services.AddTransient<IDepositoRepository, DepositoRepository>();
+            services.AddTransient<ILoteRepository, LoteRepository>();
+            services.AddTransient<IVendaRepository, VendaRepository>();
 
         }
     }

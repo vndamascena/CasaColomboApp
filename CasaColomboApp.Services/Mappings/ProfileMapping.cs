@@ -13,6 +13,7 @@ namespace CasaColomboApp.Services.Mappings
     /// </summary>
     public class ProfileMapping : Profile
     {
+
         /// <summary>
         /// Construtor
         /// </summary>
@@ -46,14 +47,42 @@ namespace CasaColomboApp.Services.Mappings
 
                });
             CreateMap<Deposito, DepositoGetModel>();
-           
+
 
             CreateMap<Categoria, CategoriaGetModel>();
 
             CreateMap<Fornecedor, FornecedorGetModel>();
 
-            CreateMap<Produto, ProdutoGetModel>();
-                
+            CreateMap<Produto, ProdutoGetModel>()
+             .ForMember(dest => dest.Lote, opt => opt.MapFrom(src => src.Lote));
+
+            CreateMap<Lote, LoteGetModel>()
+             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+             .ForMember(dest => dest.NumeroLote, opt => opt.MapFrom(src => src.NumeroLote))
+             .ForMember(dest => dest.QuantidadeLote, opt => opt.MapFrom(src => src.QuantidadeLote));
+
+
+
+            CreateMap<LoteModel, Lote>();
+            CreateMap<Lote, LoteModel>();
+
+            CreateMap<ProdutoPutModel, Produto>()
+             .ForMember(dest => dest.Lote, opt => opt.MapFrom(src => src.Lote));
+            CreateMap<LoteGetModel, LoteModel>();
+            CreateMap<LoteGetModel, Lote>();
+            CreateMap<Venda, VendaGetModel>();
+
+           
+
+
+
+
+
+
+
+
         }
+
+
     }
 }
