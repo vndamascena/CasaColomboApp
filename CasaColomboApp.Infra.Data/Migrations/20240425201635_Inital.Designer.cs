@@ -4,6 +4,7 @@ using CasaColomboApp.Infra.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240425201635_Inital")]
+    partial class Inital
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,8 +44,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("NOME");
 
                     b.HasKey("Id");
@@ -62,15 +65,15 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepositoId"));
 
-                    b.Property<string>("NomeDeposito")
+                    b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasColumnName("NOMEDEPOSITO");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
+                        .HasColumnName("NOME");
 
                     b.HasKey("DepositoId");
 
-                    b.HasIndex("NomeDeposito")
+                    b.HasIndex("Nome")
                         .IsUnique();
 
                     b.ToTable("DEPOSITO", (string)null);
@@ -101,8 +104,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("NOME");
 
                     b.HasKey("Id");
@@ -131,7 +134,7 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnName("DATAHORAALTERACAO");
 
                     b.Property<int>("NumeroLote")
-                        .HasMaxLength(15)
+                        .HasMaxLength(150)
                         .HasColumnType("int")
                         .HasColumnName("NUMERO LOTE");
 
@@ -169,8 +172,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Codigo")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("CODIGO");
 
                     b.Property<DateTime?>("DataHoraAlteracao")
@@ -190,8 +193,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("DESCRICAO");
 
                     b.Property<Guid?>("FornecedorId")
@@ -213,8 +216,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("NOME");
 
                     b.Property<int?>("PecasCaixa")

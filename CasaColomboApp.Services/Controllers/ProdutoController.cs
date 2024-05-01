@@ -4,6 +4,7 @@ using CasaColomboApp.Domain.Interfaces.Services;
 using CasaColomboApp.Services.Model.Produto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace CasaColomboApp.Services.Controllers
 {
@@ -13,6 +14,7 @@ namespace CasaColomboApp.Services.Controllers
     {
         private readonly IProdutoDomainService? _produtoDomainService;
         private readonly IMapper? _mapper;
+
 
         public ProdutoController(IProdutoDomainService? produtoDomainService, IMapper? mapper)
         {
@@ -29,12 +31,20 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                //cadastrando o produto
-                var produto = _mapper?.Map<Produto>(model);
-                var result = _produtoDomainService?.Cadastrar(produto);
+                // Mapear o modelo para a entidade Produto
+                var produto = _mapper.Map<Produto>(model);
 
-                //HTTP 201 (CREATED)
-                return StatusCode(201, _mapper.Map<ProdutoGetModel>(result));
+                // Mapear os modelos de lote para entidades de lote
+                var lotes = _mapper.Map<List<Lote>>(model.Lote);
+
+                // Cadastrar o produto juntamente com os lotes
+                var result = _produtoDomainService.Cadastrar(produto, lotes);
+
+                // Mapear o resultado de volta para o modelo de resposta
+                var produtoGetModel = _mapper.Map<ProdutoGetModel>(result);
+
+                // Retornar resposta HTTP 201 (CREATED) com o modelo de resposta
+                return StatusCode(201, produtoGetModel);
             }
             catch (Exception e)
             {
@@ -51,37 +61,26 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                //capturando os dados que serão atualizados do produto
-                var produto = new Produto
-                {
-                    Id = model.Id,
-                    Codigo = model.Codigo,
-                    Nome = model.Nome,
-                    Marca = model.Marca,
-                    Lote = model.Lote,
-                    Quantidade = model.Quantidade,
-                    Descricao = model.Descricao,
-                    CategoriaId = model.CategoriaId,
-                    FornecedorId = model.FornecedorId,
-                    DepositoId = model.DepositoId,
-                    
-                    
-                };
+                // Mapear o modelo para a entidade Produto
+                var produto = _mapper.Map<Produto>(model);
 
-                //atualizando o produto
-                var result = _produtoDomainService?.Atualizar(produto);
 
-                //HTTP 201 (OK)
-                return StatusCode(200, _mapper?.Map<ProdutoGetModel>(result));
-            }
-            catch (ApplicationException e)
-            {
-                //HTTP 400 (BAD REQUEST)
-                return StatusCode(400, new { e.Message });
+
+
+                // Atualizar o produto
+                var result = _produtoDomainService.Atualizar(produto);
+
+
+
+                // Mapear o resultado de volta para o modelo de resposta
+                var produtoGetModel = _mapper.Map<ProdutoGetModel>(result);
+
+                // Retornar resposta HTTP 200 (OK) com o modelo de resposta
+                return Ok(produtoGetModel);
             }
             catch (Exception e)
             {
-                //HTTP 500 (INTERNAL SERVER ERROR)
+                // Retornar resposta HTTP 500 (INTERNAL SERVER ERROR) em caso de exceção
                 return StatusCode(500, new { e.Message });
             }
         }
@@ -118,8 +117,13 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                var result = _mapper?.Map<List<ProdutoGetModel>>(_produtoDomainService?.Consultar());
-                return Ok(result);
+                // Consulta todos os produtos
+                var produtos = _produtoDomainService.Consultar();
+
+                // Mapeia os produtos para os modelos de resposta incluindo os lotes
+                var produtosModel = _mapper.Map<List<ProdutoGetModel>>(produtos, opt => opt.Items["IncludeLotes"] = true);
+
+                return Ok(produtosModel);
             }
             catch (Exception e)
             {
@@ -127,8 +131,6 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { e.Message });
             }
         }
-
-        
 
         /// <summary>
         /// Serviço para consultar 1 produto através do ID
@@ -139,8 +141,46 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                var result = _mapper?.Map<ProdutoGetModel>(_produtoDomainService?.ObterPorId(id));
-                return Ok(result);
+
+
+                // Consulta o produto pelo ID
+                var produto = _produtoDomainService.ObterPorId(id);
+
+               
+
+
+                // Mapeia o produto para o modelo de resposta incluindo os lotes
+                var produtoModel = _mapper.Map<ProdutoGetModel>(produto, opt => opt.Items["IncludeLotes"] = true);
+
+                return Ok(produtoModel);
+
+            }
+            catch (Exception e)
+            {
+                //HTTP 500 (INTERNAL SERVER ERROR)
+                return StatusCode(500, new { e.Message });
+            }
+
+
+
+
+        }
+
+        [HttpGet("{id}/lotes")]
+        [ProducesResponseType(typeof(List<LoteGetModel>), 200)]
+        public IActionResult GetLotesByProdutoId(Guid id)
+        {
+            try
+            {
+                // Consulta os lotes associados ao produto pelo ID do produto
+                var lotes = _produtoDomainService.ConsultarLote(id);
+
+
+
+                // Mapeia os lotes para os modelos de resposta
+                var lotesModel = _mapper.Map<List<LoteGetModel>>(lotes);
+
+                return Ok(lotesModel);
             }
             catch (Exception e)
             {
@@ -148,5 +188,51 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { e.Message });
             }
         }
+
+
+
+
+
+
+
+        [HttpDelete("{produtoId}/lotes/{loteId}")]
+        public IActionResult DeleteLote(Guid produtoId, Guid loteId)
+        {
+            try
+            {
+                // Chamar o serviço de domínio para excluir o lote do produto
+                _produtoDomainService.ExcluirLote(produtoId, loteId); // Alterado para usar loteId
+
+                // Retornar resposta HTTP 200 (OK) em caso de sucesso
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                // Retornar resposta HTTP 500 (INTERNAL SERVER ERROR) em caso de exceção
+                return StatusCode(500, new { e.Message });
+            }
+        }
+
+
+
+        [HttpPost("venda")]
+        public IActionResult ConfirmarVenda(Guid Id,[FromBody] VendaModel venda)
+        {
+            try
+            {
+
+                _produtoDomainService.ConfirmarVenda(Id, venda.QuantidadeVendida);
+
+                // Você pode retornar uma resposta indicando que a venda foi confirmada com sucesso
+                return Ok(new { message = "Venda confirmada com sucesso!" });
+            }
+            catch (Exception e)
+            {
+                // Se ocorrer algum erro, você pode retornar um status de erro com uma mensagem
+                return StatusCode(500, new { error = e.Message });
+            }
+        }
+
+
     }
 }

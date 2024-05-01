@@ -19,7 +19,7 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(f => f.Id).HasColumnName("ID");
 
-            builder.Property(f => f.Nome).HasColumnName("NOME").HasMaxLength(100).IsRequired();
+            builder.Property(f => f.Nome).HasColumnName("NOME").HasMaxLength(50).IsRequired();
 
             builder.Property(f => f.Cnpj).HasColumnName("CNPJ").HasMaxLength(20).IsRequired();
 

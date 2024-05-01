@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,18 +9,28 @@ namespace CasaColomboApp.Domain.Entities
 {
     public class Produto
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
 
         public string? Codigo { get; set; }
         public string Nome { get; set; }
 
         public string? Marca { get; set; }
 
-        public string? Quantidade { get; set; }
+        public int? Quantidade { get; set; }
 
-        public string? Lote { get; set; }
+        public string? Pei { get; set; }
 
         public string? Descricao { get; set; }
+
+        public int? PecasCaixa { get; set; }
+
+        public string? MetroQCaixa { get; set; }
+
+       
+        public decimal? PrecoCaixa { get; set; }
+
+        
+        public decimal? PrecoMetroQ {  get; set; }
 
         public DateTime? DataHoraCadastro { get; set; }
 
@@ -30,10 +41,8 @@ namespace CasaColomboApp.Domain.Entities
         public Guid? FornecedorId { get; set; }
 
         public int? DepositoId { get; set; }
-
-        
-
-
+        public string? ImagemUrl { get; set; }
+       
 
 
         #region Relacionamentos
@@ -42,9 +51,13 @@ namespace CasaColomboApp.Domain.Entities
         public Fornecedor? Fornecedor { get; set; }
 
         public Deposito? Deposito { get; set; }
+        public List<Lote>? Lote { get; set; } // Lista de lotes associados ao produto
+    }
 
-        
+
         #endregion
 
-    }
 }
+
+
+

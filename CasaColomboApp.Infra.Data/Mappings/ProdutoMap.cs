@@ -19,17 +19,25 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(p => p.Id).HasColumnName("ID");
 
-            builder.Property(p => p.Codigo).HasColumnName("CODIGO").HasMaxLength(150).IsRequired();
+            builder.Property(p => p.Codigo).HasColumnName("CODIGO").HasMaxLength(15).IsRequired();
 
-            builder.Property(p => p.Nome).HasColumnName("NOME").HasMaxLength(150).IsRequired();
+            builder.Property(p => p.Nome).HasColumnName("NOME").HasMaxLength(50).IsRequired();
 
             builder.Property(p => p.Marca).HasColumnName("MARCA");
 
             builder.Property(p => p.Quantidade).HasColumnName("QUANTIDADE").IsRequired();
 
-            builder.Property(p => p.Lote).HasColumnName("LOTE");
+            builder.Property(p => p.Pei).HasColumnName("PEI");
 
-            builder.Property(p => p.Descricao).HasColumnName("DESCRICAO").HasMaxLength(500).IsRequired();
+            builder.Property(p => p.PrecoCaixa).HasColumnName("PRECOCAIXA");
+
+            builder.Property(p => p.PrecoMetroQ).HasColumnName("PRECOMETRO");
+
+            builder.Property(p => p.MetroQCaixa).HasColumnName("MERTROQCAIXA");
+
+            builder.Property(p => p.PecasCaixa).HasColumnName("PECASCAIXA");
+
+            builder.Property(p => p.Descricao).HasColumnName("DESCRICAO").HasMaxLength(300).IsRequired();
 
             builder.Property(p => p.DataHoraCadastro).HasColumnName("DATAHORACADASTRO").IsRequired();
 
@@ -42,6 +50,8 @@ namespace CasaColomboApp.Infra.Data.Mappings
             builder.Property(p => p.FornecedorId).HasColumnName("FORNECEDORID").IsRequired();
 
             builder.Property(p => p.DepositoId).HasColumnName("DEPOSITOID").IsRequired();
+
+            builder.Property(p => p.ImagemUrl).HasColumnName("IMAGEMURL");
 
 
 
