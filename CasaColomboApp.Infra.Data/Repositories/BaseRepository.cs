@@ -1,7 +1,5 @@
-﻿using CasaColomboApp.Domain.Entities;
-using CasaColomboApp.Domain.Interfaces.Repositories;
+﻿using CasaColomboApp.Domain.Interfaces.Repositories;
 using CasaColomboApp.Infra.Data.Contexts;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +10,6 @@ namespace CasaColomboApp.Infra.Data.Repositories
 {
     public abstract class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey> where TEntity : class
     {
-
         public virtual void Add(TEntity entity)
         {
             using (var dataContext = new DataContext())
@@ -55,8 +52,6 @@ namespace CasaColomboApp.Infra.Data.Repositories
                 return dataContext.Set<TEntity>().Find(id);
             }
         }
-
-        
     }
 }
 

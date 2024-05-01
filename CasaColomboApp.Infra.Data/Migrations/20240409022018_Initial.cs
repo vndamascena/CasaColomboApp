@@ -58,23 +58,18 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CODIGO = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    NOME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CODIGO = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    NOME = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     MARCA = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    QUANTIDADE = table.Column<int>(type: "int", nullable: false),
-                    PEI = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DESCRICAO = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    PECASCAIXA = table.Column<int>(type: "int", nullable: true),
-                    MERTROQCAIXA = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PRECOCAIXA = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    PRECOMETRO = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    QUANTIDADE = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LOTE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DESCRICAO = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     DATAHORACADASTRO = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DATAHORAALTERACAO = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ATIVO = table.Column<bool>(type: "bit", nullable: false),
                     CATEGORIAID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FORNECEDORID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DEPOSITOID = table.Column<int>(type: "int", nullable: false),
-                    IMAGEMURL = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DEPOSITOID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,56 +94,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "LOTE",
-                columns: table => new
-                {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PRODUTOID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NUMEROLOTE = table.Column<int>(name: "NUMERO LOTE", type: "int", maxLength: 15, nullable: false),
-                    QUANTIDADE = table.Column<int>(type: "int", nullable: false),
-                    ALA = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DATAHORAALTERACAO = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LOTE", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_LOTE_PRODUTO_PRODUTOID",
-                        column: x => x.PRODUTOID,
-                        principalTable: "PRODUTO",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HISTORICOVENDA",
-                columns: table => new
-                {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LOTEID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NUMEROLOTE = table.Column<int>(type: "int", nullable: false),
-                    USUARIOID = table.Column<int>(type: "int", nullable: false),
-                    QUANTIDADE = table.Column<int>(type: "int", nullable: false),
-                    DATAVENDA = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LoteId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HISTORICOVENDA", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_HISTORICOVENDA_LOTE_LOTEID",
-                        column: x => x.LOTEID,
-                        principalTable: "LOTE",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_HISTORICOVENDA_LOTE_LoteId1",
-                        column: x => x.LoteId1,
-                        principalTable: "LOTE",
-                        principalColumn: "ID");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_CATEGORIA_NOME",
                 table: "CATEGORIA",
@@ -166,21 +111,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 table: "FORNECEDOR",
                 column: "CNPJ",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HISTORICOVENDA_LOTEID",
-                table: "HISTORICOVENDA",
-                column: "LOTEID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HISTORICOVENDA_LoteId1",
-                table: "HISTORICOVENDA",
-                column: "LoteId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LOTE_PRODUTOID",
-                table: "LOTE",
-                column: "PRODUTOID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PRODUTO_CATEGORIAID",
@@ -201,12 +131,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "HISTORICOVENDA");
-
-            migrationBuilder.DropTable(
-                name: "LOTE");
-
             migrationBuilder.DropTable(
                 name: "PRODUTO");
 

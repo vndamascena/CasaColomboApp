@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240501090034_Initial")]
+    [Migration("20240409022018_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -116,47 +116,9 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.ToTable("FORNECEDOR", (string)null);
                 });
 
-            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Lote", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ID");
-
-                    b.Property<string>("Ala")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ALA");
-
-                    b.Property<DateTime?>("DataUltimaAlteracao")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DATAHORAALTERACAO");
-
-                    b.Property<int>("NumeroLote")
-                        .HasMaxLength(15)
-                        .HasColumnType("int")
-                        .HasColumnName("NUMERO LOTE");
-
-                    b.Property<Guid?>("ProdutoId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("PRODUTOID");
-
-                    b.Property<int>("QuantidadeLote")
-                        .HasColumnType("int")
-                        .HasColumnName("QUANTIDADE");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProdutoId");
-
-                    b.ToTable("LOTE", (string)null);
-                });
-
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Produto", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("ID");
@@ -172,8 +134,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Codigo")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("CODIGO");
 
                     b.Property<DateTime?>("DataHoraAlteracao")
@@ -193,8 +155,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("DESCRICAO");
 
                     b.Property<Guid?>("FornecedorId")
@@ -202,43 +164,23 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("FORNECEDORID");
 
-                    b.Property<string>("ImagemUrl")
+                    b.Property<string>("Lote")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("IMAGEMURL");
+                        .HasColumnName("LOTE");
 
                     b.Property<string>("Marca")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("MARCA");
 
-                    b.Property<string>("MetroQCaixa")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("MERTROQCAIXA");
-
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("NOME");
 
-                    b.Property<int?>("PecasCaixa")
-                        .HasColumnType("int")
-                        .HasColumnName("PECASCAIXA");
-
-                    b.Property<string>("Pei")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("PEI");
-
-                    b.Property<decimal?>("PrecoCaixa")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("PRECOCAIXA");
-
-                    b.Property<decimal?>("PrecoMetroQ")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("PRECOMETRO");
-
-                    b.Property<int?>("Quantidade")
+                    b.Property<string>("Quantidade")
                         .IsRequired()
-                        .HasColumnType("int")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("QUANTIDADE");
 
                     b.HasKey("Id");
@@ -250,56 +192,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.HasIndex("FornecedorId");
 
                     b.ToTable("PRODUTO", (string)null);
-                });
-
-            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Venda", b =>
-                {
-                    b.Property<Guid>("VendaID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ID");
-
-                    b.Property<DateTime>("DataVenda")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DATAVENDA");
-
-                    b.Property<Guid>("LoteId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("LOTEID");
-
-                    b.Property<Guid?>("LoteId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("NumeroLote")
-                        .HasColumnType("int")
-                        .HasColumnName("NUMEROLOTE");
-
-                    b.Property<int>("Quantidade")
-                        .HasColumnType("int")
-                        .HasColumnName("QUANTIDADE");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int")
-                        .HasColumnName("USUARIOID");
-
-                    b.HasKey("VendaID");
-
-                    b.HasIndex("LoteId");
-
-                    b.HasIndex("LoteId1");
-
-                    b.ToTable("HISTORICOVENDA", (string)null);
-                });
-
-            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Lote", b =>
-                {
-                    b.HasOne("CasaColomboApp.Domain.Entities.Produto", "Produto")
-                        .WithMany("Lote")
-                        .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Produto");
                 });
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Produto", b =>
@@ -329,21 +221,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.Navigation("Fornecedor");
                 });
 
-            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Venda", b =>
-                {
-                    b.HasOne("CasaColomboApp.Domain.Entities.Lote", "Lote")
-                        .WithMany()
-                        .HasForeignKey("LoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CasaColomboApp.Domain.Entities.Lote", null)
-                        .WithMany("Vendas")
-                        .HasForeignKey("LoteId1");
-
-                    b.Navigation("Lote");
-                });
-
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Categoria", b =>
                 {
                     b.Navigation("Produtos");
@@ -357,16 +234,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Fornecedor", b =>
                 {
                     b.Navigation("Produtos");
-                });
-
-            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Lote", b =>
-                {
-                    b.Navigation("Vendas");
-                });
-
-            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Produto", b =>
-                {
-                    b.Navigation("Lote");
                 });
 #pragma warning restore 612, 618
         }
