@@ -249,6 +249,45 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.ToTable("PRODUTO", (string)null);
                 });
 
+            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Venda", b =>
+                {
+                    b.Property<Guid>("VendaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ID");
+
+                    b.Property<DateTime>("DataVenda")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DATAVENDA");
+
+                    b.Property<Guid>("LoteId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LOTEID");
+
+                    b.Property<Guid?>("LoteId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("NumeroLote")
+                        .HasColumnType("int")
+                        .HasColumnName("NUMEROLOTE");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int")
+                        .HasColumnName("QUANTIDADE");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int")
+                        .HasColumnName("USUARIOID");
+
+                    b.HasKey("VendaID");
+
+                    b.HasIndex("LoteId");
+
+                    b.HasIndex("LoteId1");
+
+                    b.ToTable("HISTORICOVENDA", (string)null);
+                });
+
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Lote", b =>
                 {
                     b.HasOne("CasaColomboApp.Domain.Entities.Produto", "Produto")
@@ -287,6 +326,21 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.Navigation("Fornecedor");
                 });
 
+            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Venda", b =>
+                {
+                    b.HasOne("CasaColomboApp.Domain.Entities.Lote", "Lote")
+                        .WithMany()
+                        .HasForeignKey("LoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CasaColomboApp.Domain.Entities.Lote", null)
+                        .WithMany("Vendas")
+                        .HasForeignKey("LoteId1");
+
+                    b.Navigation("Lote");
+                });
+
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Categoria", b =>
                 {
                     b.Navigation("Produtos");
@@ -300,6 +354,11 @@ namespace CasaColomboApp.Infra.Data.Migrations
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Fornecedor", b =>
                 {
                     b.Navigation("Produtos");
+                });
+
+            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Lote", b =>
+                {
+                    b.Navigation("Vendas");
                 });
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Produto", b =>

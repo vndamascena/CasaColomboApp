@@ -2,6 +2,7 @@
 {
     public class VendaModel
     {
-        public int QuantidadeVendida {  get; set; }
+        public int QuantidadeVendida { get; set; }
+        
     }
 }

@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 using CasaColomboApp.Domain.Entities;
+using CasaColomboApp.Domain.Interfaces.Repositories;
 using CasaColomboApp.Domain.Interfaces.Services;
 using CasaColomboApp.Services.Model.Produto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text;
 
 namespace CasaColomboApp.Services.Controllers
 {
@@ -14,12 +18,17 @@ namespace CasaColomboApp.Services.Controllers
     {
         private readonly IProdutoDomainService? _produtoDomainService;
         private readonly IMapper? _mapper;
+        private readonly IVendaRepository? _vendaRepository;
+        private readonly HttpClient _httpClient;
 
-
-        public ProdutoController(IProdutoDomainService? produtoDomainService, IMapper? mapper)
+        public ProdutoController(IProdutoDomainService? produtoDomainService,
+            IMapper? mapper, IVendaRepository? vendaRepository, IHttpClientFactory httpClientFactory)
         {
             _produtoDomainService = produtoDomainService;
             _mapper = mapper;
+            _vendaRepository = vendaRepository;
+            _httpClient = httpClientFactory.CreateClient();
+            _httpClient.BaseAddress = new Uri("http://localhost:5233/usuarios/autenticar");
         }
 
         /// <summary>
@@ -146,7 +155,7 @@ namespace CasaColomboApp.Services.Controllers
                 // Consulta o produto pelo ID
                 var produto = _produtoDomainService.ObterPorId(id);
 
-               
+
 
 
                 // Mapeia o produto para o modelo de resposta incluindo os lotes
@@ -216,22 +225,65 @@ namespace CasaColomboApp.Services.Controllers
 
 
         [HttpPost("venda")]
-        public IActionResult ConfirmarVenda(Guid Id,[FromBody] VendaModel venda)
+        public async Task<IActionResult> ConfirmarVenda(string matricula, string senha, Guid Id, [FromBody] VendaModel venda)
         {
             try
             {
-
-                _produtoDomainService.ConfirmarVenda(Id, venda.QuantidadeVendida);
-
-                // Você pode retornar uma resposta indicando que a venda foi confirmada com sucesso
-                return Ok(new { message = "Venda confirmada com sucesso!" });
+                if (await AutenticarUsuario(matricula, senha))
+                {
+                    _produtoDomainService.ConfirmarVenda(Id, venda.QuantidadeVendida);
+                    return Ok(new { message = "Venda confirmada com sucesso!" });
+                }
+                else
+                {
+                    return StatusCode(401, new { error = "Falha na autenticação do usuário." });
+                }
             }
             catch (Exception e)
             {
-                // Se ocorrer algum erro, você pode retornar um status de erro com uma mensagem
                 return StatusCode(500, new { error = e.Message });
             }
         }
+
+        private async Task<bool> AutenticarUsuario(string matricula, string senha)
+        {
+            try
+            {
+                var usuarioModel = new { Matricula = matricula, Senha = senha };
+                var json = JsonSerializer.Serialize(usuarioModel);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("/api/usuarios/autenticar", content); // Substitua "rota-da-autenticacao" pela rota de autenticação da sua API
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [HttpGet("venda")]
+        [ProducesResponseType(typeof(VendaGetModel), 200)]
+        
+        public IActionResult GetVendaAll()
+        {
+            try
+            {
+                var venda = _vendaRepository.GetAll();
+
+                var vendasModel = _mapper.Map<List<VendaGetModel>>(venda);
+                return Ok(vendasModel);
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, new {erro = e.Message});
+            }
+
+
+
+
+        }
+
 
 
     }
