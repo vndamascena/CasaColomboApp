@@ -11,7 +11,7 @@ namespace CasaColomboApp.Domain.Entities
         public Guid VendaID { get; set; }
         public Guid LoteId { get; set; }
         public int NumeroLote {  get; set; }
-        public int UsuarioId { get; set; }
+        public string Matricula { get; set; }
         public int Quantidade { get; set; }
         public DateTime DataVenda { get; set; }
 

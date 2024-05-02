@@ -24,11 +24,11 @@ namespace CasaColomboApp.Infra.Data.Repositories
             }
         }
 
-        public List<Venda> GetVendasByUsuarioId(int usuarioId)
+        public List<Venda> GetVendasByUsuarioId(string matricula)
         {
             using (var dataContext = new DataContext())
             {
-                return dataContext.Set<Venda>().Where(v => v.UsuarioId == usuarioId).ToList();
+                return dataContext.Set<Venda>().Where(v => v.Matricula == matricula).ToList();
             }
         }
     }

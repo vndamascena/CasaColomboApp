@@ -21,7 +21,7 @@ namespace CasaColomboApp.Domain.Interfaces.Services
 
         Produto ObterPorId(Guid id);
         void ExcluirLote(Guid produtoId, Guid loteId);
-        void ConfirmarVenda(Guid id,  int quantidadeVendida);
+        void ConfirmarVenda(Guid id,  int quantidadeVendida, string matricula);
 
 
 

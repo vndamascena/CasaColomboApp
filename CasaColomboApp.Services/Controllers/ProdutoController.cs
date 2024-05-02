@@ -236,18 +236,18 @@ namespace CasaColomboApp.Services.Controllers
 
 
         [HttpPost("venda")]
-        public async Task<IActionResult> ConfirmarVenda(string matricula, string senha, Guid Id, [FromBody] VendaModel venda)
+        public async Task<IActionResult> ConfirmarVenda(string matricula, string senha,  Guid Id, [FromBody] VendaModel venda)
         {
             try
             {
                 if (await AutenticarUsuario(matricula, senha))
                 {
-                    _produtoDomainService.ConfirmarVenda(Id, venda.QuantidadeVendida);
+                    _produtoDomainService.ConfirmarVenda(Id,  venda.QuantidadeVendida, matricula);
                     return Ok(new { message = "Venda confirmada com sucesso!" });
                 }
                 else
                 {
-                    return StatusCode(401, new { error = "Falha na autenticação do usuário." });
+                    return StatusCode(401, new { error = "Matricula ou senha incorreta, tente novamente" });
                 }
             }
             catch (Exception e)
@@ -266,6 +266,7 @@ namespace CasaColomboApp.Services.Controllers
                 var response = await _httpClient.PostAsync("/api/usuarios/autenticar", content); // Substitua "rota-da-autenticacao" pela rota de autenticação da sua API
                 response.EnsureSuccessStatusCode();
                 return true;
+                
             }
             catch
             {

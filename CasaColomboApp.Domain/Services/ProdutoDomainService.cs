@@ -222,10 +222,10 @@ namespace CasaColomboApp.Domain.Services
             _loteRepository?.Remover(loteId);
         }
 
-        public void ConfirmarVenda(Guid loteId, int quantidadeVendida)
+        public void ConfirmarVenda(Guid loteId,  int quantidadeVendida, string matricula)
         {
             // Obter o lote pelo ID
-            var lote = _loteRepository.ObterPorId(loteId);
+            var lote = _loteRepository.ObterPorId(loteId);  
 
             if (lote == null)
             {
@@ -257,11 +257,12 @@ namespace CasaColomboApp.Domain.Services
             {
                 LoteId = lote.Id,
                 Quantidade = quantidadeVendida,
-                DataVenda = DateTime.Now
+                DataVenda = DateTime.Now,
+                NumeroLote = lote.NumeroLote,
+                Matricula = matricula
+
             };
-
             _vendaRepository.Add(venda);
-
             // Atualizar o lote no banco de dados
             _loteRepository.Update(lote);
         }
