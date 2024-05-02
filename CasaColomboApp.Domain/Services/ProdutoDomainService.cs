@@ -244,8 +244,15 @@ namespace CasaColomboApp.Domain.Services
                 throw new ApplicationException("Quantidade insuficiente em estoque para a venda.");
             }
 
+            // Atualizar a quantidade do produto no banco de dados
+            var produto = _produtoRepository.GetById(lote.ProdutoId); // Obter o produto associado ao lote
+            produto.Quantidade -= quantidadeVendida; // Subtrair a quantidade vendida do estoque do produto
+            _produtoRepository.Update(produto); // Atualizar o produto no banco de dados
+
             // Subtrair a quantidade vendida do estoque do lote
             lote.QuantidadeLote -= quantidadeVendida;
+
+            // Criar e salvar a venda
             var venda = new Venda
             {
                 LoteId = lote.Id,
@@ -254,9 +261,11 @@ namespace CasaColomboApp.Domain.Services
             };
 
             _vendaRepository.Add(venda);
+
             // Atualizar o lote no banco de dados
             _loteRepository.Update(lote);
         }
+
 
 
 

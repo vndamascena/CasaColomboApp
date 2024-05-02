@@ -53,7 +53,13 @@ namespace CasaColomboApp.Services.Controllers
                 var produtoGetModel = _mapper.Map<ProdutoGetModel>(result);
 
                 // Retornar resposta HTTP 201 (CREATED) com o modelo de resposta
-                return StatusCode(201, produtoGetModel);
+               
+
+                return StatusCode(201, new
+                {
+                    Message = "Produto cadastrado com sucesso",
+                    produtoGetModel
+                });
             }
             catch (Exception e)
             {
@@ -85,7 +91,12 @@ namespace CasaColomboApp.Services.Controllers
                 var produtoGetModel = _mapper.Map<ProdutoGetModel>(result);
 
                 // Retornar resposta HTTP 200 (OK) com o modelo de resposta
-                return Ok(produtoGetModel);
+
+                return StatusCode(201, new
+                {
+                    Message = "Produto atualizado com sucesso",
+                    produtoGetModel
+                });
             }
             catch (Exception e)
             {

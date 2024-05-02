@@ -10,7 +10,7 @@ namespace CasaColomboApp.Domain.Entities
     {
         public Guid Id { get; set; }
 
-        public Guid? ProdutoId { get; set; } // Referência ao ID do produto ao qual o lote pertence
+        public Guid ProdutoId { get; set; } // Referência ao ID do produto ao qual o lote pertence
         public int NumeroLote { get; set; } // Identificador único do lote
         public int QuantidadeLote { get; set; }
        
