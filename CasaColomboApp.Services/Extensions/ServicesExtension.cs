@@ -24,6 +24,7 @@ namespace CasaColomboApp.Services.Extensions
             
             services.AddTransient<IDepositoRepository, DepositoRepository>();
             services.AddTransient<ILoteRepository, LoteRepository>();
+            services.AddTransient<IVendaRepository, VendaRepository>();
 
         }
     }

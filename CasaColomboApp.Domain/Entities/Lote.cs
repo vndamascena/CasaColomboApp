@@ -19,10 +19,12 @@ namespace CasaColomboApp.Domain.Entities
 
         // Relacionamento com o produto
         public Produto Produto { get; set; }
+        public List<Venda> Vendas { get; set; }
 
         public Lote()
         {
             DataUltimaAlteracao = DateTime.Now; // Define a data e hora atual como padrão
+            Vendas = new List<Venda>();
         }
     }
 }

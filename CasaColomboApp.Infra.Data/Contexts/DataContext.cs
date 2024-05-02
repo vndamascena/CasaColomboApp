@@ -24,6 +24,7 @@ namespace CasaColomboApp.Infra.Data.Contexts
             modelBuilder.ApplyConfiguration(new FornecedorMap());
             modelBuilder.ApplyConfiguration(new DepositoMap());
             modelBuilder.ApplyConfiguration(new LoteMap());
+            modelBuilder.ApplyConfiguration(new VendaMap());
         }
     }
 }

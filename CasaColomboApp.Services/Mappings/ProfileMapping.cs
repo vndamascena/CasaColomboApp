@@ -70,6 +70,8 @@ namespace CasaColomboApp.Services.Mappings
              .ForMember(dest => dest.Lote, opt => opt.MapFrom(src => src.Lote));
             CreateMap<LoteGetModel, LoteModel>();
             CreateMap<LoteGetModel, Lote>();
+            CreateMap<Venda, VendaGetModel>();
+
            
 
 

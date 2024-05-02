@@ -14,11 +14,13 @@ namespace CasaColomboApp.Domain.Services
     {
         private readonly IProdutoRepository? _produtoRepository;
         private readonly ILoteRepository? _loteRepository;
+        private readonly IVendaRepository? _vendaRepository;
 
-        public ProdutoDomainService(IProdutoRepository? produtoRepository, ILoteRepository? loteRepository)
+        public ProdutoDomainService(IProdutoRepository? produtoRepository, ILoteRepository? loteRepository, IVendaRepository? vendaRepository)
         {
             _produtoRepository = produtoRepository;
             _loteRepository = loteRepository;
+            _vendaRepository = vendaRepository;
         }
 
         public Produto Cadastrar(Produto produto, List<Lote> lotes)
@@ -244,7 +246,14 @@ namespace CasaColomboApp.Domain.Services
 
             // Subtrair a quantidade vendida do estoque do lote
             lote.QuantidadeLote -= quantidadeVendida;
+            var venda = new Venda
+            {
+                LoteId = lote.Id,
+                Quantidade = quantidadeVendida,
+                DataVenda = DateTime.Now
+            };
 
+            _vendaRepository.Add(venda);
             // Atualizar o lote no banco de dados
             _loteRepository.Update(lote);
         }
