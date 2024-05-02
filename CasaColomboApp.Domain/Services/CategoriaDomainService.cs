@@ -56,7 +56,7 @@ namespace CasaColomboApp.Domain.Services
             return _categoriaRepository?.GetAll();
         }
 
-        public Categoria Delete(Guid id)
+        public Categoria Delete(int id)
         {
             var categoria = ObterPorId(id);
 
@@ -71,7 +71,7 @@ namespace CasaColomboApp.Domain.Services
             return categoria;
         }
 
-        public Categoria ObterPorId(Guid id)
+        public Categoria ObterPorId(int id)
         {
            return _categoriaRepository?.GetById(id);
         }

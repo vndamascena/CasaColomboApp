@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Domain.Interfaces.Repositories
 {
-    public interface IFornecedorRepository : IBaseRepository<Fornecedor, Guid>
+    public interface IFornecedorRepository : IBaseRepository<Fornecedor, int>
     {
     }
 }

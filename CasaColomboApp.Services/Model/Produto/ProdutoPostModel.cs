@@ -42,10 +42,10 @@ namespace CasaColomboApp.Services.Model.Produto
         public decimal? PrecoMetroQ { get; set; }
 
         [Required(ErrorMessage = "Por favor, informeo ID da categoria para o produto.")]
-        public Guid? CategoriaId { get; set; }
+        public int? CategoriaId { get; set; }
 
         [Required(ErrorMessage = "Por favor, informe o ID do fornecedor para o produto.")]
-        public Guid? FornecedorId { get; set; }
+        public int? FornecedorId { get; set; }
 
         [Required(ErrorMessage = "Por favor, informe o ID do deposito para o produto.")]
         public int? DepositoId { get; set; }

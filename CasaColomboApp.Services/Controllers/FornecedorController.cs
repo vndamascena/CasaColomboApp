@@ -89,7 +89,7 @@ namespace CasaColomboApp.Services.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(int id)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace CasaColomboApp.Services.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(FornecedorGetModel), 200)]
-        public IActionResult GetById(Guid id)
+        public IActionResult GetById(int id)
         {
             try
             {

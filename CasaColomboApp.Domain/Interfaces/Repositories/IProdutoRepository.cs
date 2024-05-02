@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Domain.Interfaces.Repositories
 {
-    public interface IProdutoRepository : IBaseRepository<Produto,Guid>
+    public interface IProdutoRepository : IBaseRepository<Produto,int>
     {
         List<Produto> GetAll(bool ativo);
-        List<Lote> GetLotesByProdutoId(Guid produtoId);
+        List<Lote> GetLotesByProdutoId( int produtoId);
 
     }
 }

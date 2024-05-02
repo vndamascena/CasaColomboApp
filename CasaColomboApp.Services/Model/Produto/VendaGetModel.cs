@@ -2,8 +2,8 @@
 {
     public class VendaGetModel
     {
-        public Guid VendaId { get; set; }
-        public Guid LoteID { get; set; }
+        public int VendaId { get; set; }
+        public int LoteID { get; set; }
         public int UsuarioId { get; set; }
 
         public int Quantidade { get; set; }

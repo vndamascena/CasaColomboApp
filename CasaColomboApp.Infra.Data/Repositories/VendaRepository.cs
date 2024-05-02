@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Infra.Data.Repositories
 {
-    public class VendaRepository : BaseRepository<Venda, Guid>, IVendaRepository
+    public class VendaRepository : BaseRepository<Venda, int>, IVendaRepository
     {
-        public List<Venda> GetVendasByLoteId(Guid loteId)
+        public List<Venda> GetVendasByLoteId(int loteId)
         {
             using(var dataContext = new DataContext())
             {

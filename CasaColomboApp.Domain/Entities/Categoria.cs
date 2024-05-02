@@ -9,7 +9,7 @@ namespace CasaColomboApp.Domain.Entities
 {
     public class Categoria
     {
-        public Guid? Id { get; set; }
+        public int? Id { get; set; }
         public string Nome { get; set; }
         public DateTime? DataHoraCadastro { get; set; }
         public DateTime? DataHoraAlteracao { get; set; }

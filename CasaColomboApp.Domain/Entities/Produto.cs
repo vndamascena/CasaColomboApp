@@ -9,7 +9,7 @@ namespace CasaColomboApp.Domain.Entities
 {
     public class Produto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string? Codigo { get; set; }
         public string Nome { get; set; }
@@ -36,9 +36,9 @@ namespace CasaColomboApp.Domain.Entities
 
         public DateTime? DataHoraAlteracao { get; set; }
         public bool Ativo { get; set; }
-        public Guid? CategoriaId { get; set; }
+        public int? CategoriaId { get; set; }
 
-        public Guid? FornecedorId { get; set; }
+        public int? FornecedorId { get; set; }
 
         public int? DepositoId { get; set; }
         public string? ImagemUrl { get; set; }

@@ -5,7 +5,7 @@ namespace CasaColomboApp.Services.Model.Produto
     public class ProdutoPutModel
     {
         [Required(ErrorMessage = "Por favor, informe o id do produto.")]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
 
         [Required(ErrorMessage = "Informe o codigo do produto.")]
@@ -45,10 +45,10 @@ namespace CasaColomboApp.Services.Model.Produto
         public decimal? PrecoMetroQ { get; set; }
 
         [Required(ErrorMessage = "Por favor, informeo ID da categoria para o produto.")]
-        public Guid? CategoriaId { get; set; }
+        public int? CategoriaId { get; set; }
 
         [Required(ErrorMessage = "Por favor, informe o ID do fornecedor para o produto.")]
-        public Guid? FornecedorId { get; set; }
+        public int? FornecedorId { get; set; }
 
         public int? DepositoId { get; set; }
 

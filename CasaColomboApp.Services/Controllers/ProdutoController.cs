@@ -109,7 +109,7 @@ namespace CasaColomboApp.Services.Controllers
         /// Serviço para excluir um produto.
         /// </summary>
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(int id)
         {
             try
             {
@@ -157,7 +157,7 @@ namespace CasaColomboApp.Services.Controllers
         /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ProdutoGetModel), 200)]
-        public IActionResult GetById(Guid id)
+        public IActionResult GetById(int id)
         {
             try
             {
@@ -188,7 +188,7 @@ namespace CasaColomboApp.Services.Controllers
 
         [HttpGet("{id}/lotes")]
         [ProducesResponseType(typeof(List<LoteGetModel>), 200)]
-        public IActionResult GetLotesByProdutoId(Guid id)
+        public IActionResult GetLotesByProdutoId(int id)
         {
             try
             {
@@ -216,7 +216,7 @@ namespace CasaColomboApp.Services.Controllers
 
 
         [HttpDelete("{produtoId}/lotes/{loteId}")]
-        public IActionResult DeleteLote(Guid produtoId, Guid loteId)
+        public IActionResult DeleteLote(int produtoId, int loteId)
         {
             try
             {
@@ -236,7 +236,7 @@ namespace CasaColomboApp.Services.Controllers
 
 
         [HttpPost("venda")]
-        public async Task<IActionResult> ConfirmarVenda(string matricula, string senha,  Guid Id, [FromBody] VendaModel venda)
+        public async Task<IActionResult> ConfirmarVenda(string matricula, string senha,  int Id, [FromBody] VendaModel venda)
         {
             try
             {

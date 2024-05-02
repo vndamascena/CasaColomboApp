@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Infra.Data.Repositories
 {
-    public class LoteRepository : BaseRepository<Lote, Guid>, ILoteRepository
+    public class LoteRepository : BaseRepository<Lote, int>, ILoteRepository
     {
         public List<Lote> GetAll(bool ativo)
         {
             throw new NotImplementedException();
         }
 
-        public Lote ObterPorId(Guid id)
+        public Lote ObterPorId(int id)
         {
             using (var dataContext = new DataContext())
             {
@@ -25,7 +25,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
         }
 
         // Implementação do método para remover um lote pelo ID
-        public void Remover(Guid id)
+        public void Remover(int id)
         {
             using (var dataContext = new DataContext())
             {

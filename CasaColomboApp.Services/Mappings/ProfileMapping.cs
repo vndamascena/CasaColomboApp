@@ -23,7 +23,7 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<ProdutoPostModel, Produto>()
                 .AfterMap((model, entity) =>
                 {
-                    entity.Id = Guid.NewGuid();
+                    
                     entity.DataHoraCadastro = DateTime.Now;
                     entity.DataHoraAlteracao = DateTime.Now;
                     entity.Ativo = true;
@@ -32,7 +32,7 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<CategoriaPostModel, Categoria>()
                 .AfterMap((model, entity) =>
                 {
-                    entity.Id = Guid.NewGuid();
+                   
                     entity.DataHoraCadastro = DateTime.Now;
                     entity.DataHoraAlteracao = DateTime.Now;
 
@@ -41,7 +41,7 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<FornecedorPostModel, Fornecedor>()
                .AfterMap((model, entity) =>
                {
-                   entity.Id = Guid.NewGuid();
+                   
                    entity.DataHoraCadastro = DateTime.Now;
                    entity.DataHoraAlteracao = DateTime.Now;
 

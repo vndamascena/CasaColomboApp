@@ -8,7 +8,7 @@
        
         public string? Ala {  get; set; }
 
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
     }
 }

@@ -59,7 +59,7 @@ namespace CasaColomboApp.Domain.Services
             return _fornecedorRepository?.GetAll();
         }
 
-        public Fornecedor Delete(Guid id)
+        public Fornecedor Delete(int id)
         {
             var fornecedor = ObterPorId(id);
 
@@ -73,7 +73,7 @@ namespace CasaColomboApp.Domain.Services
             return fornecedor;
         }
 
-        public Fornecedor ObterPorId(Guid id)
+        public Fornecedor ObterPorId(int id)
         {
             return _fornecedorRepository?.GetById(id);
         }

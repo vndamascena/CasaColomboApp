@@ -12,10 +12,10 @@ namespace CasaColomboApp.Domain.Interfaces.Services
     {
         Categoria Cadastrar(Categoria categoria);
         Categoria Atualizar(Categoria categoria);
-        Categoria Delete(Guid id);
+        Categoria Delete(int id);
         List<Categoria> Consultar();
 
-        Categoria ObterPorId(Guid id);
+        Categoria ObterPorId(int id);
 
     }
 }

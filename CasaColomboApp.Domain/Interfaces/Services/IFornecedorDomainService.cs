@@ -11,8 +11,8 @@ namespace CasaColomboApp.Domain.Interfaces.Services
     {
         Fornecedor Cadastrar(Fornecedor fornecedor);
         Fornecedor Atualizar(Fornecedor fornecedor);
-        Fornecedor Delete(Guid id);
+        Fornecedor Delete(int id);
         List<Fornecedor> Consultar();
-        Fornecedor ObterPorId(Guid id);
+        Fornecedor ObterPorId(int id);
     }
 }

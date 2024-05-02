@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Infra.Data.Repositories
 {
-    public class ProdutoRepository : BaseRepository<Produto, Guid>, IProdutoRepository
+    public class ProdutoRepository : BaseRepository<Produto, int>, IProdutoRepository
     {
         protected readonly DataContext _dataContext;
 
@@ -48,7 +48,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
 
 
 
-        public override Produto GetById(Guid id)
+        public override Produto GetById(int id)
         {
             using (var dataContext = new DataContext())
             {
@@ -62,7 +62,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
             }
         }
 
-        public List<Lote> GetLotesByProdutoId(Guid produtoId)
+        public List<Lote> GetLotesByProdutoId(int produtoId)
         {
             using (var dataContext = new DataContext())
             {

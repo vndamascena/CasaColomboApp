@@ -88,7 +88,7 @@ namespace CasaColomboApp.Domain.Services
             foreach (var lote in produto.Lote)
             {
                 // Se o lote tiver um ID válido, mantenha o ID ao construir a lista de lotes atualizados
-                if (lote.Id != Guid.Empty)
+                if (lote.Id != 0)
                 {
                     lotesAtualizados.Add(new Lote
                     {
@@ -152,7 +152,7 @@ namespace CasaColomboApp.Domain.Services
 
 
 
-        public Produto Inativar(Guid id)
+        public Produto Inativar(int id)
         {
 
             var produto = ObterPorId(id);
@@ -187,7 +187,7 @@ namespace CasaColomboApp.Domain.Services
 
 
 
-        public Produto ObterPorId(Guid id)
+        public Produto ObterPorId(int id)
         {
             var produto = _produtoRepository?.GetById(id);
 
@@ -198,13 +198,13 @@ namespace CasaColomboApp.Domain.Services
             return produto;
         }
 
-        public List<Lote> ConsultarLote(Guid produtoId)
+        public List<Lote> ConsultarLote(int produtoId)
         {
             var lotes = _produtoRepository.GetLotesByProdutoId(produtoId);
             return lotes;
         }
 
-        public void ExcluirLote(Guid produtoId, Guid loteId)
+        public void ExcluirLote(int produtoId, int loteId)
         {
             // Verifica se o lote pertence ao produto
             var lote = _loteRepository.ObterPorId(loteId);
@@ -222,7 +222,7 @@ namespace CasaColomboApp.Domain.Services
             _loteRepository?.Remover(loteId);
         }
 
-        public void ConfirmarVenda(Guid loteId,  int quantidadeVendida, string matricula)
+        public void ConfirmarVenda(int loteId,  int quantidadeVendida, string matricula)
         {
             // Obter o lote pelo ID
             var lote = _loteRepository.ObterPorId(loteId);  

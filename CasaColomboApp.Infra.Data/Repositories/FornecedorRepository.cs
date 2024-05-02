@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Infra.Data.Repositories
 {
-    public class FornecedorRepository : BaseRepository<Fornecedor, Guid>, IFornecedorRepository
+    public class FornecedorRepository : BaseRepository<Fornecedor, int>, IFornecedorRepository
     {
         public override List<Fornecedor> GetAll()
         {

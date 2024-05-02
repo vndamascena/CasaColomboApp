@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Domain.Interfaces.Repositories
 {
-    public interface IVendaRepository : IBaseRepository<Venda, Guid>
+    public interface IVendaRepository : IBaseRepository<Venda, int>
     {
         // Adicione métodos adicionais específicos para o modelo de dados de vendas, se necessário
-        List<Venda> GetVendasByLoteId(Guid loteId);
+        List<Venda> GetVendasByLoteId(int loteId);
         List<Venda> GetVendasByUsuarioId(string matricula);
         // Outros métodos podem ser adicionados conforme necessário
     }

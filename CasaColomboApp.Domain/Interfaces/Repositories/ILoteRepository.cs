@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Domain.Interfaces.Repositories
 {
-    public interface ILoteRepository : IBaseRepository<Lote, Guid>
+    public interface ILoteRepository : IBaseRepository<Lote, int>
     {
         List<Lote> GetAll(bool ativo);
 
-        Lote ObterPorId(Guid id);
+        Lote ObterPorId(int id);
 
         // Adicionar método para remover um lote pelo ID
-        void Remover(Guid id);
+        void Remover(int id);
 
     }
 }

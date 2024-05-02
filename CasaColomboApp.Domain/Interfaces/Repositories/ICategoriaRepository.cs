@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Domain.Interfaces.Repositories
 {
-    public interface ICategoriaRepository : IBaseRepository<Categoria, Guid>
+    public interface ICategoriaRepository : IBaseRepository<Categoria, int>
     {
     }
 }

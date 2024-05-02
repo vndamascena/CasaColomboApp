@@ -13,15 +13,15 @@ namespace CasaColomboApp.Domain.Interfaces.Services
 
         Produto Cadastrar(Produto produto, List<Lote>lotes);
         Produto Atualizar(Produto produto);
-        Produto Inativar(Guid id);
+        Produto Inativar(int id);
 
         List<Produto> Consultar();
 
-        List<Lote> ConsultarLote(Guid produtoId);
+        List<Lote> ConsultarLote(int produtoId);
 
-        Produto ObterPorId(Guid id);
-        void ExcluirLote(Guid produtoId, Guid loteId);
-        void ConfirmarVenda(Guid id,  int quantidadeVendida, string matricula);
+        Produto ObterPorId(int id);
+        void ExcluirLote(int produtoId,  int loteId);
+        void ConfirmarVenda(int id,  int quantidadeVendida, string matricula);
 
 
 

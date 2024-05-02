@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CasaColomboApp.Infra.Data.Repositories
 {
-    public class CategoriaRepository : BaseRepository<Categoria, Guid>, ICategoriaRepository
+    public class CategoriaRepository : BaseRepository<Categoria, int>, ICategoriaRepository
     {
         public CategoriaRepository() // Adicionado um construtor vazio
         {

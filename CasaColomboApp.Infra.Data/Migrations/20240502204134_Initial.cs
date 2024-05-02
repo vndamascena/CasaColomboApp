@@ -15,7 +15,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 name: "CATEGORIA",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     NOME = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     DATAHORACADASTRO = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DATAHORAALTERACAO = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -42,7 +43,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 name: "FORNECEDOR",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     NOME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CNPJ = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     DATAHORACADASTRO = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -57,7 +59,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 name: "PRODUTO",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CODIGO = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     NOME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     MARCA = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -71,8 +74,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     DATAHORACADASTRO = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DATAHORAALTERACAO = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ATIVO = table.Column<bool>(type: "bit", nullable: false),
-                    CATEGORIAID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FORNECEDORID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CATEGORIAID = table.Column<int>(type: "int", nullable: false),
+                    FORNECEDORID = table.Column<int>(type: "int", nullable: false),
                     DEPOSITOID = table.Column<int>(type: "int", nullable: false),
                     IMAGEMURL = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -103,8 +106,9 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 name: "LOTE",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PRODUTOID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PRODUTOID = table.Column<int>(type: "int", nullable: false),
                     NUMEROLOTE = table.Column<int>(name: "NUMERO LOTE", type: "int", maxLength: 15, nullable: false),
                     QUANTIDADE = table.Column<int>(type: "int", nullable: false),
                     ALA = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -125,13 +129,14 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 name: "HISTORICOVENDA",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LOTEID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LOTEID = table.Column<int>(type: "int", nullable: false),
                     NUMEROLOTE = table.Column<int>(type: "int", nullable: false),
-                    USUARIOID = table.Column<int>(type: "int", nullable: false),
+                    USUARIOID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     QUANTIDADE = table.Column<int>(type: "int", nullable: false),
                     DATAVENDA = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LoteId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    LoteId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

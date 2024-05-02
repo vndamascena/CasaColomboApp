@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240501105012_Initial")]
+    [Migration("20240502204134_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -27,10 +27,12 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Categoria", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<DateTime?>("DataHoraAlteracao")
                         .IsRequired()
@@ -81,10 +83,12 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Fornecedor", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<string>("Cnpj")
                         .IsRequired()
@@ -118,10 +122,12 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Lote", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Ala")
                         .IsRequired()
@@ -138,9 +144,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("NUMERO LOTE");
 
-                    b.Property<Guid?>("ProdutoId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int")
                         .HasColumnName("PRODUTOID");
 
                     b.Property<int>("QuantidadeLote")
@@ -156,18 +161,20 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Produto", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("bit")
                         .HasColumnName("ATIVO");
 
-                    b.Property<Guid?>("CategoriaId")
+                    b.Property<int?>("CategoriaId")
                         .IsRequired()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("CATEGORIAID");
 
                     b.Property<string>("Codigo")
@@ -197,9 +204,9 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("nvarchar(300)")
                         .HasColumnName("DESCRICAO");
 
-                    b.Property<Guid?>("FornecedorId")
+                    b.Property<int?>("FornecedorId")
                         .IsRequired()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("FORNECEDORID");
 
                     b.Property<string>("ImagemUrl")
@@ -254,21 +261,28 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Venda", b =>
                 {
-                    b.Property<Guid>("VendaID")
+                    b.Property<int>("VendaID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VendaID"));
 
                     b.Property<DateTime>("DataVenda")
                         .HasColumnType("datetime2")
                         .HasColumnName("DATAVENDA");
 
-                    b.Property<Guid>("LoteId")
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<int>("LoteId")
+                        .HasColumnType("int")
                         .HasColumnName("LOTEID");
 
-                    b.Property<Guid?>("LoteId1")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("LoteId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Matricula")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("USUARIOID");
 
                     b.Property<int>("NumeroLote")
                         .HasColumnType("int")
@@ -277,10 +291,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.Property<int>("Quantidade")
                         .HasColumnType("int")
                         .HasColumnName("QUANTIDADE");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int")
-                        .HasColumnName("USUARIOID");
 
                     b.HasKey("VendaID");
 

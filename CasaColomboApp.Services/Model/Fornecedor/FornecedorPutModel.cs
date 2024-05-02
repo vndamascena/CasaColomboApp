@@ -5,7 +5,7 @@ namespace CasaColomboApp.Services.Model.Fornecedor
     public class FornecedorPutModel
     {
         [Required(ErrorMessage = "Por favor, informe o id do fornecedor.")]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Informe o nome do fornecedor.")]
         [MinLength(4, ErrorMessage = "Informe no minimo {1} caracteres.")]
