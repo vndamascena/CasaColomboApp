@@ -15,7 +15,7 @@ namespace CasaColomboApp.Domain.Entities
         public int QuantidadeLote { get; set; }
        
         public string Ala {  get; set; }
-        public DateTime? DataUltimaAlteracao { get; set; }
+        public DateTime DataUltimaAlteracao { get; set; }
 
         // Relacionamento com o produto
         public Produto Produto { get; set; }

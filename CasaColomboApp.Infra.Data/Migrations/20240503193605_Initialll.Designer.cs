@@ -3,7 +3,6 @@ using System;
 using CasaColomboApp.Infra.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -12,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240502204134_Initial")]
-    partial class Initial
+    [Migration("20240503193605_Initialll")]
+    partial class Initialll
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,9 +20,7 @@ namespace CasaColomboApp.Infra.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Categoria", b =>
                 {
@@ -32,22 +29,18 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
-
-                    b.Property<DateTime?>("DataHoraAlteracao")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
+                    b.Property<DateTime>("DataHoraAlteracao")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATAHORAALTERACAO");
 
-                    b.Property<DateTime?>("DataHoraCadastro")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
+                    b.Property<DateTime>("DataHoraCadastro")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATAHORACADASTRO");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("NOME");
 
                     b.HasKey("Id");
@@ -65,12 +58,10 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepositoId"));
-
                     b.Property<string>("NomeDeposito")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("NOMEDEPOSITO");
 
                     b.HasKey("DepositoId");
@@ -88,28 +79,24 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
-
                     b.Property<string>("Cnpj")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("CNPJ");
 
-                    b.Property<DateTime?>("DataHoraAlteracao")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
+                    b.Property<DateTime>("DataHoraAlteracao")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATAHORAALTERACAO");
 
-                    b.Property<DateTime?>("DataHoraCadastro")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
+                    b.Property<DateTime>("DataHoraCadastro")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATAHORACADASTRO");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("NOME");
 
                     b.HasKey("Id");
@@ -127,16 +114,13 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Ala")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("ALA");
 
-                    b.Property<DateTime?>("DataUltimaAlteracao")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
+                    b.Property<DateTime>("DataUltimaAlteracao")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATAHORAALTERACAO");
 
                     b.Property<int>("NumeroLote")
@@ -166,10 +150,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<bool>("Ativo")
-                        .HasColumnType("bit")
+                        .HasColumnType("tinyint(1)")
                         .HasColumnName("ATIVO");
 
                     b.Property<int?>("CategoriaId")
@@ -180,17 +162,15 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.Property<string>("Codigo")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
+                        .HasColumnType("varchar(15)")
                         .HasColumnName("CODIGO");
 
-                    b.Property<DateTime?>("DataHoraAlteracao")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
+                    b.Property<DateTime>("DataHoraAlteracao")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATAHORAALTERACAO");
 
-                    b.Property<DateTime?>("DataHoraCadastro")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
+                    b.Property<DateTime>("DataHoraCadastro")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATAHORACADASTRO");
 
                     b.Property<int?>("DepositoId")
@@ -201,7 +181,7 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
+                        .HasColumnType("varchar(300)")
                         .HasColumnName("DESCRICAO");
 
                     b.Property<int?>("FornecedorId")
@@ -210,21 +190,21 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnName("FORNECEDORID");
 
                     b.Property<string>("ImagemUrl")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("IMAGEMURL");
 
                     b.Property<string>("Marca")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("MARCA");
 
                     b.Property<string>("MetroQCaixa")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("MERTROQCAIXA");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("NOME");
 
                     b.Property<int?>("PecasCaixa")
@@ -232,7 +212,7 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnName("PECASCAIXA");
 
                     b.Property<string>("Pei")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("PEI");
 
                     b.Property<decimal?>("PrecoCaixa")
@@ -266,10 +246,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VendaID"));
-
                     b.Property<DateTime>("DataVenda")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATAVENDA");
 
                     b.Property<int>("LoteId")
@@ -281,7 +259,7 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Matricula")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("USUARIOID");
 
                     b.Property<int>("NumeroLote")

@@ -12,8 +12,8 @@ namespace CasaColomboApp.Domain.Entities
         public string? Nome { get; set; }
         public string? Cnpj { get; set; }
 
-        public DateTime? DataHoraCadastro { get; set; }
-        public DateTime? DataHoraAlteracao { get; set; }
+        public DateTime DataHoraCadastro { get; set; }
+        public DateTime DataHoraAlteracao { get; set; }
 
         #region Relacionamento
 

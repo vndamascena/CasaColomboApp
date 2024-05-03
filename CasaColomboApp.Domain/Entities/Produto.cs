@@ -32,9 +32,9 @@ namespace CasaColomboApp.Domain.Entities
         
         public decimal? PrecoMetroQ {  get; set; }
 
-        public DateTime? DataHoraCadastro { get; set; }
+        public DateTime DataHoraCadastro { get; set; }
 
-        public DateTime? DataHoraAlteracao { get; set; }
+        public DateTime DataHoraAlteracao { get; set; }
         public bool Ativo { get; set; }
         public int? CategoriaId { get; set; }
 
