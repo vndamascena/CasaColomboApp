@@ -19,7 +19,7 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(c => c.DepositoId).HasColumnName("ID");
 
-            builder.Property(c => c.NomeDeposito).HasColumnName("NOMEDEPOSITO").HasMaxLength(30).IsRequired();
+            builder.Property(c => c.NomeDeposito).HasColumnName("NOMEDEPOSITO").HasMaxLength(12).IsRequired();
 
             builder.HasIndex(c => c.NomeDeposito).IsUnique();
 

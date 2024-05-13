@@ -6,7 +6,7 @@
 
         public string? Nome { get; set; }
 
-        public DateTime? DataHoraCadastro { get; set; }
-        public DateTime? DataHoraAlteracao { get; set; }
+        public DateTime DataHoraCadastro { get; set; }
+        public DateTime DataHoraAlteracao { get; set; }
     }
 }

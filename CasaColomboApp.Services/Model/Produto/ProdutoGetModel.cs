@@ -24,8 +24,8 @@ namespace CasaColomboApp.Services.Model.Produto
         
         public decimal? PrecoMetroQ { get; set; }
 
-        public DateTime? DataHoraCadastro { get; set; }
-        public DateTime? DataHoraAlteracao { get; set; }
+        public DateTime DataHoraCadastro { get; set; }
+        public DateTime DataHoraAlteracao { get; set; }
 
         public FornecedorGetModel? Fornecedor { get; set; }
         public CategoriaGetModel? Categoria { get; set; }
