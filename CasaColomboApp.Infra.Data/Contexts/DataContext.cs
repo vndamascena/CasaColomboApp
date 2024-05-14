@@ -13,8 +13,7 @@ namespace CasaColomboApp.Infra.Data.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Substitua a string de conexão padrão pelo MySQL
-            optionsBuilder.UseMySQL("server=mysql8010.site4now.net;port=3306;database=db_aa86db_casacol;user=aa86db_casacol;password=colombo24");
-
+            optionsBuilder.UseSqlServer(@"Data Source=SQL8010.site4now.net;Initial Catalog=db_aa8a78_casacol;User Id=db_aa8a78_casacol_admin;Password=colombo24");
 
         }
 

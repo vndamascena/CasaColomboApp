@@ -8,7 +8,7 @@
 
         public string? Cnpj { get; set; }
 
-        public DateTime? DataHoraCadastro { get; set; }
-        public DateTime? DataHoraAlteracao { get; set; }
+        public DateTime DataHoraCadastro { get; set; }
+        public DateTime DataHoraAlteracao { get; set; }
     }
 }

@@ -6,28 +6,28 @@ namespace CasaColomboApp.Services.Model.Produto
     {
         [Required(ErrorMessage = "Informe o codigo do produto.")]
         [MinLength(1, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(100, ErrorMessage = "Informe no maximo {1} carateres.")]
+        [MaxLength(5, ErrorMessage = "Informe no maximo {1} carateres.")]
         public string? Codigo { get; set; }
 
 
         [Required(ErrorMessage = "Informe o nome do produto.")]
         [MinLength(4, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(100, ErrorMessage = "Informe no maximo {1} carateres.")]
+        [MaxLength(15, ErrorMessage = "Informe no maximo {1} carateres.")]
         public string? Nome { get; set; }
 
 
         [MinLength(4, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(20, ErrorMessage = "Infome no maximo {1} caracteres")]
+        [MaxLength(15, ErrorMessage = "Infome no maximo {1} caracteres")]
         public string? Marca { get; set; }
 
         
 
         [MinLength(1, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(20, ErrorMessage = "Infome no maximo {1} caracteres")]
+        [MaxLength(2, ErrorMessage = "Infome no maximo {1} caracteres")]
         public string? Pei { get; set; }
 
         [MinLength(8, ErrorMessage = "Por favor, informe no mínimo {1} caracteres.")]
-        [MaxLength(500, ErrorMessage = "Por favor, informe no máximo {1} caracteres.")]
+        [MaxLength(70, ErrorMessage = "Por favor, informe no máximo {1} caracteres.")]
         [Required(ErrorMessage = "Por favor, informe a descrição do produto.")]
         public string? Descricao { get; set; }
 
