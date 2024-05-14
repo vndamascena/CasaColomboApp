@@ -28,7 +28,7 @@ namespace CasaColomboApp.Services.Controllers
             _mapper = mapper;
             _vendaRepository = vendaRepository;
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("http://localhost:5233/usuarios/autenticar");
+            _httpClient.BaseAddress = new Uri("http://colombo01-001-site2.gtempurl.com/usuarios/autenticar");
         }
 
         /// <summary>
