@@ -4,10 +4,7 @@ namespace CasaColomboApp.Services.Model.Produto
 {
     public class ProdutoPostModel
     {
-        [Required(ErrorMessage = "Informe o codigo do produto.")]
-        [MinLength(1, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(5, ErrorMessage = "Informe no maximo {1} carateres.")]
-        public string? Codigo { get; set; }
+        
 
 
         [Required(ErrorMessage = "Informe o nome do produto.")]

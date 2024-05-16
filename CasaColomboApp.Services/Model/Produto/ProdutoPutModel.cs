@@ -8,10 +8,7 @@ namespace CasaColomboApp.Services.Model.Produto
         public int Id { get; set; }
 
 
-        [Required(ErrorMessage = "Informe o codigo do produto.")]
-        [MinLength(1, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(5, ErrorMessage = "Informe no maximo {1} carateres.")]
-        public string? Codigo { get; set; }
+       
 
         [Required(ErrorMessage = "Informe o nome do produto.")]
         [MinLength(4, ErrorMessage = "Informe no minimo {1} caracteres.")]
@@ -44,17 +41,17 @@ namespace CasaColomboApp.Services.Model.Produto
         
         public decimal? PrecoMetroQ { get; set; }
 
-        [Required(ErrorMessage = "Por favor, informeo ID da categoria para o produto.")]
-        public int? CategoriaId { get; set; }
+       // [Required(ErrorMessage = "Por favor, informeo ID da categoria para o produto.")]
+       // public int? CategoriaId { get; set; }
 
-        [Required(ErrorMessage = "Por favor, informe o ID do fornecedor para o produto.")]
-        public int? FornecedorId { get; set; }
+       // [Required(ErrorMessage = "Por favor, informe o ID do fornecedor para o produto.")]
+       // public int? FornecedorId { get; set; }
 
-        public int? DepositoId { get; set; }
+       // public int? DepositoId { get; set; }
 
         // Novo campo para a URL da imagem
 
-        public string? ImagemUrl { get; set; }
+       // public string? ImagemUrl { get; set; }
 
         public List<LoteGetModel>? Lote { get; set; }
        

@@ -2,7 +2,7 @@
 {
     public class LoteGetModel
     {
-       
+        public string? Codigo { get; set; }  
         public int? NumeroLote { get; set; }
         public int? QuantidadeLote { get; set; }
        

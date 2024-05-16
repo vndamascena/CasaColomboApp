@@ -10,6 +10,7 @@ namespace CasaColomboApp.Domain.Entities
     {
         public int VendaID { get; set; }
         public int LoteId { get; set; }
+        public string Codigo { get; set; }
         public int NumeroLote {  get; set; }
         public string Matricula { get; set; }
         public int Quantidade { get; set; }

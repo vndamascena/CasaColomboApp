@@ -95,7 +95,8 @@ namespace CasaColomboApp.Domain.Services
                         Id = lote.Id, // Mantém o ID do lote original
                         NumeroLote = lote.NumeroLote,
                         QuantidadeLote = lote.QuantidadeLote,
-                        Ala = lote.Ala
+                        Ala = lote.Ala,
+                        Codigo = lote.Codigo
                     });
                 }
                 else
@@ -105,10 +106,11 @@ namespace CasaColomboApp.Domain.Services
                     {
                         NumeroLote = lote.NumeroLote,
                         QuantidadeLote = lote.QuantidadeLote,
-                        Ala = lote.Ala
-                        
+                        Ala = lote.Ala,
+                        Codigo = lote.Codigo
 
-                        
+
+
                     });
                 }
             }
@@ -116,7 +118,7 @@ namespace CasaColomboApp.Domain.Services
             var produtoAtualizado = new Produto
             {
                 Id = produto.Id,
-                Codigo = produto.Codigo,
+                
                 Nome = produto.Nome,
                 Marca = produto.Marca,
                 Pei = produto.Pei,
@@ -127,14 +129,14 @@ namespace CasaColomboApp.Domain.Services
                 MetroQCaixa = produto.MetroQCaixa,
                 PrecoMetroQ = produto.PrecoMetroQ,
                 PecasCaixa = produto.PecasCaixa,
-                CategoriaId = produto.CategoriaId,
-                FornecedorId = produto.FornecedorId,
                 Ativo = registro.Ativo,
-                ImagemUrl = produto.ImagemUrl,
+                ImagemUrl = registro.ImagemUrl,
                 DataHoraCadastro = registro.DataHoraCadastro,
                 DataHoraAlteracao = DateTime.Now,
-                DepositoId = produto.DepositoId
-
+                DepositoId = registro.DepositoId,
+                FornecedorId = registro.FornecedorId,
+                CategoriaId = registro.CategoriaId,
+          
 
             };
             if (registro.DataHoraCadastro == null)
@@ -222,35 +224,15 @@ namespace CasaColomboApp.Domain.Services
             _loteRepository?.Remover(loteId);
         }
 
-        public void ConfirmarVenda(int loteId,  int quantidadeVendida, string matricula)
+        public void ConfirmarVenda(int loteId, int quantidadeVendida, string matricula)
         {
             // Obter o lote pelo ID
-            var lote = _loteRepository.ObterPorId(loteId);  
+            var lote = _loteRepository.ObterPorId(loteId);
 
             if (lote == null)
             {
                 throw new ApplicationException("Lote não encontrado.");
             }
-
-            // Verificar se a quantidade vendida é válida
-            if (quantidadeVendida <= 0)
-            {
-                throw new ArgumentException("A quantidade vendida deve ser maior que zero.");
-            }
-
-            // Verificar se a quantidade vendida é maior que a quantidade disponível em estoque
-            if (quantidadeVendida > lote.QuantidadeLote)
-            {
-                throw new ApplicationException("Quantidade insuficiente em estoque para a venda.");
-            }
-
-            // Atualizar a quantidade do produto no banco de dados
-            var produto = _produtoRepository.GetById(lote.ProdutoId); // Obter o produto associado ao lote
-            produto.Quantidade -= quantidadeVendida; // Subtrair a quantidade vendida do estoque do produto
-            _produtoRepository.Update(produto); // Atualizar o produto no banco de dados
-
-            // Subtrair a quantidade vendida do estoque do lote
-            lote.QuantidadeLote -= quantidadeVendida;
 
             // Criar e salvar a venda
             var venda = new Venda
@@ -259,10 +241,25 @@ namespace CasaColomboApp.Domain.Services
                 Quantidade = quantidadeVendida,
                 DataVenda = DateTime.Now,
                 NumeroLote = lote.NumeroLote,
-                Matricula = matricula
-
+                Matricula = matricula,
+                Codigo = lote.Codigo
             };
+
             _vendaRepository.Add(venda);
+
+            // Verificar se há quantidade suficiente em estoque
+            if (quantidadeVendida <= lote.QuantidadeLote)
+            {
+                // Atualizar a quantidade vendida do lote
+                lote.QuantidadeLote -= quantidadeVendida;
+            }
+            else
+            {
+                // Se não houver estoque suficiente, vendemos o que temos e registramos o restante como negativo
+                quantidadeVendida = lote.QuantidadeLote;
+                lote.QuantidadeLote = 0; // Nenhum estoque restante
+            }
+
             // Atualizar o lote no banco de dados
             _loteRepository.Update(lote);
         }

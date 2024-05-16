@@ -8,7 +8,7 @@ namespace CasaColomboApp.Services.Model.Produto
     public class ProdutoGetModel
     {
         public int? Id { get; set; }
-        public string? Codigo { get; set; }
+       
         public string? Nome { get; set; }
         public string? Marca { get; set; }
         public int? Quantidade { get; set; }
