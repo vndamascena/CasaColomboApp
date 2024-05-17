@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text;
+using System.Globalization;
+using System.ComponentModel;
 
 namespace CasaColomboApp.Services.Controllers
 {
@@ -38,13 +40,20 @@ namespace CasaColomboApp.Services.Controllers
         [ProducesResponseType(typeof(ProdutoGetModel), 201)]
         public IActionResult Post([FromBody] ProdutoPostModel model)
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("pt-BR");
             try
             {
                 // Mapear o modelo para a entidade Produto
                 var produto = _mapper.Map<Produto>(model);
 
+              
+
+
                 // Mapear os modelos de lote para entidades de lote
                 var lotes = _mapper.Map<List<Lote>>(model.Lote);
+
+
+               
 
                 // Cadastrar o produto juntamente com os lotes
                 var result = _produtoDomainService.Cadastrar(produto, lotes);

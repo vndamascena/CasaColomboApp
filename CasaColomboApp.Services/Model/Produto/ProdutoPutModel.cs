@@ -36,10 +36,10 @@ namespace CasaColomboApp.Services.Model.Produto
         public string? MetroQCaixa { get; set; }
 
        
-        public decimal? PrecoCaixa { get; set; }
+        public string? PrecoCaixa { get; set; }
 
         
-        public decimal? PrecoMetroQ { get; set; }
+        public string? PrecoMetroQ { get; set; }
 
        // [Required(ErrorMessage = "Por favor, informeo ID da categoria para o produto.")]
        // public int? CategoriaId { get; set; }

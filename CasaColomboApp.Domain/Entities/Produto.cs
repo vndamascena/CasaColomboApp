@@ -24,7 +24,7 @@ namespace CasaColomboApp.Domain.Entities
 
         public int? PecasCaixa { get; set; }
 
-        public string? MetroQCaixa { get; set; }
+        public decimal? MetroQCaixa { get; set; }
 
        
         public decimal? PrecoCaixa { get; set; }

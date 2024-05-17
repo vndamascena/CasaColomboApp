@@ -7,7 +7,6 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace CasaColomboApp.Domain.Services
 {
     public class ProdutoDomainService : IProdutoDomainService
@@ -25,6 +24,7 @@ namespace CasaColomboApp.Domain.Services
 
         public Produto Cadastrar(Produto produto, List<Lote> lotes)
         {
+           
             if (produto == null)
                 throw new ArgumentNullException(nameof(produto));
 
@@ -35,11 +35,14 @@ namespace CasaColomboApp.Domain.Services
             if (produto.Lote == null)
                 produto.Lote = new List<Lote>();
 
+           
             // Calcula a quantidade total dos lotes
             int quantidadeTotalLotes = lotes.Sum(l => l.QuantidadeLote);
 
             // Atribui a quantidade total dos lotes à propriedade Quantidade do produto
             produto.Quantidade = quantidadeTotalLotes;
+
+
 
             // Associar os lotes ao produto
             foreach (var lote in lotes)

@@ -9,7 +9,7 @@ namespace CasaColomboApp.Services.Model.Produto
 
         [Required(ErrorMessage = "Informe o nome do produto.")]
         [MinLength(4, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(15, ErrorMessage = "Informe no maximo {1} carateres.")]
+        [MaxLength(50, ErrorMessage = "Informe no maximo {1} carateres.")]
         public string? Nome { get; set; }
 
 
@@ -33,10 +33,10 @@ namespace CasaColomboApp.Services.Model.Produto
         public string? MetroQCaixa { get; set; }
 
         
-        public decimal? PrecoCaixa { get; set; }
+        public string? PrecoCaixa { get; set; }
 
        
-        public decimal? PrecoMetroQ { get; set; }
+        public string? PrecoMetroQ { get; set; }
 
         [Required(ErrorMessage = "Por favor, informeo ID da categoria para o produto.")]
         public int? CategoriaId { get; set; }

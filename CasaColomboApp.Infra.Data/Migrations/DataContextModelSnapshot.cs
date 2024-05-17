@@ -208,8 +208,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("MARCA");
 
-                    b.Property<string>("MetroQCaixa")
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<decimal?>("MetroQCaixa")
+                        .HasColumnType("decimal(18,2)")
                         .HasColumnName("MERTROQCAIXA");
 
                     b.Property<string>("Nome")

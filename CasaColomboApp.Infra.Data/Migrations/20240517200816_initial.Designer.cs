@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240516173110_initupp")]
-    partial class initupp
+    [Migration("20240517200816_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -131,7 +131,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnName("ALA");
 
                     b.Property<string>("Codigo")
-                        .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
                         .HasColumnName("CODIGO");
@@ -140,9 +139,10 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("DATAHORAALTERACAO");
 
-                    b.Property<int>("NumeroLote")
+                    b.Property<string>("NumeroLote")
+                        .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("int")
+                        .HasColumnType("nvarchar(10)")
                         .HasColumnName("NUMERO LOTE");
 
                     b.Property<int>("ProdutoId")
@@ -211,8 +211,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("MARCA");
 
-                    b.Property<string>("MetroQCaixa")
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<decimal?>("MetroQCaixa")
+                        .HasColumnType("decimal(18,2)")
                         .HasColumnName("MERTROQCAIXA");
 
                     b.Property<string>("Nome")
@@ -239,7 +239,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnName("PRECOMETRO");
 
                     b.Property<int?>("Quantidade")
-                        .IsRequired()
                         .HasColumnType("int")
                         .HasColumnName("QUANTIDADE");
 
@@ -283,8 +282,9 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("USUARIOID");
 
-                    b.Property<int>("NumeroLote")
-                        .HasColumnType("int")
+                    b.Property<string>("NumeroLote")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("NUMEROLOTE");
 
                     b.Property<int>("Quantidade")

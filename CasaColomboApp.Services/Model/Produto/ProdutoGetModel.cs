@@ -19,10 +19,10 @@ namespace CasaColomboApp.Services.Model.Produto
 
         public string? MetroQCaixa { get; set; }
 
-        public decimal? PrecoCaixa { get; set; }
+        public string? PrecoCaixa { get; set; }
 
         
-        public decimal? PrecoMetroQ { get; set; }
+        public string? PrecoMetroQ { get; set; }
 
         public DateTime DataHoraCadastro { get; set; }
         public DateTime DataHoraAlteracao { get; set; }
