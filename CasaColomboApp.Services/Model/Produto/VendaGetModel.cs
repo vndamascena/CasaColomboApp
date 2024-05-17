@@ -10,7 +10,7 @@
         public int Quantidade { get; set; }
 
         public DateTime DataVenda { get; set; }
-        public int NumeroLote { get; set; }
+        public string NumeroLote { get; set; }
 
     }
 }

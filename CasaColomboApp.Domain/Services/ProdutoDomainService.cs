@@ -81,7 +81,7 @@ namespace CasaColomboApp.Domain.Services
                 throw new ApplicationException("Produto não encontrado para edição.");
 
             // Remove os lotes excluídos do produto
-            produto.Lote.RemoveAll(l => l.QuantidadeLote == 0 && (l.NumeroLote == 0));
+            produto.Lote.RemoveAll(l => l.QuantidadeLote == 0 && string.IsNullOrEmpty(l.NumeroLote));
 
             // Constrói uma nova lista de lotes para o produto atualizado
             var lotesAtualizados = new List<Lote>();

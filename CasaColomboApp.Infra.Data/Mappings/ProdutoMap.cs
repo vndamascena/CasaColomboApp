@@ -23,7 +23,7 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(p => p.Marca).HasColumnName("MARCA").HasMaxLength(15);
 
-            builder.Property(p => p.Quantidade).HasColumnName("QUANTIDADE").IsRequired();
+            builder.Property(p => p.Quantidade).HasColumnName("QUANTIDADE");
 
             builder.Property(p => p.Pei).HasColumnName("PEI").HasMaxLength(2);
 
