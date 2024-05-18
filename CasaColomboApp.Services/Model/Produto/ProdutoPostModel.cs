@@ -14,7 +14,7 @@ namespace CasaColomboApp.Services.Model.Produto
 
 
         [MinLength(4, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(15, ErrorMessage = "Infome no maximo {1} caracteres")]
+        [MaxLength(50, ErrorMessage = "Infome no maximo {1} caracteres")]
         public string? Marca { get; set; }
 
         

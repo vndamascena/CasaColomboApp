@@ -12,11 +12,11 @@ namespace CasaColomboApp.Services.Model.Produto
 
         [Required(ErrorMessage = "Informe o nome do produto.")]
         [MinLength(4, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(15, ErrorMessage = "Informe no maximo {1} carateres.")]
+        [MaxLength(50, ErrorMessage = "Informe no maximo {1} carateres.")]
         public string? Nome { get; set; }
 
         [MinLength(4, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(15, ErrorMessage = "Infome no maximo {1} caracteres")]
+        [MaxLength(50, ErrorMessage = "Infome no maximo {1} caracteres")]
         public string? Marca { get; set; }
 
 
