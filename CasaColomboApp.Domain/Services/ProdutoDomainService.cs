@@ -24,7 +24,7 @@ namespace CasaColomboApp.Domain.Services
 
         public Produto Cadastrar(Produto produto, List<Lote> lotes)
         {
-           
+
             if (produto == null)
                 throw new ArgumentNullException(nameof(produto));
 
@@ -35,16 +35,14 @@ namespace CasaColomboApp.Domain.Services
             if (produto.Lote == null)
                 produto.Lote = new List<Lote>();
 
-           
-            // Calcula a quantidade total dos lotes
-            int quantidadeTotalLotes = lotes.Sum(l => l.QuantidadeLote);
+            // Se o produto ainda não tiver nenhum lote, considere o primeiro lote como o principal
+            if (!produto.Lote.Any())
+            {
+                produto.Lote.Add(lotes.First()); // Adicione o primeiro lote à lista de lotes do produto
+                lotes.RemoveAt(0); // Remova o primeiro lote da lista de lotes
+            }
 
-            // Atribui a quantidade total dos lotes à propriedade Quantidade do produto
-            produto.Quantidade = quantidadeTotalLotes;
-
-
-
-            // Associar os lotes ao produto
+            // Associar os lotes restantes ao produto
             foreach (var lote in lotes)
             {
                 // Verificar se já existe um lote com o mesmo númeroLote
@@ -61,6 +59,12 @@ namespace CasaColomboApp.Domain.Services
                     loteExistente.QuantidadeLote = lote.QuantidadeLote;
                 }
             }
+
+            // Calcula a quantidade total dos lotes, excluindo o primeiro lote
+            int quantidadeTotalLotes = produto.Lote.Skip(1).Sum(l => l.QuantidadeLote);
+
+            // Atribui a quantidade total dos lotes à propriedade Quantidade do produto
+            produto.Quantidade = quantidadeTotalLotes;
 
             try
             {
@@ -180,10 +184,15 @@ namespace CasaColomboApp.Domain.Services
             if (produtos == null)
                 return new List<Produto>();
 
-            // Carregar os lotes para cada produto
+            // Carregar os lotes para cada produto, começando do segundo lote
             foreach (var produto in produtos)
             {
                 produto.Lote = _produtoRepository?.GetLotesByProdutoId(produto.Id);
+
+                // Se o produto tiver mais de um lote, exclua o primeiro lote da lista
+                if (produto.Lote.Count > 1)
+                    produto.Lote.RemoveAt(0);
+
                 produto.Quantidade = produto.Lote.Sum(l => l.QuantidadeLote);
             }
 
@@ -250,22 +259,29 @@ namespace CasaColomboApp.Domain.Services
 
             _vendaRepository.Add(venda);
 
-            // Verificar se há quantidade suficiente em estoque
-            if (quantidadeVendida <= lote.QuantidadeLote)
-            {
-                // Atualizar a quantidade vendida do lote
-                lote.QuantidadeLote -= quantidadeVendida;
-            }
-            else
-            {
-                // Se não houver estoque suficiente, vendemos o que temos e registramos o restante como negativo
-                quantidadeVendida = lote.QuantidadeLote;
-                lote.QuantidadeLote = 0; // Nenhum estoque restante
-            }
+            // Atualizar a quantidade vendida do lote, permitindo quantidade negativa
+            lote.QuantidadeLote -= quantidadeVendida;
 
             // Atualizar o lote no banco de dados
             _loteRepository.Update(lote);
+
+            // Obter o produto associado ao lote
+            var produto = _produtoRepository.GetById(lote.ProdutoId);
+
+            if (produto == null)
+            {
+                throw new ApplicationException("Produto não encontrado.");
+            }
+
+            // Recalcular a quantidade total do produto, excluindo lotes com quantidade negativa
+            produto.Quantidade = _produtoRepository.GetLotesByProdutoId(produto.Id)
+                                                    .Where(l => l.QuantidadeLote >= 0)
+                                                    .Sum(l => l.QuantidadeLote);
+
+            // Atualizar o produto no banco de dados
+            _produtoRepository.Update(produto);
         }
+
 
 
 
