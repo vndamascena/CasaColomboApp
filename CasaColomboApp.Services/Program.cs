@@ -19,6 +19,7 @@ SwaggerExtension.UseSwaggerConfig(app);
 CorsConfigExtension.UseCorsConfig(app);
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

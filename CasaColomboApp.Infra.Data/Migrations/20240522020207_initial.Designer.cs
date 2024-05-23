@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240517200816_initial")]
+    [Migration("20240522020207_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -207,8 +207,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnName("IMAGEMURL");
 
                     b.Property<string>("Marca")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("MARCA");
 
                     b.Property<decimal?>("MetroQCaixa")
@@ -217,8 +217,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("NOME");
 
                     b.Property<int?>("PecasCaixa")

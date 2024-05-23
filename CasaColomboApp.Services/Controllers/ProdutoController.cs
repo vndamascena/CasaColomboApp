@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Text;
 using System.Globalization;
 using System.ComponentModel;
+using Microsoft.Data.SqlClient;
 
 namespace CasaColomboApp.Services.Controllers
 {
@@ -18,19 +19,89 @@ namespace CasaColomboApp.Services.Controllers
     [ApiController]
     public class ProdutoController : ControllerBase
     {
-        private readonly IProdutoDomainService? _produtoDomainService;
-        private readonly IMapper? _mapper;
-        private readonly IVendaRepository? _vendaRepository;
+        private readonly IProdutoDomainService _produtoDomainService;
+        private readonly IMapper _mapper;
+        private readonly IVendaRepository _vendaRepository;
         private readonly HttpClient _httpClient;
+        private readonly string _imageFolderPath;
+        private int _nextImageId = 1; // This variable will store the next image ID
 
-        public ProdutoController(IProdutoDomainService? produtoDomainService,
-            IMapper? mapper, IVendaRepository? vendaRepository, IHttpClientFactory httpClientFactory)
+        public ProdutoController(IProdutoDomainService produtoDomainService,
+            IMapper mapper, IVendaRepository vendaRepository, IHttpClientFactory httpClientFactory)
         {
             _produtoDomainService = produtoDomainService;
             _mapper = mapper;
             _vendaRepository = vendaRepository;
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("http://colombo01-001-site2.gtempurl.com/usuarios/autenticar");
+            _imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+        }
+
+        [HttpPost]
+        [Route("Upload")]
+        public async Task<IActionResult> UploadImage(IFormFile imageFile, int produtoId)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return BadRequest("Nenhuma imagem foi enviada.");
+            }
+
+            // Generate a unique filename using an auto-incrementing integer
+            string fileName = $"{_nextImageId}_{Path.GetFileName(imageFile.FileName)}";
+            _nextImageId++; // Increment the counter for the next image
+
+            string filePath = Path.Combine(_imageFolderPath, fileName);
+
+            // Ensure the destination directory exists
+            if (!Directory.Exists(_imageFolderPath))
+            {
+                Directory.CreateDirectory(_imageFolderPath);
+            }
+
+            // Save the image to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+            // Save the relative image path in the database
+            string relativeFilePath = $"/images/{fileName}";
+            await SalvarCaminhoImagemNoBanco(produtoId, relativeFilePath);
+
+            return Ok(new { Message = "Imagem carregada com sucesso.", ImageUrl = relativeFilePath });
+        }
+
+        private async Task SalvarCaminhoImagemNoBanco(int produtoId, string relativeFilePath)
+        {
+            string connectionString = @"Data Source=SQL8010.site4now.net;Initial Catalog=db_aa8a78_casacol;User Id=db_aa8a78_casacol_admin;Password=colombo24";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE PRODUTO SET IMAGEMURL = @FilePath WHERE ID = @ID";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@FilePath", relativeFilePath);
+                    command.Parameters.AddWithValue("@ID", produtoId);
+
+                    connection.Open();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+        [HttpGet]
+        [Route("images/{fileName}")]
+        public IActionResult GetImage(string fileName)
+        {
+            string filePath = Path.Combine(_imageFolderPath, fileName);
+            if (System.IO.File.Exists(filePath))
+            {
+                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+                return File(fileBytes, "image/jpeg");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -46,14 +117,8 @@ namespace CasaColomboApp.Services.Controllers
                 // Mapear o modelo para a entidade Produto
                 var produto = _mapper.Map<Produto>(model);
 
-              
-
-
                 // Mapear os modelos de lote para entidades de lote
                 var lotes = _mapper.Map<List<Lote>>(model.Lote);
-
-
-               
 
                 // Cadastrar o produto juntamente com os lotes
                 var result = _produtoDomainService.Cadastrar(produto, lotes);
@@ -62,8 +127,6 @@ namespace CasaColomboApp.Services.Controllers
                 var produtoGetModel = _mapper.Map<ProdutoGetModel>(result);
 
                 // Retornar resposta HTTP 201 (CREATED) com o modelo de resposta
-               
-
                 return StatusCode(201, new
                 {
                     Message = "Produto cadastrado com sucesso",
@@ -88,19 +151,13 @@ namespace CasaColomboApp.Services.Controllers
                 // Mapear o modelo para a entidade Produto
                 var produto = _mapper.Map<Produto>(model);
 
-
-
-
                 // Atualizar o produto
                 var result = _produtoDomainService.Atualizar(produto);
-
-
 
                 // Mapear o resultado de volta para o modelo de resposta
                 var produtoGetModel = _mapper.Map<ProdutoGetModel>(result);
 
                 // Retornar resposta HTTP 200 (OK) com o modelo de resposta
-
                 return StatusCode(201, new
                 {
                     Message = "Produto atualizado com sucesso",
@@ -170,29 +227,19 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-
-
                 // Consulta o produto pelo ID
                 var produto = _produtoDomainService.ObterPorId(id);
-
-
-
 
                 // Mapeia o produto para o modelo de resposta incluindo os lotes
                 var produtoModel = _mapper.Map<ProdutoGetModel>(produto, opt => opt.Items["IncludeLotes"] = true);
 
                 return Ok(produtoModel);
-
             }
             catch (Exception e)
             {
                 //HTTP 500 (INTERNAL SERVER ERROR)
                 return StatusCode(500, new { e.Message });
             }
-
-
-
-
         }
 
         [HttpGet("{id}/lotes")]
@@ -203,8 +250,6 @@ namespace CasaColomboApp.Services.Controllers
             {
                 // Consulta os lotes associados ao produto pelo ID do produto
                 var lotes = _produtoDomainService.ConsultarLote(id);
-
-
 
                 // Mapeia os lotes para os modelos de resposta
                 var lotesModel = _mapper.Map<List<LoteGetModel>>(lotes);
@@ -217,12 +262,6 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { e.Message });
             }
         }
-
-
-
-
-
-
 
         [HttpDelete("{produtoId}/lotes/{loteId}")]
         public IActionResult DeleteLote(int produtoId, int loteId)
@@ -242,16 +281,14 @@ namespace CasaColomboApp.Services.Controllers
             }
         }
 
-
-
         [HttpPost("venda")]
-        public async Task<IActionResult> ConfirmarVenda(string matricula, string senha,  int Id, [FromBody] VendaModel venda)
+        public async Task<IActionResult> ConfirmarVenda(string matricula, string senha, int Id, [FromBody] VendaModel venda)
         {
             try
             {
                 if (await AutenticarUsuario(matricula, senha))
                 {
-                    _produtoDomainService.ConfirmarVenda(Id,  venda.QuantidadeVendida, matricula);
+                    _produtoDomainService.ConfirmarVenda(Id, venda.QuantidadeVendida, matricula);
                     return Ok(new { message = "Venda confirmada com sucesso!" });
                 }
                 else
@@ -275,7 +312,6 @@ namespace CasaColomboApp.Services.Controllers
                 var response = await _httpClient.PostAsync("/api/usuarios/autenticar", content); // Substitua "rota-da-autenticacao" pela rota de autenticação da sua API
                 response.EnsureSuccessStatusCode();
                 return true;
-                
             }
             catch
             {
@@ -285,27 +321,18 @@ namespace CasaColomboApp.Services.Controllers
 
         [HttpGet("venda")]
         [ProducesResponseType(typeof(VendaGetModel), 200)]
-        
         public IActionResult GetVendaAll()
         {
             try
             {
                 var venda = _vendaRepository.GetAll();
-
                 var vendasModel = _mapper.Map<List<VendaGetModel>>(venda);
                 return Ok(vendasModel);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                return StatusCode(500, new {erro = e.Message});
+                return StatusCode(500, new { erro = e.Message });
             }
-
-
-
-
         }
-
-
-
     }
 }
