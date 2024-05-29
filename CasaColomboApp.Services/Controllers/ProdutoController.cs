@@ -109,11 +109,16 @@ namespace CasaColomboApp.Services.Controllers
         /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(ProdutoGetModel), 201)]
-        public IActionResult Post([FromBody] ProdutoPostModel model)
+        public async Task<IActionResult> Post([FromBody] ProdutoPostModel model, string matricula, string senha)
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("pt-BR");
             try
             {
+                // Verifique se o usuário está autorizado
+                if (!(await IsUserAuthorized(matricula, senha)))
+                {
+                    return StatusCode(401, new { error = "Usuário não autorizado." });
+                }
+
                 // Mapear o modelo para a entidade Produto
                 var produto = _mapper.Map<Produto>(model);
 
@@ -140,14 +145,18 @@ namespace CasaColomboApp.Services.Controllers
             }
         }
 
-        /// <summary>
-        /// Serviço para alterar os dados de um produto.
-        /// </summary>
         [HttpPut]
-        public IActionResult Put([FromBody] ProdutoPutModel model)
+        [ProducesResponseType(typeof(ProdutoGetModel), 201)]
+        public async Task<IActionResult> Put([FromBody] ProdutoPutModel model, string matricula, string senha)
         {
             try
             {
+                // Verifique se o usuário está autorizado
+                if (!(await IsUserAuthorized(matricula, senha)))
+                {
+                    return StatusCode(401, new { error = "Usuário não autorizado." });
+                }
+
                 // Mapear o modelo para a entidade Produto
                 var produto = _mapper.Map<Produto>(model);
 
@@ -170,6 +179,42 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { e.Message });
             }
         }
+
+
+        private async Task<bool> IsUserAuthorized(string matricula, string senha)
+        {
+            // Lista de usuários autorizados para autenticação
+            Dictionary<string, string> usuariosAutorizados = new Dictionary<string, string>
+            {
+                { "65", "1723" },   // Exemplo: Matricula e senha do usuário 1
+                { "usuario2", "senha2" }, // Exemplo: Matricula e senha do usuário 2
+            };
+
+            // Verifica se as credenciais fornecidas estão na lista de usuários autorizados
+            if (usuariosAutorizados.ContainsKey(matricula) && usuariosAutorizados[matricula] == senha)
+            {
+                try
+                {
+                    // Realiza a chamada à API de autenticação apenas para os usuários autorizados
+                    var usuarioModel = new { Matricula = matricula, Senha = senha };
+                    var json = JsonSerializer.Serialize(usuarioModel);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var response = await _httpClient.PostAsync("/api/usuarios/autenticar", content); // Substitua "rota-da-autenticacao" pela rota de autenticação da sua API
+                    response.EnsureSuccessStatusCode();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                // Se as credenciais do usuário não estiverem na lista branca, retorne false
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// Serviço para excluir um produto.
@@ -201,6 +246,7 @@ namespace CasaColomboApp.Services.Controllers
         [ProducesResponseType(typeof(List<ProdutoGetModel>), 200)]
         public IActionResult GetAll()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("pt-BR");
             try
             {
                 // Consulta todos os produtos
