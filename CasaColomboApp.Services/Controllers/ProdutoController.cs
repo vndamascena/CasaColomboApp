@@ -187,7 +187,9 @@ namespace CasaColomboApp.Services.Controllers
             Dictionary<string, string> usuariosAutorizados = new Dictionary<string, string>
             {
                 { "65", "1723" },   // Exemplo: Matricula e senha do usuário 1
-                { "usuario2", "senha2" }, // Exemplo: Matricula e senha do usuário 2
+                { "1", "2816" }, // Exemplo: Matricula e senha do usuário 2
+                 { "5", "1005" },   // Exemplo: Matricula e senha do usuário 1
+                { "2", "1470" },
             };
 
             // Verifica se as credenciais fornecidas estão na lista de usuários autorizados

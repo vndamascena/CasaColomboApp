@@ -21,7 +21,9 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(v => v.LoteId).HasColumnName("LOTEID").IsRequired();
 
-            builder.Property(v => v.Matricula).HasColumnName("USUARIOID").IsRequired();
+            builder.Property(v => v.Nomeproduto).HasColumnName("NOMEPRODUTO");
+
+            builder.Property(v => v.UsuarioId).HasColumnName("USUARIOID").IsRequired();
 
             builder.Property(v => v.Quantidade).HasColumnName("QUANTIDADE").IsRequired();
 

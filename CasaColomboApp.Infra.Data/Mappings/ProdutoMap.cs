@@ -25,7 +25,7 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(p => p.Quantidade).HasColumnName("QUANTIDADE");
 
-            builder.Property(p => p.Pei).HasColumnName("PEI").HasMaxLength(2);
+            builder.Property(p => p.Pei).HasColumnName("PEI").HasMaxLength(15);
 
             builder.Property(p => p.PrecoCaixa).HasColumnName("PRECOCAIXA");
 

@@ -253,8 +253,9 @@ namespace CasaColomboApp.Domain.Services
                 Quantidade = quantidadeVendida,
                 DataVenda = DateTime.Now,
                 NumeroLote = lote.NumeroLote,
-                Matricula = matricula,
-                Codigo = lote.Codigo
+                UsuarioId  = matricula,
+                Codigo = lote.Codigo,
+                
             };
 
             _vendaRepository.Add(venda);

@@ -28,7 +28,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
         {
             using (var dataContext = new DataContext())
             {
-                return dataContext.Set<Venda>().Where(v => v.Matricula == matricula).ToList();
+                return dataContext.Set<Venda>().Where(v => v.UsuarioId == matricula).ToList();
             }
         }
     }

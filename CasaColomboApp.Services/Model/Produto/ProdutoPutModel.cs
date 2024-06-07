@@ -22,7 +22,7 @@ namespace CasaColomboApp.Services.Model.Produto
 
 
         [MinLength(1, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(2, ErrorMessage = "Infome no maximo {1} caracteres")]
+        [MaxLength(15, ErrorMessage = "Infome no maximo {1} caracteres")]
         public string? Pei { get; set; }
 
         [MinLength(8, ErrorMessage = "Por favor, informe no mínimo {1} caracteres.")]
