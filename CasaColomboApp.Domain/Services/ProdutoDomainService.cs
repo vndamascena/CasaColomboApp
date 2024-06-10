@@ -255,6 +255,7 @@ namespace CasaColomboApp.Domain.Services
                 NumeroLote = lote.NumeroLote,
                 UsuarioId  = matricula,
                 Codigo = lote.Codigo,
+                Nomeproduto = lote.NomeProduto
                 
             };
 
