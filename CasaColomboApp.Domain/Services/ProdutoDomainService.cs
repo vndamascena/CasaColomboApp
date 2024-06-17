@@ -103,7 +103,8 @@ namespace CasaColomboApp.Domain.Services
                         NumeroLote = lote.NumeroLote,
                         QuantidadeLote = lote.QuantidadeLote,
                         Ala = lote.Ala,
-                        Codigo = lote.Codigo
+                        Codigo = lote.Codigo,
+                        NomeProduto = lote.NomeProduto,
                     });
                 }
                 else
@@ -114,7 +115,8 @@ namespace CasaColomboApp.Domain.Services
                         NumeroLote = lote.NumeroLote,
                         QuantidadeLote = lote.QuantidadeLote,
                         Ala = lote.Ala,
-                        Codigo = lote.Codigo
+                        Codigo = lote.Codigo,
+                        NomeProduto = lote.NomeProduto
 
 
 

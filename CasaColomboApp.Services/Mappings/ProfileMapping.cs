@@ -3,7 +3,10 @@ using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Services.Model.Categoria;
 using CasaColomboApp.Services.Model.Deposito;
 using CasaColomboApp.Services.Model.Fornecedor;
+using CasaColomboApp.Services.Model.Ocorrencia;
+using CasaColomboApp.Services.Model.Ocorrencias;
 using CasaColomboApp.Services.Model.Produto;
+using CasaColomboApp.Services.Model.TipoOcorrencia;
 
 namespace CasaColomboApp.Services.Mappings
 {
@@ -37,6 +40,14 @@ namespace CasaColomboApp.Services.Mappings
                     entity.DataHoraAlteracao = DateTime.Now;
 
                 });
+            CreateMap<OcorrenciaPostModel, Ocorrencia>()
+               .AfterMap((model, entity) =>
+               {
+
+                   entity.DataTime = DateTime.Now;
+                   
+
+               });
 
             CreateMap<FornecedorPostModel, Fornecedor>()
                .AfterMap((model, entity) =>
@@ -50,6 +61,10 @@ namespace CasaColomboApp.Services.Mappings
 
 
             CreateMap<Categoria, CategoriaGetModel>();
+
+           
+            CreateMap<Ocorrencia, OcorrenciaGetModel>().ForMember(dest => dest.TipoOcorrencia, opt => opt.MapFrom(src => src.TipoOcorrencia));
+
 
             CreateMap<Fornecedor, FornecedorGetModel>();
 
@@ -71,8 +86,19 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<LoteGetModel, LoteModel>();
             CreateMap<LoteGetModel, Lote>();
             CreateMap<Venda, VendaGetModel>();
+            CreateMap<BaixaOcorrencia, BaixaOcorrenciaGetModel>();
 
-           
+            CreateMap<TipoOcorrenciaPostModel, TipoOcorrencia>();
+            CreateMap<TipoOcorrencia, TipoOcorrenciaPostModel>();
+            CreateMap<TipoOcorrenciaPutModel, TipoOcorrencia>();
+            CreateMap<TipoOcorrencia, TipoOcorrenciaPutModel>();
+
+            CreateMap<OcorrenciaPostModel, Ocorrencia>();
+            CreateMap<Ocorrencia, OcorrenciaPostModel>();
+            CreateMap<TipoOcorrencia, TipoOcorrenciaGetModel>();
+
+
+
 
 
 
