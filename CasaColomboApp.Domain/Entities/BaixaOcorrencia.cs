@@ -10,6 +10,7 @@ namespace CasaColomboApp.Domain.Entities
     {
         public int BaixaId { get; set; }
         public int CodProduto { get; set; }
+        public int OcorrenciaId { get; set; }
         public int TipoOcorrenciaId { get; set; }
        
         public string Produto { get; set; }
@@ -20,7 +21,7 @@ namespace CasaColomboApp.Domain.Entities
         public string UsuarioId { get; set; }
         
 
-        public Ocorrencia Ocorrencia { get; set; }
+        public Ocorrencia? Ocorrencia { get; set; }
 
     }
 }

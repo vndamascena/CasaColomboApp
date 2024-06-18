@@ -12,6 +12,21 @@ namespace CasaColomboApp.Infra.Data.Repositories
 {
     public class BaixaOcorrenciaRepository: BaseRepository<BaixaOcorrencia , int>, IBaixaOcorrenciaRepository
     {
+        protected readonly DataContext dataContext;
+
+        public override List<BaixaOcorrencia> GetAll()
+        {
+            using (var dataContext = new DataContext())
+            {
+                return dataContext
+                    .Set<BaixaOcorrencia>()
+                    .Include(p => p.Ocorrencia) //JOIN
+
+                    .OrderBy(p => p.BaixaId)
+
+                    .ToList();
+            }
+        }
 
         public List<BaixaOcorrencia> GetBaixaOcorrenciaId(int ocorrenciaId)
         {

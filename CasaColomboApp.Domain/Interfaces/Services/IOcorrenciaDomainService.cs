@@ -11,10 +11,13 @@ namespace CasaColomboApp.Domain.Interfaces.Services
     {
         Ocorrencia Cadastrar(Ocorrencia ocorrencia, string matricula);
 
-       // Ocorrencia Atualizar(Ocorrencia ocorrencia);
-     
+        // Ocorrencia Atualizar(Ocorrencia ocorrencia);
+
 
         List<Ocorrencia> Consultar();
+
+        List<BaixaOcorrencia> ConsultarBaixa();
+
 
         void BaixaOcorrencia(int id, string matricula);
 

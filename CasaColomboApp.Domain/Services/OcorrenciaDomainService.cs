@@ -1,6 +1,7 @@
 ﻿using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Domain.Interfaces.Repositories;
 using CasaColomboApp.Domain.Interfaces.Services;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,9 @@ namespace CasaColomboApp.Domain.Services
         {
 
             ocorrencia.UsuarioId = matricula;
-
+            ocorrencia.Ativo = true;
             _ocorrenciaRepository?.Add(ocorrencia);
-           
+            ocorrencia = _ocorrenciaRepository?.GetById(ocorrencia.Id);
 
             return ocorrencia;
         }
@@ -35,20 +36,31 @@ namespace CasaColomboApp.Domain.Services
 
         //public Ocorrencia Atualizar(Ocorrencia ocorrencia)
         //{
-          // var registro  = ObterPorId(ocorrencia.Id);
-            //if (registro == null)
-              //  throw new ApplicationException("Ocorrência não encontrado para edição.");
+        // var registro  = ObterPorId(ocorrencia.Id);
+        //if (registro == null)
+        //  throw new ApplicationException("Ocorrência não encontrado para edição.");
 
-            
+
 
         //}
 
         public List<Ocorrencia> Consultar()
         {
-           var ocorrencia = _ocorrenciaRepository?.GetAll();
+            var ocorrencia = _ocorrenciaRepository?.GetAll(true);
 
             if (ocorrencia == null)
                 return new List<Ocorrencia>();
+
+            return ocorrencia.Where(o => o.Ativo).ToList();
+
+
+        }
+        public List<BaixaOcorrencia> ConsultarBaixa()
+        {
+            var ocorrencia = _baixaOcorrenciaRepository?.GetAll();
+
+            if (ocorrencia == null)
+                return new List<BaixaOcorrencia>();
 
             return ocorrencia.ToList();
 
@@ -65,6 +77,7 @@ namespace CasaColomboApp.Domain.Services
         public void BaixaOcorrencia(int  id, string matricula)
         {
             var ocorrencia = _ocorrenciaRepository.GetById(id);
+           
 
             if (ocorrencia == null)
             {
@@ -74,7 +87,8 @@ namespace CasaColomboApp.Domain.Services
 
             var baixaOcorrencia = new BaixaOcorrencia
             {
-                TipoOcorrenciaId = ocorrencia.Id,
+                OcorrenciaId = ocorrencia.Id,
+                TipoOcorrenciaId = ocorrencia.TipoOcorrenciaId,
                 NumeroNota = ocorrencia.NumeroNota,
                 CodProduto = ocorrencia.CodProduto,
                 UsuarioId = matricula,
@@ -86,11 +100,24 @@ namespace CasaColomboApp.Domain.Services
             };
 
             _baixaOcorrenciaRepository.Add(baixaOcorrencia);
+
+
+            var baxocorrencia = ObterPorId(id);
+
+            if (baxocorrencia == null)
+                throw new ApplicationException("Ocorrencia não encontrada para baixa.");
+
+            baxocorrencia.Ativo = false;
+            
+
+            _ocorrenciaRepository?.Update(baxocorrencia);
+
            
+
         }
 
-     
 
        
+
     }
 }

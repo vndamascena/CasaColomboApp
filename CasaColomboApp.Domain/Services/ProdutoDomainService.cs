@@ -70,6 +70,7 @@ namespace CasaColomboApp.Domain.Services
             {
                 // Cadastre o produto com os lotes
                 _produtoRepository.Add(produto); // Salva o produto no banco de dados
+                produto = _produtoRepository?.GetById(produto.Id);
                 return produto; // Retorna o produto após ser salvo, caso precise usar mais tarde
             }
             catch (Exception ex)

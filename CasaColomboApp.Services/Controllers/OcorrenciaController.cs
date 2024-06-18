@@ -53,6 +53,22 @@ namespace CasaColomboApp.Services.Controllers
             }
         }
 
+        [HttpGet("baixaOcorrencia")]
+        [ProducesResponseType(typeof(List<BaixaOcorrenciaGetModel>), 200)]
+        public IActionResult BaixaOcorrenciaAll()
+        {
+            try
+            {
+                var baixaOcorrencia = _ocorrenciaDomainService.ConsultarBaixa();
+                var baixaOcorrenciaModel = _mapper.Map<List<BaixaOcorrenciaGetModel>>(baixaOcorrencia);
+                return Ok(baixaOcorrenciaModel);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { erro = e.Message });
+            }
+        }
+
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(OcorrenciaGetModel), 200)]
@@ -133,21 +149,7 @@ namespace CasaColomboApp.Services.Controllers
             }
         }
 
-        [HttpGet("baixaOcorrencia")]
-        [ProducesResponseType(typeof(BaixaOcorrenciaGetModel), 200)]
-        public IActionResult GetBaixaOcorrenciaAll()
-        {
-            try
-            {
-                var baixaOcorrencia = _baixaOcorrenciaRepository.GetAll();
-                var baixaOcorrenciaModel = _mapper.Map<List<BaixaOcorrenciaGetModel>>(baixaOcorrencia);
-                return Ok(baixaOcorrenciaModel);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new { erro = e.Message });
-            }
-        }
+       
 
 
         private async Task<bool> AutenticarUsuario(string matricula, string senha)

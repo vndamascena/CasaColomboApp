@@ -11,8 +11,8 @@ namespace CasaColomboApp.Domain.Entities
     {
         public int Id { get; set; }
         public int CodProduto { get; set; }
-        
-       
+
+        public bool Ativo { get; set; }
         public string Produto { get; set; }
         public string Fornecedo { get; set; }
         public string NumeroNota { get; set; }

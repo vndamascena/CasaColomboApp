@@ -21,7 +21,8 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(t => t.CodProduto).HasColumnName("CODPRODUTO").HasMaxLength(7);
 
-
+            builder.Property(p => p.Ativo).HasColumnName("ATIVO").IsRequired();
+            
             builder.Property(t => t.Produto).HasColumnName("PRODUTO").HasMaxLength(70);
 
             builder.Property(t => t.Fornecedo).HasColumnName("FORNECEDO").HasMaxLength(70);

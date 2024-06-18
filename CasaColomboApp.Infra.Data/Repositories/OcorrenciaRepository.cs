@@ -14,7 +14,21 @@ namespace CasaColomboApp.Infra.Data.Repositories
     {
         protected readonly DataContext dataContext;
 
+
         public override List<Ocorrencia> GetAll()
+        {
+            using (var dataContext = new DataContext())
+            {
+                return dataContext
+                    .Set<Ocorrencia>()
+                    .Include(p => p.TipoOcorrencia) //JOIN
+
+                    .OrderBy(p => p.Produto)
+
+                    .ToList();
+            }
+        }
+        public  List<Ocorrencia> GetAll(bool ativo)
         {
             using (var dataContext = new DataContext())
             {

@@ -9,6 +9,6 @@ namespace CasaColomboApp.Domain.Interfaces.Repositories
 {
     public interface IOcorrenciaRepository : IBaseRepository<Ocorrencia, int>
     {
-        
+        List<Ocorrencia> GetAll(bool ativo);
     }
 }

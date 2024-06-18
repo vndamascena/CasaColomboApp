@@ -20,23 +20,24 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(v => v.BaixaId).HasColumnName("ID");
 
-            builder.Property(v => v.TipoOcorrenciaId).HasColumnName("TIPOOCORRENCIAID").IsRequired();
+            builder.Property(v => v.TipoOcorrenciaId).HasColumnName("TIPOOCORRENCIAID");
 
             builder.Property(v => v.CodProduto).HasColumnName("CODPRODUTO");
 
             builder.Property(v => v.Produto).HasColumnName("PRODUTO");
-            builder.Property(v => v.Fornecedo).HasColumnName("NUMEROLOTE");
+            builder.Property(v => v.Fornecedo).HasColumnName("FORNECEDO");
+            
 
             builder.Property(v => v.NumeroNota).HasColumnName("NUMERONOTA");
-
+            builder.Property(v => v.OcorrenciaId).HasColumnName("OCORRENCIAID");
             builder.Property(v => v.UsuarioId).HasColumnName("USUARIOID");
             builder.Property(v => v.Observacao).HasColumnName("OBSERVACAO");
             builder.Property(v => v.DataTime).HasColumnName("DATA");
 
 
             builder.HasOne(v => v.Ocorrencia) // VENDA TEM 1 LOTE
-                  .WithMany() // LOTE TEM N VENDAS
-                  .HasForeignKey(v => v.TipoOcorrenciaId) // Chave estrangeira
+                  .WithMany()
+                  .HasForeignKey(v => v.OcorrenciaId) // Chave estrangeira
                   .OnDelete(DeleteBehavior.Cascade); // Excluir em cascata
         }
     }

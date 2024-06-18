@@ -45,7 +45,8 @@ namespace CasaColomboApp.Services.Mappings
                {
 
                    entity.DataTime = DateTime.Now;
-                   
+                   entity.Ativo = true;
+
 
                });
 

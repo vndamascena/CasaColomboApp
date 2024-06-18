@@ -4,6 +4,7 @@ using CasaColomboApp.Infra.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240618145425_upbaixaocorrencia")]
+    partial class upbaixaocorrencia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,9 +61,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("OCORRENCIAID");
 
-                    b.Property<int?>("OcorrenciaId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Produto")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -78,8 +78,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.HasKey("BaixaId");
 
                     b.HasIndex("OcorrenciaId");
-
-                    b.HasIndex("OcorrenciaId1");
 
                     b.ToTable("BAIXAOCORRENCIA", (string)null);
                 });
@@ -231,10 +229,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnName("ID");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("bit")
-                        .HasColumnName("ATIVO");
 
                     b.Property<int>("CodProduto")
                         .HasMaxLength(7)
@@ -454,10 +448,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CasaColomboApp.Domain.Entities.Ocorrencia", null)
-                        .WithMany("BaixaOcorrencias")
-                        .HasForeignKey("OcorrenciaId1");
-
                     b.Navigation("Ocorrencia");
                 });
 
@@ -543,11 +533,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Lote", b =>
                 {
                     b.Navigation("Vendas");
-                });
-
-            modelBuilder.Entity("CasaColomboApp.Domain.Entities.Ocorrencia", b =>
-                {
-                    b.Navigation("BaixaOcorrencias");
                 });
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Produto", b =>

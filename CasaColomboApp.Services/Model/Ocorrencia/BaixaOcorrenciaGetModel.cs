@@ -1,4 +1,6 @@
-﻿using CasaColomboApp.Services.Model.TipoOcorrencia;
+﻿using CasaColomboApp.Domain.Entities;
+using CasaColomboApp.Services.Model.Ocorrencias;
+using CasaColomboApp.Services.Model.TipoOcorrencia;
 
 namespace CasaColomboApp.Services.Model.Ocorrencia
 {
@@ -12,9 +14,12 @@ namespace CasaColomboApp.Services.Model.Ocorrencia
         public DateTime DataTime { get; set; }
         public string Observacao { get; set; }
         public string UsuarioId { get; set; }
-        public TipoOcorrenciaGetModel? TipoOcorrencia { get; set; }
+        public int TipoOcorrenciaId { get; set; }
+        public int OcorrenciaId { get; set; }
+      
 
-       
+
+
 
     }
 }
