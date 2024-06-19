@@ -77,12 +77,15 @@ namespace CasaColomboApp.Domain.Services
         public void BaixaOcorrencia(int  id, string matricula)
         {
             var ocorrencia = _ocorrenciaRepository.GetById(id);
-           
 
             if (ocorrencia == null)
             {
+                throw new ApplicationException("Ocorrência não encontrada.");
+            }
 
-                throw new ApplicationException("Ocorrência não encontrado.");
+            if (!ocorrencia.Ativo)
+            {
+                throw new ApplicationException("Não é possível dar baixa em uma ocorrência inativa.");
             }
 
             var baixaOcorrencia = new BaixaOcorrencia
@@ -96,23 +99,15 @@ namespace CasaColomboApp.Domain.Services
                 Produto = ocorrencia.Produto,
                 Observacao = ocorrencia.Observacao,
                 DataTime = DateTime.Now
-                
             };
 
             _baixaOcorrenciaRepository.Add(baixaOcorrencia);
 
+            ocorrencia.Ativo = false;
 
-            var baxocorrencia = ObterPorId(id);
+            _ocorrenciaRepository.Update(ocorrencia);
 
-            if (baxocorrencia == null)
-                throw new ApplicationException("Ocorrencia não encontrada para baixa.");
 
-            baxocorrencia.Ativo = false;
-            
-
-            _ocorrenciaRepository?.Update(baxocorrencia);
-
-           
 
         }
 
