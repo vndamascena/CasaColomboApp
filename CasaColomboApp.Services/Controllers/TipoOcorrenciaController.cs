@@ -3,6 +3,7 @@ using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Domain.Interfaces.Services;
 using CasaColomboApp.Domain.Services;
 using CasaColomboApp.Services.Model.Fornecedor;
+using CasaColomboApp.Services.Model.Ocorrencias;
 using CasaColomboApp.Services.Model.Produto;
 using CasaColomboApp.Services.Model.TipoOcorrencia;
 using Microsoft.AspNetCore.Http;
@@ -110,7 +111,26 @@ namespace CasaColomboApp.Services.Controllers
         }
 
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TipoOcorrenciaGetModel), 200)]
+        public IActionResult GetById(int id)
+        {
+            try
+            {
+                // Consulta a ocorrencia pelo ID
+                var ocorrencia = _tipoOcorrenciaDomainService.ObterPorId(id);
 
+                // Mapeia a ocorrencia para o modelo de resposta 
+                var ocorrenciaModel = _mapper.Map<TipoOcorrenciaGetModel>(ocorrencia);
+
+                return Ok(ocorrenciaModel);
+            }
+            catch (Exception e)
+            {
+                //HTTP 500 (INTERNAL SERVER ERROR)
+                return StatusCode(500, new { e.Message });
+            }
+        }
 
     }
 }
