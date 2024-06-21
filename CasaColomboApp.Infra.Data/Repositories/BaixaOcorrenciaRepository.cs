@@ -34,7 +34,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
             {
                 return dataContext.Set< BaixaOcorrencia>()
                            .Include(v => v.Ocorrencia) // Inclui o lote relacionado à venda
-                           .Where(v => v.TipoOcorrenciaId == ocorrenciaId)
+                           .Where(v => v.OcorrenciaId == ocorrenciaId)
                            .ToList(); ;
 
             }

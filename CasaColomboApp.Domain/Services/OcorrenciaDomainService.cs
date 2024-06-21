@@ -26,6 +26,7 @@ namespace CasaColomboApp.Domain.Services
         {
 
             ocorrencia.UsuarioId = matricula;
+            ocorrencia.DataTime = DateTime.Now;
             ocorrencia.Ativo = true;
             _ocorrenciaRepository?.Add(ocorrencia);
             ocorrencia = _ocorrenciaRepository?.GetById(ocorrencia.Id);

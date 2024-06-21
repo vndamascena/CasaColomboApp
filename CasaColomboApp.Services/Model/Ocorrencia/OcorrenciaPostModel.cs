@@ -16,7 +16,6 @@ namespace CasaColomboApp.Services.Model.Ocorrencias
         public string NumeroNota { get; set; }
        
         public string Observacao { get; set; }
-        public DateTime DataTime { get; set; }
 
 
         [Required(ErrorMessage = "Por favor, informeo ID da ocorrencia para o produto.")]
