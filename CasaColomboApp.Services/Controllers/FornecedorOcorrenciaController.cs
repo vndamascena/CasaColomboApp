@@ -1,61 +1,59 @@
 ﻿using AutoMapper;
 using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Domain.Interfaces.Services;
-using CasaColomboApp.Domain.Services;
-using CasaColomboApp.Services.Model.Categoria;
 using CasaColomboApp.Services.Model.Fornecedor;
+using CasaColomboApp.Services.Model.Fornecedor.FornecedorOcorrencia;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace CasaColomboApp.Services.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class FornecedorController : ControllerBase
+    public class FornecedorOcorrenciaController : ControllerBase
     {
-        private readonly IFornecedorDomainService? _fornecedorDomainService;
+        private readonly IFornecedorOcorrenciaDomainService? _fornecedorOcorrenciaDomainService;
         private readonly IMapper? _mapper;
-        public FornecedorController
+        public FornecedorOcorrenciaController
 
-        (IFornecedorDomainService? fornecedorDomainService, IMapper? mapper)
+        (IFornecedorOcorrenciaDomainService? fornecedorOcorrenciaDomainService, IMapper? mapper)
 
         {
-            _fornecedorDomainService = fornecedorDomainService;
+            _fornecedorOcorrenciaDomainService = fornecedorOcorrenciaDomainService;
             _mapper = mapper;
         }
 
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<FornecedorGetModel>), 200)]
+        [ProducesResponseType(typeof(List<FornecedorOcorrenciaGetModel>), 200)]
         public IActionResult GetAll()
         {
-            var fornecedores = _fornecedorDomainService?.Consultar();
-            var result = _mapper?.Map<List<FornecedorGetModel>>(fornecedores);
+            var fornecedores = _fornecedorOcorrenciaDomainService?.Consultar();
+            var result = _mapper?.Map<List<FornecedorOcorrenciaGetModel>>(fornecedores);
             return Ok(result);
         }
 
         [HttpPut]
-        public IActionResult PutModel([FromBody] FornecedorPutModel model)
+        public IActionResult PutModel([FromBody] FornecedorOcorrenciaPutModel model)
         {
             try
             {
                 //capturando os dados que serão atualizados do fornecedor
-                var fornecedor = new Fornecedor
+                var fornecedor = new FornecedorOcorrencia
                 {
                     Id = model.Id,
                     Nome = model.Nome,
-                    Cnpj = model.Cnpj,
+                    
 
                 };
 
                 //atualizando o fornecedor
-                var result = _fornecedorDomainService?.Atualizar(fornecedor);
+                var result = _fornecedorOcorrenciaDomainService?.Atualizar(fornecedor);
 
                 //HTTP 201 (OK)
-                return StatusCode(200, _mapper?.Map<FornecedorGetModel>(result));
+                return StatusCode(200, _mapper?.Map<FornecedorOcorrenciaGetModel>(result));
             }
             catch (ApplicationException e)
             {
@@ -68,20 +66,20 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { e.Message });
             }
 
-            
+
         }
         [HttpPost]
-        [ProducesResponseType(typeof(FornecedorGetModel), 201)]
-        public IActionResult PostModel([FromBody] FornecedorPostModel model)
+        [ProducesResponseType(typeof(FornecedorOcorrenciaGetModel), 201)]
+        public IActionResult PostModel([FromBody] FornecedorOcorrenciaPostModel model)
         {
             try
             {
                 //cadastrando o produto
-                var fornecedor = _mapper?.Map<Fornecedor>(model);
-                var result = _fornecedorDomainService?.Cadastrar(fornecedor);
+                var fornecedor = _mapper?.Map<FornecedorOcorrencia>(model);
+                var result = _fornecedorOcorrenciaDomainService?.Cadastrar(fornecedor);
 
                 //HTTP 201 (CREATED)
-                return StatusCode(201, _mapper.Map<FornecedorGetModel>(result));
+                return StatusCode(201, _mapper.Map<FornecedorOcorrenciaGetModel>(result));
             }
             catch (Exception e)
             {
@@ -95,7 +93,7 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                var result = _fornecedorDomainService?.Delete(id);
+                var result = _fornecedorOcorrenciaDomainService?.Delete(id);
                 return Ok(result);
             }
             catch (ApplicationException e)
@@ -111,12 +109,12 @@ namespace CasaColomboApp.Services.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(FornecedorGetModel), 200)]
+        [ProducesResponseType(typeof(FornecedorOcorrenciaGetModel), 200)]
         public IActionResult GetById(int id)
         {
             try
             {
-                var result = _mapper?.Map<FornecedorGetModel>(_fornecedorDomainService?.ObterPorId(id));
+                var result = _mapper?.Map<FornecedorOcorrenciaGetModel>(_fornecedorOcorrenciaDomainService?.ObterPorId(id));
                 return Ok(result);
             }
             catch (Exception e)
@@ -125,6 +123,5 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { e.Message });
             }
         }
-
     }
 }

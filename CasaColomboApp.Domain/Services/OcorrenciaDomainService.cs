@@ -24,7 +24,7 @@ namespace CasaColomboApp.Domain.Services
 
         public Ocorrencia Cadastrar(Ocorrencia ocorrencia, string matricula)
         {
-
+            
             ocorrencia.UsuarioId = matricula;
             ocorrencia.DataTime = DateTime.Now;
             ocorrencia.Ativo = true;
@@ -96,7 +96,7 @@ namespace CasaColomboApp.Domain.Services
                 NumeroNota = ocorrencia.NumeroNota,
                 CodProduto = ocorrencia.CodProduto,
                 UsuarioId = matricula,
-                Fornecedo = ocorrencia.Fornecedo,
+                FornecedorOcorrenciaId = ocorrencia.FornecedorOcorrenciaId,
                 Produto = ocorrencia.Produto,
                 Observacao = ocorrencia.Observacao,
                 DataTime = DateTime.Now

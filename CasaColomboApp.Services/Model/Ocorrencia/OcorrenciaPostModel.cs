@@ -10,9 +10,9 @@ namespace CasaColomboApp.Services.Model.Ocorrencias
 
         [Required(ErrorMessage = "Informe o nome do produto.")]
         [MinLength(1, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(50, ErrorMessage = "Informe no maximo {1} carateres.")]
+        [MaxLength(50, ErrorMessage = "Informe no maximo {1} carateres.")] 
         public string Produto { get; set; }
-        public string Fornecedo { get; set; }
+        public int? FornecedorOcorrenciaId { get; set; }
         public string NumeroNota { get; set; }
        
         public string Observacao { get; set; }

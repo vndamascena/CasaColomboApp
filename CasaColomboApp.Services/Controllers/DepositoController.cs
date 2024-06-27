@@ -2,11 +2,13 @@
 using CasaColomboApp.Domain.Interfaces.Services;
 using CasaColomboApp.Services.Model.Categoria;
 using CasaColomboApp.Services.Model.Deposito;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CasaColomboApp.Services.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepositoController : ControllerBase

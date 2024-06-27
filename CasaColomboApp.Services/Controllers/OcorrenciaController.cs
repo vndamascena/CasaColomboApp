@@ -12,9 +12,11 @@ using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Services.Model.Ocorrencia;
 using CasaColomboApp.Domain.Interfaces.Repositories;
 using CasaColomboApp.Infra.Data.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CasaColomboApp.Services.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OcorrenciaController : ControllerBase

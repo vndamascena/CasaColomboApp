@@ -14,7 +14,7 @@ namespace CasaColomboApp.Domain.Entities
 
         public bool Ativo { get; set; }
         public string Produto { get; set; }
-        public string Fornecedo { get; set; }
+        public int FornecedorOcorrenciaId { get; set; }
         public string NumeroNota { get; set; }
         public DateTime DataTime { get; set; }
         public string Observacao { get; set; }
@@ -23,6 +23,7 @@ namespace CasaColomboApp.Domain.Entities
 
         public List<BaixaOcorrencia> BaixaOcorrencias {  get; set; }
         public TipoOcorrencia? TipoOcorrencia { get; set; }
+        public FornecedorOcorrencia? FornecedorOcorrencia { get; set; }
 
         public Ocorrencia() 
         {

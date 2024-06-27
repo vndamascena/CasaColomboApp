@@ -6,11 +6,13 @@ using CasaColomboApp.Services.Model.Fornecedor;
 using CasaColomboApp.Services.Model.Ocorrencias;
 using CasaColomboApp.Services.Model.Produto;
 using CasaColomboApp.Services.Model.TipoOcorrencia;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CasaColomboApp.Services.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TipoOcorrenciaController : ControllerBase

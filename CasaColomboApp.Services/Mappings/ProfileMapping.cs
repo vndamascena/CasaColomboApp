@@ -3,6 +3,7 @@ using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Services.Model.Categoria;
 using CasaColomboApp.Services.Model.Deposito;
 using CasaColomboApp.Services.Model.Fornecedor;
+using CasaColomboApp.Services.Model.Fornecedor.FornecedorOcorrencia;
 using CasaColomboApp.Services.Model.Ocorrencia;
 using CasaColomboApp.Services.Model.Ocorrencias;
 using CasaColomboApp.Services.Model.Produto;
@@ -53,7 +54,15 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<FornecedorPostModel, Fornecedor>()
                .AfterMap((model, entity) =>
                {
-                   
+
+                   entity.DataHoraCadastro = DateTime.Now;
+                   entity.DataHoraAlteracao = DateTime.Now;
+
+               });
+            CreateMap<FornecedorOcorrenciaPostModel, FornecedorOcorrencia>()
+               .AfterMap((model, entity) =>
+               {
+
                    entity.DataHoraCadastro = DateTime.Now;
                    entity.DataHoraAlteracao = DateTime.Now;
 
@@ -64,10 +73,13 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<Categoria, CategoriaGetModel>();
 
            
-            CreateMap<Ocorrencia, OcorrenciaGetModel>().ForMember(dest => dest.TipoOcorrencia, opt => opt.MapFrom(src => src.TipoOcorrencia));
+            CreateMap<Ocorrencia, OcorrenciaGetModel>()
+                .ForMember(dest => dest.TipoOcorrencia, opt => opt.MapFrom(src => src.TipoOcorrencia))
+                .ForMember(dest => dest.FornecedorOcorrencia, opt => opt.MapFrom(src => src.FornecedorOcorrencia));
 
 
             CreateMap<Fornecedor, FornecedorGetModel>();
+            CreateMap<FornecedorOcorrencia, FornecedorOcorrenciaGetModel>();
 
             CreateMap<Produto, ProdutoGetModel>()
              .ForMember(dest => dest.Lote, opt => opt.MapFrom(src => src.Lote));
@@ -97,7 +109,8 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<OcorrenciaPostModel, Ocorrencia>();
             CreateMap<Ocorrencia, OcorrenciaPostModel>();
             CreateMap<TipoOcorrencia, TipoOcorrenciaGetModel>();
-
+            CreateMap<FornecedorOcorrencia, FornecedorOcorrenciaPostModel>();
+            CreateMap<FornecedorOcorrenciaPostModel, FornecedorOcorrencia>();
 
 
 

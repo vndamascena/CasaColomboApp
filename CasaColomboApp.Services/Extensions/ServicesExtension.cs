@@ -14,7 +14,7 @@ namespace CasaColomboApp.Services.Extensions
             services.AddTransient<IFornecedorDomainService, FornecedorDomainService>();
             services.AddTransient<ICategoriaDomainService, CategoriaDomainService>();
             services.AddTransient<IProdutoDomainService, ProdutoDomainService>();
-            
+            services.AddTransient<IFornecedorOcorrenciaDomainService, FornecedorOcorrenciaDomainService>();
             services.AddTransient<IDepositoDomainService, DepositoDomainService>();
             services.AddTransient<IOcorrenciaDomainService, OcorrenciaDomainService>();
             services.AddTransient<ITipoOcorrenciaDomainService, TipoOcorrenciaDomainService>();
@@ -30,6 +30,7 @@ namespace CasaColomboApp.Services.Extensions
             services.AddTransient<ITipoOcorrenciaRepository, TipoOcorrenciaRepository>();
             services.AddTransient<IOcorrenciaRepository, OcorrenciaRepository>();
             services.AddTransient<IBaixaOcorrenciaRepository, BaixaOcorrenciaRepository>();
+            services.AddTransient<IFornecedorOcorrenciaRepository, FornecedorOcorrenciaRepository>();
 
         }
     }
