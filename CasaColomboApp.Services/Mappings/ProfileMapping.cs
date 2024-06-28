@@ -4,6 +4,7 @@ using CasaColomboApp.Services.Model.Categoria;
 using CasaColomboApp.Services.Model.Deposito;
 using CasaColomboApp.Services.Model.Fornecedor;
 using CasaColomboApp.Services.Model.Fornecedor.FornecedorOcorrencia;
+using CasaColomboApp.Services.Model.Loja;
 using CasaColomboApp.Services.Model.Ocorrencia;
 using CasaColomboApp.Services.Model.Ocorrencias;
 using CasaColomboApp.Services.Model.Produto;
@@ -75,7 +76,8 @@ namespace CasaColomboApp.Services.Mappings
            
             CreateMap<Ocorrencia, OcorrenciaGetModel>()
                 .ForMember(dest => dest.TipoOcorrencia, opt => opt.MapFrom(src => src.TipoOcorrencia))
-                .ForMember(dest => dest.FornecedorOcorrencia, opt => opt.MapFrom(src => src.FornecedorOcorrencia));
+                .ForMember(dest => dest.FornecedorOcorrencia, opt => opt.MapFrom(src => src.FornecedorOcorrencia))
+                .ForMember(dest => dest.Loja, opt => opt.MapFrom(src => src.Loja));
 
 
             CreateMap<Fornecedor, FornecedorGetModel>();
@@ -111,6 +113,12 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<TipoOcorrencia, TipoOcorrenciaGetModel>();
             CreateMap<FornecedorOcorrencia, FornecedorOcorrenciaPostModel>();
             CreateMap<FornecedorOcorrenciaPostModel, FornecedorOcorrencia>();
+            CreateMap<Loja, LojaGetModel>();
+            CreateMap<Loja, LojaPostModel>();
+            CreateMap<LojaGetModel, Loja>();
+            CreateMap<LojaPostModel, Loja>();
+
+
 
 
 

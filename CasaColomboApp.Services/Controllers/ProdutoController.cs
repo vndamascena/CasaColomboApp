@@ -15,7 +15,7 @@ using Microsoft.Data.SqlClient;
 
 namespace CasaColomboApp.Services.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ProdutoController : ControllerBase

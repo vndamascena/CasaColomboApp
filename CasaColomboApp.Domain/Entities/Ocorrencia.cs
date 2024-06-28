@@ -19,7 +19,10 @@ namespace CasaColomboApp.Domain.Entities
         public DateTime DataTime { get; set; }
         public string Observacao { get; set; }
         public string UsuarioId { get; set; }
+        public int LojaId { get; set; }
         public int TipoOcorrenciaId { get; set; }
+
+        public Loja? Loja { get; set; }
 
         public List<BaixaOcorrencia> BaixaOcorrencias {  get; set; }
         public TipoOcorrencia? TipoOcorrencia { get; set; }

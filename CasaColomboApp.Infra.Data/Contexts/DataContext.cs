@@ -13,7 +13,7 @@ namespace CasaColomboApp.Infra.Data.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Substitua a string de conexão padrão pelo MySQL
-            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BDCasaColomboDeposito;Integrated Security=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BDcasacolombo;Integrated Security=True;");
 
         }
 

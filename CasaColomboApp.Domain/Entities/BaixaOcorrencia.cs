@@ -12,7 +12,7 @@ namespace CasaColomboApp.Domain.Entities
         public int CodProduto { get; set; }
         public int OcorrenciaId { get; set; }
         public int TipoOcorrenciaId { get; set; }
-       
+        public int LojaId { get; set; }
         public string Produto { get; set; }
         public int FornecedorOcorrenciaId { get; set; }
         public string NumeroNota { get; set; }

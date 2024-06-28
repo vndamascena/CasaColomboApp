@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CasaColomboApp.Services.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class TipoOcorrenciaController : ControllerBase

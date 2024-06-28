@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CasaColomboApp.Services.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class OcorrenciaController : ControllerBase
