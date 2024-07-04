@@ -26,16 +26,21 @@ namespace CasaColomboApp.Domain.Services
 
             if (registro == null)
                 throw new ArgumentNullException("Fornecedor nao encontrado para edição");
-            var forncedorOcorrenciaAtualizado = new FornecedorOcorrencia
-            {
-                Id = fornecedorOcorrencia.Id,
-                Nome = fornecedorOcorrencia.Nome,
-                DataHoraCadastro = registro.DataHoraCadastro,
-                DataHoraAlteracao = DateTime.Now,
-            };
+          
+                registro.Id = fornecedorOcorrencia.Id;
+                registro.Nome = fornecedorOcorrencia.Nome;
+                registro.Vendedor = fornecedorOcorrencia.Vendedor;
+                registro.ForneProdu = fornecedorOcorrencia.ForneProdu;
+                registro.Tipo = fornecedorOcorrencia.Tipo;
+                registro.TelVen = fornecedorOcorrencia.TelVen;
+                registro.TelFor = fornecedorOcorrencia.TelFor;
+                registro.DataHoraAlteracao = DateTime.Now;
 
-            _fornecedorOcorrenciaRepository?.Update(forncedorOcorrenciaAtualizado);
-            return _fornecedorOcorrenciaRepository?.GetById(fornecedorOcorrencia.Id.Value);
+
+            _fornecedorOcorrenciaRepository?.Update(registro);
+                        
+
+            return registro;
         }
 
         public FornecedorOcorrencia Cadastrar(FornecedorOcorrencia fornecedorOcorrencia)

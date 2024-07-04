@@ -23,7 +23,11 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(f => f.Nome).HasColumnName("NOME").HasMaxLength(15).IsRequired();
 
-           
+            builder.Property(f => f.Vendedor).HasColumnName("VENDEDOR");
+            builder.Property(f => f.ForneProdu).HasColumnName("FORNECEDORPRODUTO");
+            builder.Property(f => f.Tipo).HasColumnName("TIPO");
+            builder.Property(f => f.TelFor).HasColumnName("TELFORNECEDOR");
+            builder.Property(f => f.TelVen).HasColumnName("TELVENDEDOR");
 
             builder.Property(p => p.DataHoraCadastro).HasColumnName("DATAHORACADASTRO").IsRequired();
 

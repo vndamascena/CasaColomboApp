@@ -3,9 +3,11 @@ using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Domain.Interfaces.Services;
 using CasaColomboApp.Services.Model.Fornecedor;
 using CasaColomboApp.Services.Model.Fornecedor.FornecedorOcorrencia;
+using CasaColomboApp.Services.Model.Produto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 
 namespace CasaColomboApp.Services.Controllers
 {
@@ -38,14 +40,30 @@ namespace CasaColomboApp.Services.Controllers
         [HttpPut]
         public IActionResult PutModel([FromBody] FornecedorOcorrenciaPutModel model)
         {
+           
+
             try
             {
+
+
+                if (model == null)
+                {
+                    return BadRequest("Model cannot be null.");
+                }
                 //capturando os dados que serão atualizados do fornecedor
                 var fornecedor = new FornecedorOcorrencia
                 {
+
                     Id = model.Id,
                     Nome = model.Nome,
-                    
+                    Vendedor = model.Vendedor,
+                    ForneProdu = model.ForneProdu,
+                    Tipo = model.Tipo,
+                    TelVen = model.TelVen,
+                    TelFor = model.TelFor,
+                    DataHoraAlteracao = DateTime.Now
+
+
 
                 };
 
@@ -53,7 +71,11 @@ namespace CasaColomboApp.Services.Controllers
                 var result = _fornecedorOcorrenciaDomainService?.Atualizar(fornecedor);
 
                 //HTTP 201 (OK)
-                return StatusCode(200, _mapper?.Map<FornecedorOcorrenciaGetModel>(result));
+                return StatusCode(201, new
+                {
+                    Message = "Fornecedor atualizado com sucesso",
+                    result
+                });
             }
             catch (ApplicationException e)
             {
@@ -79,7 +101,11 @@ namespace CasaColomboApp.Services.Controllers
                 var result = _fornecedorOcorrenciaDomainService?.Cadastrar(fornecedor);
 
                 //HTTP 201 (CREATED)
-                return StatusCode(201, _mapper.Map<FornecedorOcorrenciaGetModel>(result));
+                return StatusCode(201, new
+                {
+                    Message = "Fornecedor cadastrado com sucesso",
+                    result
+                });
             }
             catch (Exception e)
             {
