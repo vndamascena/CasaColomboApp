@@ -47,25 +47,25 @@ namespace CasaColomboApp.Services.Controllers
                 return BadRequest("Nenhuma imagem foi enviada.");
             }
 
-            // Generate a unique filename using an auto-incrementing integer
+            
             string fileName = $"{_nextImageId}_{Path.GetFileName(imageFile.FileName)}";
-            _nextImageId++; // Increment the counter for the next image
+            _nextImageId++; 
 
             string filePath = Path.Combine(_imageFolderPath, fileName);
 
-            // Ensure the destination directory exists
+            
             if (!Directory.Exists(_imageFolderPath))
             {
                 Directory.CreateDirectory(_imageFolderPath);
             }
 
-            // Save the image to the server
+            
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await imageFile.CopyToAsync(stream);
             }
 
-            // Save the relative image path in the database
+            
             string relativeFilePath = $"/images/{fileName}";
             await SalvarCaminhoImagemNoBanco(produtoId, relativeFilePath);
 
@@ -74,7 +74,7 @@ namespace CasaColomboApp.Services.Controllers
 
         private async Task SalvarCaminhoImagemNoBanco(int produtoId, string relativeFilePath)
         {
-            string connectionString = @"Data Source=SQL8010.site4now.net;Initial Catalog=db_aa8a78_casacol;User Id=db_aa8a78_casacol_admin;Password=colombo24";
+            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BDcasacolombo;Integrated Security=True;";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = "UPDATE PRODUTO SET IMAGEMURL = @FilePath WHERE ID = @ID";

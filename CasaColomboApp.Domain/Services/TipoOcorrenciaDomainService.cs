@@ -59,7 +59,7 @@ namespace CasaColomboApp.Domain.Services
         {
             var tipoOcorrencia = ObterPorId(id);
             if (tipoOcorrencia == null)
-                throw new ApplicationException("Tipo de serviçonao encontrado.");
+                throw new ApplicationException("Tipo de ocorrencia nao encontrado.");
 
             _tipoOcorrenciaRepository?.Delete(tipoOcorrencia);
             return tipoOcorrencia;
