@@ -14,7 +14,7 @@ namespace CasaColomboApp.Domain.Entities
         public string? Codigo { get; set; }
         public string NumeroLote { get; set; } // Identificador único do lote
         public int QuantidadeLote { get; set; }
-
+        public bool Ativo { get; set; }
         public string? NomeProduto { get; set; }
         public string Ala {  get; set; }
         public DateTime DataUltimaAlteracao { get; set; }

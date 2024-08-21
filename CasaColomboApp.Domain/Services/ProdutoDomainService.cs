@@ -106,6 +106,7 @@ namespace CasaColomboApp.Domain.Services
                         Ala = lote.Ala,
                         Codigo = lote.Codigo,
                         NomeProduto = lote.NomeProduto,
+                        Ativo = lote.Ativo,
                     });
                 }
                 else
@@ -117,7 +118,8 @@ namespace CasaColomboApp.Domain.Services
                         QuantidadeLote = lote.QuantidadeLote,
                         Ala = lote.Ala,
                         Codigo = lote.Codigo,
-                        NomeProduto = lote.NomeProduto
+                        NomeProduto = lote.NomeProduto,
+                        Ativo= lote.Ativo,
 
 
 
@@ -218,7 +220,7 @@ namespace CasaColomboApp.Domain.Services
         public List<Lote> ConsultarLote(int produtoId)
         {
             var lotes = _produtoRepository.GetLotesByProdutoId(produtoId);
-            return lotes;
+            return lotes.Where(l => l.Ativo).ToList();
         }
 
         public void ExcluirLote(int produtoId, int loteId)
@@ -235,8 +237,10 @@ namespace CasaColomboApp.Domain.Services
                 throw new ApplicationException("O lote não pertence ao produto especificado.");
             }
 
-            // Remove o lote do banco de dados
-            _loteRepository?.Remover(loteId);
+            // Inativa o lote em vez de removê-lo
+            lote.Ativo = false;
+            _loteRepository.Update(lote);
+
         }
 
         public void ConfirmarVenda(int loteId, int quantidadeVendida, string matricula)

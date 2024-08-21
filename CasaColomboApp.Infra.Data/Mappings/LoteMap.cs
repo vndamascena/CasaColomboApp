@@ -25,7 +25,7 @@ namespace CasaColomboApp.Infra.Data.Mappings
             builder.Property(l => l.NumeroLote).HasColumnName("NUMERO LOTE").HasMaxLength(10);
 
             builder.Property(l => l.QuantidadeLote).HasColumnName("QUANTIDADE");
-
+            builder.Property(l => l.Ativo).HasColumnName("ATIVO").IsRequired();
 
             builder.Property(l => l.Ala).HasColumnName("ALA");
 

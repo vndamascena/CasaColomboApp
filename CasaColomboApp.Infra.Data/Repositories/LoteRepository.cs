@@ -1,6 +1,7 @@
 ﻿using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Domain.Interfaces.Repositories;
 using CasaColomboApp.Infra.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,15 @@ namespace CasaColomboApp.Infra.Data.Repositories
     {
         public List<Lote> GetAll(bool ativo)
         {
-            throw new NotImplementedException();
+            using (var dataContext = new DataContext())
+            {
+                return dataContext
+                   .Set<Lote>()
+                   
+                   .OrderBy(p => p.Id)
+                   .ToList();
+
+            }
         }
 
         public Lote ObterPorId(int id)
