@@ -95,23 +95,22 @@ namespace CasaColomboApp.Domain.Services
             var lotesAtualizados = new List<Lote>();
             foreach (var lote in produto.Lote)
             {
-                // Se o lote tiver um ID válido, mantenha o ID ao construir a lista de lotes atualizados
-                if (lote.Id != 0)
+                var loteExistente = _loteRepository.ObterPorId(lote.Id);
+
+                if (loteExistente != null)
                 {
-                    lotesAtualizados.Add(new Lote
-                    {
-                        Id = lote.Id, // Mantém o ID do lote original
-                        NumeroLote = lote.NumeroLote,
-                        QuantidadeLote = lote.QuantidadeLote,
-                        Ala = lote.Ala,
-                        Codigo = lote.Codigo,
-                        NomeProduto = lote.NomeProduto,
-                        Ativo = lote.Ativo,
-                    });
+                    // Atualiza o lote existente, mantendo o status Ativo
+                    loteExistente.NumeroLote = lote.NumeroLote;
+                    loteExistente.QuantidadeLote = lote.QuantidadeLote;
+                    loteExistente.Ala = lote.Ala;
+                    loteExistente.Codigo = lote.Codigo;
+                    loteExistente.NomeProduto = lote.NomeProduto;
+
+                    lotesAtualizados.Add(loteExistente);
                 }
                 else
                 {
-                    // Se o lote não tiver um ID válido, cria um novo lote sem ID
+                    // Adiciona um novo lote com status Ativo
                     lotesAtualizados.Add(new Lote
                     {
                         NumeroLote = lote.NumeroLote,
@@ -119,18 +118,16 @@ namespace CasaColomboApp.Domain.Services
                         Ala = lote.Ala,
                         Codigo = lote.Codigo,
                         NomeProduto = lote.NomeProduto,
-                        Ativo= lote.Ativo,
-
-
-
+                        Ativo = true, // Define o novo lote como ativo
                     });
                 }
             }
 
+            // Identifica lotes que foram removidos do produto e deve ser desativado
+          
             var produtoAtualizado = new Produto
             {
                 Id = produto.Id,
-                
                 Nome = produto.Nome,
                 Marca = produto.Marca,
                 Pei = produto.Pei,
@@ -148,8 +145,6 @@ namespace CasaColomboApp.Domain.Services
                 DepositoId = registro.DepositoId,
                 FornecedorId = registro.FornecedorId,
                 CategoriaId = registro.CategoriaId,
-          
-
             };
             if (registro.DataHoraCadastro == null)
             {
@@ -210,9 +205,11 @@ namespace CasaColomboApp.Domain.Services
         {
             var produto = _produtoRepository?.GetById(id);
 
-
-
-
+            if (produto != null)
+            {
+                // Filtra os lotes inativos
+                produto.Lote = produto.Lote.Where(l => l.Ativo).ToList();
+            }
 
             return produto;
         }

@@ -74,7 +74,7 @@ namespace CasaColomboApp.Services.Controllers
 
         private async Task SalvarCaminhoImagemNoBanco(int produtoId, string relativeFilePath)
         {
-            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BDcasacolombo;Integrated Security=True;";
+            string connectionString = @"Data Source=SQL8010.site4now.net;Initial Catalog=db_aa8a78_casacol;User Id=db_aa8a78_casacol_admin;Password=colombo24";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = "UPDATE PRODUTO SET IMAGEMURL = @FilePath WHERE ID = @ID";
