@@ -23,16 +23,18 @@ namespace CasaColomboApp.Services.Controllers
         private readonly IProdutoDomainService _produtoDomainService;
         private readonly IMapper _mapper;
         private readonly IVendaRepository _vendaRepository;
+        private readonly ILoteRepository _loteRepository;
         private readonly HttpClient _httpClient;
         private readonly string _imageFolderPath;
         private int _nextImageId = 1; // This variable will store the next image ID
 
         public ProdutoController(IProdutoDomainService produtoDomainService,
-            IMapper mapper, IVendaRepository vendaRepository, IHttpClientFactory httpClientFactory)
+            IMapper mapper, IVendaRepository vendaRepository, ILoteRepository loteRepository, IHttpClientFactory httpClientFactory)
         {
             _produtoDomainService = produtoDomainService;
             _mapper = mapper;
             _vendaRepository = vendaRepository;
+            _loteRepository = loteRepository;
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("http://colombo01-001-site2.gtempurl.com/usuarios/autenticar");
             _imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
@@ -127,7 +129,7 @@ namespace CasaColomboApp.Services.Controllers
                 var lotes = _mapper.Map<List<Lote>>(model.Lote);
 
                 // Cadastrar o produto juntamente com os lotes
-                var result = _produtoDomainService.Cadastrar(produto, lotes);
+                var result = _produtoDomainService.Cadastrar(produto, lotes, matricula);
 
                 // Mapear o resultado de volta para o modelo de resposta
                 var produtoGetModel = _mapper.Map<ProdutoGetModel>(result);
@@ -162,7 +164,7 @@ namespace CasaColomboApp.Services.Controllers
                 var produto = _mapper.Map<Produto>(model);
 
                 // Atualizar o produto
-                var result = _produtoDomainService.Atualizar(produto);
+                var result = _produtoDomainService.Atualizar(produto, matricula);
 
                 // Mapear o resultado de volta para o modelo de resposta
                 var produtoGetModel = _mapper.Map<ProdutoGetModel>(result);
@@ -288,6 +290,22 @@ namespace CasaColomboApp.Services.Controllers
             {
                 //HTTP 500 (INTERNAL SERVER ERROR)
                 return StatusCode(500, new { e.Message });
+            }
+        }
+
+        [HttpGet("lotes")]
+        [ProducesResponseType(typeof(LoteGetModel), 200)]
+        public IActionResult GetLoteAll()
+        {
+            try
+            {
+                var lote = _loteRepository.GetAll();
+                var loteModel = _mapper.Map<List<LoteGetModel>>(lote);
+                return Ok(loteModel);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { erro = e.Message });
             }
         }
 

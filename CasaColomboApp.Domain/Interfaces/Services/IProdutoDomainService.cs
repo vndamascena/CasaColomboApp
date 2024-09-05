@@ -11,8 +11,8 @@ namespace CasaColomboApp.Domain.Interfaces.Services
     public interface IProdutoDomainService
     {
 
-        Produto Cadastrar(Produto produto, List<Lote>lotes);
-        Produto Atualizar(Produto produto);
+        Produto Cadastrar(Produto produto, List<Lote>lotes, string matricula);
+        Produto Atualizar(Produto produto,  string matricula);
         Produto Inativar(int id);
 
         List<Produto> Consultar();

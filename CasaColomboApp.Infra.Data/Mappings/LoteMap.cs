@@ -21,6 +21,7 @@ namespace CasaColomboApp.Infra.Data.Mappings
             builder.Property(l => l.Id).HasColumnName("ID");
 
             builder.Property(p => p.Codigo).HasColumnName("CODIGO").HasMaxLength(5);
+            builder.Property(v => v.UsuarioId).HasColumnName("USUARIOID").IsRequired();
 
             builder.Property(l => l.NumeroLote).HasColumnName("NUMERO LOTE").HasMaxLength(10);
 
@@ -28,12 +29,14 @@ namespace CasaColomboApp.Infra.Data.Mappings
             builder.Property(l => l.Ativo).HasColumnName("ATIVO").IsRequired();
 
             builder.Property(l => l.Ala).HasColumnName("ALA");
-
+            builder.Property(v => v.Marca).HasColumnName("MARCA");
             builder.Property(l => l.NomeProduto).HasColumnName("NOMEPRODUTO");
 
+            builder.Property(l => l.QtdEntrada).HasColumnName("QTDENTRADA");
             builder.Property(l => l.DataUltimaAlteracao).HasColumnName("DATAHORAALTERACAO").IsRequired();
 
             builder.Property(l => l.ProdutoId).HasColumnName("PRODUTOID").IsRequired();
+            builder.Property(l => l.DataEntrada).HasColumnName("DATAENTRADA").IsRequired();
 
             builder.HasOne(p => p.Produto) //LOTE TEM 1 PRODUTO
                    .WithMany(f => f.Lote) //PRODUTO TEM N LOTES
