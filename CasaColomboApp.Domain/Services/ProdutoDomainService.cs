@@ -92,7 +92,6 @@ namespace CasaColomboApp.Domain.Services
         {
             var registro = ObterPorId(produto.Id);
 
-
             if (registro == null)
                 throw new ApplicationException("Produto não encontrado para edição.");
 
@@ -107,18 +106,16 @@ namespace CasaColomboApp.Domain.Services
 
                 if (loteExistente != null)
                 {
-                    // Atualiza o lote existente, mantendo o status Ativo
+                    // Se os campos QtdEntrada e NomeProduto não forem fornecidos, mantenha os valores atuais
                     loteExistente.NumeroLote = lote.NumeroLote;
                     loteExistente.QuantidadeLote = lote.QuantidadeLote;
                     loteExistente.Ala = lote.Ala;
                     loteExistente.Codigo = lote.Codigo;
-                    loteExistente.NomeProduto = lote.NomeProduto;
+                    loteExistente.NomeProduto = string.IsNullOrEmpty(lote.NomeProduto) ? loteExistente.NomeProduto : lote.NomeProduto;
+                    loteExistente.QtdEntrada = lote.QtdEntrada == 0 ? loteExistente.QtdEntrada : lote.QtdEntrada;
                     loteExistente.DataUltimaAlteracao = DateTime.Now;
-                    loteExistente.QtdEntrada = lote.QtdEntrada;
                     loteExistente.UsuarioId = matricula;
-                    loteExistente.Marca = lote.Marca;
-
-
+                    loteExistente.Marca = string.IsNullOrEmpty(lote.Marca) ? loteExistente.Marca : lote.Marca;
 
                     lotesAtualizados.Add(loteExistente);
                 }
@@ -142,7 +139,7 @@ namespace CasaColomboApp.Domain.Services
                 }
             }
 
-            // Identifica lotes que foram removidos do produto e deve ser desativado
+            // Identifica lotes que foram removidos do produto e devem ser desativados
 
             var produtoAtualizado = new Produto
             {
@@ -165,6 +162,7 @@ namespace CasaColomboApp.Domain.Services
                 FornecedorId = registro.FornecedorId,
                 CategoriaId = registro.CategoriaId,
             };
+
             if (registro.DataHoraCadastro == null)
             {
                 produtoAtualizado.DataHoraCadastro = DateTime.Now;
@@ -173,6 +171,7 @@ namespace CasaColomboApp.Domain.Services
             _produtoRepository?.Update(produtoAtualizado);
             return _produtoRepository?.GetById(produto.Id);
         }
+
 
 
 
