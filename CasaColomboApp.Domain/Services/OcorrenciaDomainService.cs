@@ -97,7 +97,7 @@ namespace CasaColomboApp.Domain.Services
                 CodProduto = ocorrencia.CodProduto,
                 UsuarioId = matricula,
                 LojaId = ocorrencia.LojaId,
-                FornecedorOcorrenciaId = ocorrencia.FornecedorOcorrenciaId,
+                FornecedorGeralId = ocorrencia.FornecedorGeralId,
                 Produto = ocorrencia.Produto,
                 Observacao = ocorrencia.Observacao,
                 DataTime = DateTime.Now

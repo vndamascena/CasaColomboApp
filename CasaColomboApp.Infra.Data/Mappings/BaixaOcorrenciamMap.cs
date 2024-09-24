@@ -25,7 +25,7 @@ namespace CasaColomboApp.Infra.Data.Mappings
             builder.Property(v => v.CodProduto).HasColumnName("CODPRODUTO");
 
             builder.Property(v => v.Produto).HasColumnName("PRODUTO");
-            builder.Property(v => v.FornecedorOcorrenciaId).HasColumnName("FORNECEDO");
+            builder.Property(v => v.FornecedorGeralId).HasColumnName("FORNECEDO");
             
 
             builder.Property(v => v.NumeroNota).HasColumnName("NUMERONOTA");

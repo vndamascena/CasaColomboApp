@@ -25,7 +25,7 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             builder.Property(t => t.Produto).HasColumnName("PRODUTO").HasMaxLength(70);
 
-            builder.Property(t => t.FornecedorOcorrenciaId).HasColumnName("FORNECEDO").HasMaxLength(70);
+            builder.Property(t => t.FornecedorGeralId).HasColumnName("FORNECEDO").HasMaxLength(70);
 
             builder.Property(t => t.NumeroNota).HasColumnName("NUMERONOTA");
 
@@ -44,9 +44,9 @@ namespace CasaColomboApp.Infra.Data.Mappings
              .HasForeignKey(p => p.TipoOcorrenciaId) //Chave estrangeira
              .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(p => p.FornecedorOcorrencia) //Ocorrenca TEM 1 Tipo ocorrencia
+            builder.HasOne(p => p.FornecedorGeral) //Ocorrenca TEM 1 Tipo ocorrencia
             .WithMany(f => f.Ocorrencia) //tipo ocorrencia TEM N Ocorrencia
-            .HasForeignKey(p => p.FornecedorOcorrenciaId) //Chave estrangeira
+            .HasForeignKey(p => p.FornecedorGeralId) //Chave estrangeira
             .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(p => p.Loja) //Ocorrenca TEM 1 Tipo ocorrencia

@@ -2,7 +2,7 @@
 using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Domain.Interfaces.Services;
 using CasaColomboApp.Domain.Services;
-using CasaColomboApp.Services.Model.Fornecedor.FornecedorOcorrencia;
+using CasaColomboApp.Services.Model.Fornecedor.FornecedorGeral;
 using CasaColomboApp.Services.Model.Loja;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

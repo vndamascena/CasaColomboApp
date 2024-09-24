@@ -20,16 +20,19 @@ namespace CasaColomboApp.Infra.Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CategoriaMap());
-            modelBuilder.ApplyConfiguration(new ProdutoMap());
+            modelBuilder.ApplyConfiguration(new ProdutoPisoMap());
             modelBuilder.ApplyConfiguration(new FornecedorMap());
             modelBuilder.ApplyConfiguration(new DepositoMap());
             modelBuilder.ApplyConfiguration(new LoteMap());
             modelBuilder.ApplyConfiguration(new VendaMap());
-            
-            modelBuilder.ApplyConfiguration(new FornecedorOcorrenciaMap());
+            modelBuilder.ApplyConfiguration(new VendaProdutoGeralMap());
+
+            modelBuilder.ApplyConfiguration(new FornecedorGeralMap());
             modelBuilder.ApplyConfiguration(new TipoOcorrenciaMap());
             modelBuilder.ApplyConfiguration(new OcorrenciaMap());
             modelBuilder.ApplyConfiguration(new BaixaOcorrenciamMap());
+            modelBuilder.ApplyConfiguration(new ProdutoGeralMap());
+            modelBuilder.ApplyConfiguration(new QuantidadeProdutosDepositosMap());
         }
     }
 }

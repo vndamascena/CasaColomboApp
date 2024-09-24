@@ -76,7 +76,7 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                //cadastrando o produto
+                
                 var fornecedor = _mapper?.Map<Fornecedor>(model);
                 var result = _fornecedorDomainService?.Cadastrar(fornecedor);
 

@@ -18,7 +18,7 @@ namespace CasaColomboApp.Services.Model.Ocorrencias
         public string Observacao { get; set; }
 
         public int? LojaId {  get; set; }
-        public int? FornecedorOcorrenciaId { get; set; }
+        public int? FornecedorGeralId { get; set; }
         [Required(ErrorMessage = "Por favor, informeo ID da ocorrencia para o produto.")]
         public int? TipoOcorrenciaId { get; set; }
      

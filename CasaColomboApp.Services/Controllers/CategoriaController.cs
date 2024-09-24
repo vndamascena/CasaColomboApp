@@ -41,7 +41,7 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                //capturando os dados que serão atualizados do produto
+                
                 var categoria = new Categoria
                 {
                     Id = model.Id,
@@ -50,7 +50,7 @@ namespace CasaColomboApp.Services.Controllers
                    
                 };
 
-                //atualizando o produto
+                
                 var result = _categoriaDomainService?.Atualizar(categoria);
 
                 //HTTP 201 (OK)
@@ -75,7 +75,7 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                //cadastrando o produto
+                
                 var categoria = _mapper?.Map<Categoria>(model);
                 var result = _categoriaDomainService?.Cadastrar(categoria);
 

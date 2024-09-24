@@ -14,7 +14,7 @@ namespace CasaColomboApp.Domain.Entities
         public int TipoOcorrenciaId { get; set; }
         public int LojaId { get; set; }
         public string Produto { get; set; }
-        public int FornecedorOcorrenciaId { get; set; }
+        public int FornecedorGeralId { get; set; }
         public string NumeroNota { get; set; }
         public DateTime DataTime { get; set; }
         public string Observacao { get; set; }

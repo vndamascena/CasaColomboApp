@@ -22,7 +22,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
                 return dataContext
                     .Set<Ocorrencia>()
                     .Include(p => p.TipoOcorrencia) //JOIN
-                    .Include(p => p.FornecedorOcorrencia)
+                    .Include(p => p.FornecedorGeral)
                     .Include(p => p.Loja)
                     .OrderBy(p => p.Produto)
 
@@ -36,7 +36,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
                 return dataContext
                     .Set<Ocorrencia>()
                     .Include(p => p.TipoOcorrencia) //JOIN
-                    .Include(p => p.FornecedorOcorrencia)
+                    .Include(p => p.FornecedorGeral)
                     .Include(p => p.Loja)
                     .OrderBy(p => p.Produto)
 
@@ -52,7 +52,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
                 return dataContext
                     .Set<Ocorrencia>()
                     .Include(p => p.TipoOcorrencia) //JOIN
-                    .Include(p => p.FornecedorOcorrencia)
+                    .Include(p => p.FornecedorGeral)
                     .Include(p => p.Loja)
                     .FirstOrDefault(p => p.Id == id);
             }

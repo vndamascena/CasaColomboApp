@@ -35,12 +35,12 @@ namespace CasaColomboApp.Infra.Data.Mappings
             builder.Property(l => l.QtdEntrada).HasColumnName("QTDENTRADA");
             builder.Property(l => l.DataUltimaAlteracao).HasColumnName("DATAHORAALTERACAO").IsRequired();
 
-            builder.Property(l => l.ProdutoId).HasColumnName("PRODUTOID").IsRequired();
+            builder.Property(l => l.ProdutoPisoId).HasColumnName("PRODUTOID").IsRequired();
             builder.Property(l => l.DataEntrada).HasColumnName("DATAENTRADA").IsRequired();
 
-            builder.HasOne(p => p.Produto) //LOTE TEM 1 PRODUTO
+            builder.HasOne(p => p.ProdutoPiso) //LOTE TEM 1 PRODUTO
                    .WithMany(f => f.Lote) //PRODUTO TEM N LOTES
-                   .HasForeignKey(p => p.ProdutoId) //Chave estrangeira
+                   .HasForeignKey(p => p.ProdutoPisoId) //Chave estrangeira
                    .OnDelete(DeleteBehavior.Cascade); // Excluir em cascata
 
 

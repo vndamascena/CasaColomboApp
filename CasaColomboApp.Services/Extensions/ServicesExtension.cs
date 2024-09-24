@@ -13,26 +13,29 @@ namespace CasaColomboApp.Services.Extensions
         {
             services.AddTransient<IFornecedorDomainService, FornecedorDomainService>();
             services.AddTransient<ICategoriaDomainService, CategoriaDomainService>();
-            services.AddTransient<IProdutoDomainService, ProdutoDomainService>();
-            services.AddTransient<IFornecedorOcorrenciaDomainService, FornecedorOcorrenciaDomainService>();
+            services.AddTransient<IProdutoPisoDomainService, ProdutoPisoDomainService>();
+            services.AddTransient<IFornecedorGeralDomainService, FornecedorGeralDomainService>();
             services.AddTransient<IDepositoDomainService, DepositoDomainService>();
             services.AddTransient<IOcorrenciaDomainService, OcorrenciaDomainService>();
             services.AddTransient<ITipoOcorrenciaDomainService, TipoOcorrenciaDomainService>();
             services.AddTransient<ILojaDomainService, LojaDomainService>();
-            
+            services.AddTransient<IProdutoGeralDomainService, ProdutoGeralDomainService>();
+
 
             services.AddTransient<IFornecedorRepository, FornecedorRepository>();
             services.AddTransient<ICategoriaRepository, CategoriaRepository>();
-            services.AddTransient<IProdutoRepository, ProdutoRepository>();
-            
+            services.AddTransient<IProdutoPisoRepository, ProdutoPisoRepository>();
+            services.AddTransient<IVendaProdutoGeralRepository, VendaProdutoGeralRepository>();
             services.AddTransient<IDepositoRepository, DepositoRepository>();
             services.AddTransient<ILoteRepository, LoteRepository>();
             services.AddTransient<IVendaRepository, VendaRepository>();
             services.AddTransient<ITipoOcorrenciaRepository, TipoOcorrenciaRepository>();
             services.AddTransient<IOcorrenciaRepository, OcorrenciaRepository>();
             services.AddTransient<IBaixaOcorrenciaRepository, BaixaOcorrenciaRepository>();
-            services.AddTransient<IFornecedorOcorrenciaRepository, FornecedorOcorrenciaRepository>();
+            services.AddTransient<IFornecedorGeralRepository, FornecedorGeralRepository>();
             services.AddTransient<ILojaRepository, LojaRepository>();
+            services.AddTransient<IProdutoGeralRepository, ProdutoGeralRepository>();
+            services.AddTransient<IQuantidadeProdutosDepositosRepository, QuantidadeProdutosDepositosRepository>();
 
         }
     }

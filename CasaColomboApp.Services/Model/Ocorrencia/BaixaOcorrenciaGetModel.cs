@@ -12,7 +12,7 @@ namespace CasaColomboApp.Services.Model.Ocorrencia
         public string NumeroNota { get; set; }
         public string Observacao { get; set; }
         public string UsuarioId { get; set; }
-        public int FornecedorOcorrenciaId { get; set; }
+        public int FornecedorGeralId { get; set; }
         public int LojaId   { get; set; }
         public int TipoOcorrenciaId { get; set; }
         public int OcorrenciaId { get; set; }
