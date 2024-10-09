@@ -8,28 +8,28 @@ namespace CasaColomboApp.Services.Model.ProdutoGeral
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Informe o nome do produto.")]
-        [MinLength(3, ErrorMessage = "Informe no minimo {1} caracteres.")]
-        [MaxLength(255, ErrorMessage = "Informe no maximo {1} carateres.")]
+        [MinLength(3, ErrorMessage = "Informe no mínimo {1} caracteres.")]
+        [MaxLength(255, ErrorMessage = "Informe no máximo {1} caracteres.")]
         public string? NomeProduto { get; set; }
 
         public string? MarcaProduto { get; set; }
-
         public string? Un { get; set; }
 
-        [Required(ErrorMessage = "Por favor, informeo o codígo do produto.")]
+        [Required(ErrorMessage = "Por favor, informe o código do produto.")]
         public string? CodigoSistema { get; set; }
 
-        //public string? Preco { get; set; }
-
-        [Required(ErrorMessage = "Por favor, informeo ID da categoria para o produto.")]
-        public int? CategoriaGeralId { get; set; }
-
-        [Required(ErrorMessage = "Por favor, informe o ID do fornecedor para o produto.")]
-        public int? FornecedorGeralId { get; set; }
-
-        [Required(ErrorMessage = "Por favor, informe o ID do deposito para o produto.")]
-
         public string? ImagemUrlGeral { get; set; }
-        public List<QuantidadeProdutosDepositosGetModel> QuantidadeProdutoDeposito { get; set; }
+
+        // Lista de depósitos e suas quantidades para atualização
+        public List<ProdutoDepositoPutModel>? Depositos { get; set; }
+    }
+
+    public class ProdutoDepositoPutModel
+    {
+        [Required(ErrorMessage = "Por favor, informe o ID do depósito.")]
+        public int DepositoId { get; set; }
+
+        [Required(ErrorMessage = "Por favor, informe a quantidade.")]
+        public int Quantidade { get; set; }
     }
 }

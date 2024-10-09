@@ -27,7 +27,8 @@ namespace CasaColomboApp.Infra.Data.Mappings
             builder.Property(p => p.DataHoraAlteracao).HasColumnName("DATAHORAALTERACAO").IsRequired();
             builder.Property(p => p.CategoriaId).HasColumnName("IDCATEGORIA").IsRequired();
             builder.Property(p => p.FornecedorGeralId).HasColumnName("IDFORNECEDOR").IsRequired();
-            
+           
+
 
 
 
@@ -48,8 +49,11 @@ namespace CasaColomboApp.Infra.Data.Mappings
                .HasForeignKey(p => p.FornecedorGeralId) //Chave estrangeira
                .OnDelete(DeleteBehavior.Restrict);
 
-            
 
+            builder.HasMany(p => p.ProdutoDeposito) // ProdutoGeral TEM N ProdutoDeposito
+                .WithOne(pd => pd.ProdutoGeral) // ProdutoDeposito TEM 1 ProdutoGeral
+                .HasForeignKey(pd => pd.ProdutoGeralId) // Chave estrangeira em ProdutoDeposito
+                .OnDelete(DeleteBehavior.Cascade); // Define o comportamento de exclusão
 
             #endregion
         }

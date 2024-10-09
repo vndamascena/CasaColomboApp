@@ -9,20 +9,22 @@ namespace CasaColomboApp.Domain.Interfaces.Services
 {
     public interface IProdutoGeralDomainService
     {
-        ProdutoGeral Cadastrar(ProdutoGeral produtoGeral, List<QuantidadeProdutosDepositos> quantidadeProdutosDepositos, string matricula);
+        ProdutoGeral Cadastrar(ProdutoGeral produtoGeral, List<(int depositoId, int quantidade)> depositosSelecionados, string matricula);
 
         ProdutoGeral Atualizar(ProdutoGeral produtoGeral, string matricula);
         ProdutoGeral Inativar(int id);
 
         List<ProdutoGeral> Consultar();
-
-        List<QuantidadeProdutosDepositos> ConsultarQuantidadeProdutoDeposito(int produtoGeralId);
-
         ProdutoGeral ObterPorId(int id);
-        void ExcluirQuantidadeProdutoDeposito(int produtoGeralId, int quantidadeProdutoDepositoId);
+
+        // Métodos para gerenciar produtos e depósitos
+        List<ProdutoDeposito> ConsultarQuantidadeProdutoDeposito(int produtoGeralId);
+        void ExcluirQuantidadeProdutoDeposito(int produtoGeralId, int depositoId);
+
+        // Métodos de venda
         void ConfirmarVenda(int id, int quantidadeVendida, string matricula);
+        void UploadVenda(int id, int quantidadeVendida, string matricula, string DataVenda);
 
         void Excluir(int id);
-
     }
 }

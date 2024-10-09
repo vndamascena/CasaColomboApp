@@ -23,7 +23,7 @@ namespace CasaColomboApp.Infra.Data.Repositories
                    .Set<ProdutoGeral>()
                    .Include(p => p.Categoria) //JOIN
                    .Include(p => p.Fornecedor) //JOIN
-
+                   .Include(p => p.ProdutoDeposito)
                    .OrderBy(p => p.NomeProduto)
                    .ToList();
 
@@ -38,23 +38,27 @@ namespace CasaColomboApp.Infra.Data.Repositories
                     .Set<ProdutoGeral>()
                     .Include(p => p.Categoria) //JOIN
                     .Include(p => p.Fornecedor) //JOIN
+                    .Include(p => p.ProdutoDeposito)
 
-                    .Include(p => p.QuantidadeProdutoDeposito)
                     .FirstOrDefault(p => p.Id == id);
             }
         }
 
-        public List<QuantidadeProdutosDepositos> GetQuantidadeProdutosDepositosProdutoId(int produtoGeralId)
+
+        public List<ProdutoDeposito> GetProdutosDepositosProdutoId(int produtoGeralId)
         {
             using (var dataContext = new DataContext())
             {
                 return dataContext
-                    .Set<QuantidadeProdutosDepositos>()
+                    .Set<ProdutoDeposito>()
                     .Where(l => l.ProdutoGeralId == produtoGeralId)
+
                     .ToList();
             }
         }
 
+
+        
       
     }
 }

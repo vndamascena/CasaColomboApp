@@ -9,7 +9,7 @@ namespace CasaColomboApp.Domain.Interfaces.Repositories
 {
     public interface IVendaProdutoGeralRepository : IBaseRepository<VendaProdutoGeral, int>
     {
-        List<VendaProdutoGeral> GetVendaProutoGeralByQtdPDId(int quantidadeProdutoDepositoId);
+        List<VendaProdutoGeral> GetVendaProutoGeralByQtdPDId(int produtoDepositoId);
         List<VendaProdutoGeral> GetVendaProdutoGeralByUsuarioId(string matricula);
     }
 }

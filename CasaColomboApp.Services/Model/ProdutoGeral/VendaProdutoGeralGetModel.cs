@@ -9,8 +9,10 @@
         public string? CodigoSistema { get; set; }
         public string? NomeProduto { get; set; }
         public int? QuantidadeVendida { get; set; }
+        public string? NomeDeposito { get; set; }
+        public DateTime? UploadRelatorioVenda { get; set; }
 
-        public DateTime? DataVenda { get; set; }
-       
+        public string? DataVenda { get; set; }
+
     }
 }

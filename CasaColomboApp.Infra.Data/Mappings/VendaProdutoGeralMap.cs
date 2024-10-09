@@ -16,22 +16,27 @@ namespace CasaColomboApp.Infra.Data.Mappings
             builder.ToTable("VENDAPRODUTOGERAL");
             builder.HasKey(v => v.VendaProdutoGeralId);
             builder.Property(v => v.VendaProdutoGeralId).HasColumnName("ID");
-            builder.Property(v => v.QuantidadeProdutoID).HasColumnName("DEPOSITOID").IsRequired();
+            builder.Property(v => v.ProdutoDepositoId).HasColumnName("DEPOSITOID").IsRequired();
 
             builder.Property(v => v.NomeProduto).HasColumnName("NOMEPRODUTO");
+            builder.Property(v => v.NomeDeposito).HasColumnName("NOMEDEPOSITO");
             builder.Property(v => v.Marca).HasColumnName("MARCA");
 
             builder.Property(v => v.UsuarioId).HasColumnName("USUARIOID").IsRequired();
 
             builder.Property(v => v.QuantidadeVendida).HasColumnName("QUANTIDADE").IsRequired();
 
-            builder.Property(v => v.DataVenda).HasColumnName("DATAVENDA").IsRequired();
-
+            builder.Property(v => v.UploadRelatorioVenda).HasColumnName("DATAUPLOADVENDA");
+            builder.Property(v => v.DataVenda).HasColumnName("DATAVENDA");
+            builder.Property(v => v.DataVendaManual).HasColumnName("DATAVENDAMANUAL");
             builder.Property(v => v.CodigoSistema).HasColumnName("CODIGO").IsRequired();
 
-            builder.HasOne(v => v.QuantidadeProdutosDepositos).WithMany()
-                .HasForeignKey(v => v.QuantidadeProdutoID)
+            builder.HasOne(v => v.ProdutoDeposito).WithMany()
+                .HasForeignKey(v => v.ProdutoDepositoId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+           
+          
 
         }
     }

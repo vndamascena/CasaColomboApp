@@ -2,6 +2,7 @@
 using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Services.Model.Categoria;
 using CasaColomboApp.Services.Model.Deposito;
+using CasaColomboApp.Services.Model.Depositos;
 using CasaColomboApp.Services.Model.Fornecedor;
 using CasaColomboApp.Services.Model.Fornecedor.FornecedorGeral;
 using CasaColomboApp.Services.Model.Loja;
@@ -92,10 +93,33 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<Fornecedor, FornecedorGetModel>();
             CreateMap<FornecedorGeral, FornecedorGeralGetModel>();
 
+
+
+
+
+
+
+
+
+            CreateMap<Depositos, DepositosGetModel>();
+
+
+
+            CreateMap<DepositosPostModel, Depositos>()
+               .AfterMap((model, entity) =>
+               {
+
+                   entity.DataHoraCadastro = DateTime.Now;
+                   entity.DataHoraAlteracao = DateTime.Now;
+
+               });
+           
+
+
             CreateMap<ProdutoPiso, ProdutoPisoGetModel>()
              .ForMember(dest => dest.Lote, opt => opt.MapFrom(src => src.Lote));
-            CreateMap<ProdutoGeral, ProdutoGeralGetModel>()
-                .ForMember(dest => dest.QuantidadeProdutoDeposito, opt => opt.MapFrom(src => src.QuantidadeProdutoDeposito));
+            CreateMap<ProdutoGeral, ProdutoGeralGetModel>();
+               
 
             CreateMap<Lote, LoteGetModel>()
              .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -109,8 +133,8 @@ namespace CasaColomboApp.Services.Mappings
 
             CreateMap<ProdutoPisoPutModel, ProdutoPiso>()
              .ForMember(dest => dest.Lote, opt => opt.MapFrom(src => src.Lote));
-            CreateMap<ProdutoGeralPutModel, ProdutoGeral>()
-             .ForMember(dest => dest.QuantidadeProdutoDeposito, opt => opt.MapFrom(src => src.QuantidadeProdutoDeposito));
+            CreateMap<ProdutoGeralPutModel, ProdutoGeral>();
+            
             CreateMap<LoteGetModel, LoteModel>();
             CreateMap<LoteGetModel, Lote>();
             CreateMap<Venda, VendaPisoGetModel>();
@@ -132,16 +156,14 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<LojaGetModel, Loja>();
             CreateMap<LojaPostModel, Loja>();
 
-            CreateMap<QuantidadeProdutosDepositosPostModel, QuantidadeProdutosDepositos>();
-            CreateMap<QuantidadeProdutosDepositosGetModel, QuantidadeProdutosDepositosPostModel>();
-            CreateMap<QuantidadeProdutosDepositosGetModel, QuantidadeProdutosDepositos>();
-            CreateMap<QuantidadeProdutosDepositos, QuantidadeProdutosDepositosPostModel>();
-            CreateMap<QuantidadeProdutosDepositos, QuantidadeProdutosDepositosGetModel>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
+         
 
 
 
-
+            CreateMap<ProdutoDeposito, ProdutoDepositoGetModel>();       ;
+            CreateMap<ProdutoDeposito, ProdutoDepositoModel>();
+            CreateMap<ProdutoDepositoGetModel, ProdutoDeposito>();
+            CreateMap<ProdutoDepositoModel, ProdutoDeposito>();
 
 
 

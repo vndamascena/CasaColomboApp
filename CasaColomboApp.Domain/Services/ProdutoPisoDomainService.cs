@@ -302,8 +302,8 @@ namespace CasaColomboApp.Domain.Services
             if (produtoPiso == null)
             {
                 throw new ApplicationException("Produto não encontrado.");
-            }
 
+            }
             // Recalcular a quantidade total do produto, excluindo lotes com quantidade negativa
             produtoPiso.Quantidade = _produtoPisoRepository.GetLotesByProdutoId(produtoPiso.Id)
                                                     .Where(l => l.QuantidadeLote >= 0)

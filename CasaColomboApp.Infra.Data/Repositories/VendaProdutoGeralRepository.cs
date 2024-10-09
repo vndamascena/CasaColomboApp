@@ -20,14 +20,14 @@ namespace CasaColomboApp.Infra.Data.Repositories
             }
         }
 
-        public List<VendaProdutoGeral> GetVendaProutoGeralByQtdPDId(int quantidadeProdutoDepositoId)
+        public List<VendaProdutoGeral> GetVendaProutoGeralByQtdPDId(int produtoDepositoId)
         {
 
             using (var dataContext = new DataContext())
             {
                 return dataContext.Set<VendaProdutoGeral>()
-                           .Include(v => v.QuantidadeProdutosDepositos) // Inclui o lote relacionado à venda
-                           .Where(v => v.QuantidadeProdutoID == quantidadeProdutoDepositoId)
+                           .Include(v => v.ProdutoDeposito) // Inclui o lote relacionado à venda
+                           .Where(v => v.ProdutoDepositoId == produtoDepositoId)
                            .ToList(); ;
 
             }

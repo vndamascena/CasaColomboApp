@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CasaColomboApp.Domain.Services
@@ -12,225 +13,246 @@ namespace CasaColomboApp.Domain.Services
     public class ProdutoGeralDomainService : IProdutoGeralDomainService
     {
         private readonly IProdutoGeralRepository? _produtoGeralRepository;
-        private readonly IQuantidadeProdutosDepositosRepository? _quantidadeProdutosDepositosRepository;
-        private readonly IVendaProdutoGeralRepository? _vendaProdutoGeralRepository;
 
-        public ProdutoGeralDomainService(IProdutoGeralRepository? produtoGeralRepository, 
-            IQuantidadeProdutosDepositosRepository quantidadeProdutosDepositosRepository,
-            IVendaProdutoGeralRepository? vendaProdutoGeralRepository)
+        private readonly IVendaProdutoGeralRepository? _vendaProdutoGeralRepository;
+        private readonly IProdutoDepositoRepository? _produtoDepositoRepository;
+        private readonly IDepositosRepository? _depositosRepository;
+
+        public ProdutoGeralDomainService(IProdutoGeralRepository? produtoGeralRepository,
+
+            IVendaProdutoGeralRepository? vendaProdutoGeralRepository,
+            IProdutoDepositoRepository? produtoDepositoRepository,
+            IDepositosRepository? depositosRepository)
         {
             _produtoGeralRepository = produtoGeralRepository;
-            _quantidadeProdutosDepositosRepository = quantidadeProdutosDepositosRepository;
+
             _vendaProdutoGeralRepository = vendaProdutoGeralRepository;
+            _produtoDepositoRepository = produtoDepositoRepository;
+            _depositosRepository = depositosRepository;
         }
 
 
 
         public ProdutoGeral Atualizar(ProdutoGeral produtoGeral, string matricula)
         {
-            var registro = ObterPorId(produtoGeral.Id);
+            // Verifica se o produto já existe no banco de dados
+            var produtoExistente = _produtoGeralRepository.GetById(produtoGeral.Id);
 
-            if (registro == null)
-                throw new ApplicationException("Produto não encontrado para edição.");
+            if (produtoExistente == null)
+                throw new ApplicationException("Produto não encontrado para atualização.");
 
-            // Remove os lotes excluídos do produto
-            produtoGeral.QuantidadeProdutoDeposito.RemoveAll(l => l.Quantidade == 0 && string.IsNullOrEmpty(l.NomeDeposito));
+            // Atualiza as propriedades básicas do produto
+            produtoExistente.NomeProduto = produtoGeral.NomeProduto;
+            produtoExistente.MarcaProduto = produtoGeral.MarcaProduto;
+            produtoExistente.Un = produtoGeral.Un;
+            produtoExistente.CodigoSistema = produtoGeral.CodigoSistema;
+            produtoExistente.ImagemUrlGeral = produtoGeral.ImagemUrlGeral;
+            produtoExistente.DataHoraAlteracao = DateTime.Now;
 
-            // Constrói uma nova lista de lotes para o produto atualizado
-            var quantidadeProdutoDepositoAtualizados = new List<QuantidadeProdutosDepositos>();
-            foreach (var quantidadeProdutosDepositos in produtoGeral.QuantidadeProdutoDeposito)
+            // Atualiza as associações com os depósitos
+            var depositosSelecionados = produtoGeral.ProdutoDeposito;
+
+            // Inicializa uma lista para os depósitos que vão ser atualizados ou criados
+            var depositosAtualizados = new List<ProdutoDeposito>();
+
+            foreach (var depositoSelecionado in depositosSelecionados)
             {
-                var quantidadeprodutoExistente = _quantidadeProdutosDepositosRepository.ObterPorId(quantidadeProdutosDepositos.Id);
+                // Verifica se o depósito já está associado ao produto
+                var depositoExistente = produtoExistente.ProdutoDeposito
+                    .FirstOrDefault(pd => pd.DepositoId == depositoSelecionado.DepositoId);
 
-                if (quantidadeprodutoExistente != null)
+                if (depositoExistente != null)
                 {
-                    // Se os campos QtdEntrada e NomeProduto não forem fornecidos, mantenha os valores atuais
-                    quantidadeprodutoExistente.Quantidade = quantidadeProdutosDepositos.Quantidade;
-                    quantidadeprodutoExistente.NomeDeposito = quantidadeProdutosDepositos.NomeDeposito;
-                    quantidadeprodutoExistente.NomeProduto = string.IsNullOrEmpty(quantidadeProdutosDepositos.NomeProduto) ? quantidadeprodutoExistente.NomeProduto : quantidadeProdutosDepositos.NomeProduto;
-                    quantidadeprodutoExistente.UsuarioId = matricula;
-                    quantidadeprodutoExistente.CodigoSistema = quantidadeProdutosDepositos.CodigoSistema;
+                    // Se o depósito já está associado, apenas atualiza a quantidade
+                    depositoExistente.Quantidade = depositoSelecionado.Quantidade;
 
-
-                    quantidadeprodutoExistente.DataUltimaAlteracao = DateTime.Now;
-                  
-
-                    quantidadeProdutoDepositoAtualizados.Add(quantidadeprodutoExistente);
+                    depositosAtualizados.Add(depositoExistente);
                 }
                 else
                 {
-                    // Adiciona um novo lote com status Ativo
-                    quantidadeProdutoDepositoAtualizados.Add(new QuantidadeProdutosDepositos
+                    // Se não estiver associado, cria a relação com a quantidade
+                    depositosAtualizados.Add(new ProdutoDeposito
                     {
-                        
-                        Quantidade = quantidadeProdutosDepositos.Quantidade,
-                        CodigoSistema = quantidadeProdutosDepositos.CodigoSistema,
+                        ProdutoGeralId = produtoGeral.Id,
+                        DepositoId = depositoSelecionado.DepositoId,
+                        Quantidade = depositoSelecionado.Quantidade,
                         NomeProduto = produtoGeral.NomeProduto,
-                        DataUltimaAlteracao = DateTime.Now,
-                        DataEntrada = DateTime.Now,
-                        UsuarioId = matricula,
-                        NomeDeposito = quantidadeProdutosDepositos.NomeDeposito
+                        CodigoSistema = produtoGeral.CodigoSistema,
+                        NomeDeposito = depositoSelecionado.NomeDeposito,
                         
+                        
+
                     });
                 }
             }
 
-            // Identifica lotes que foram removidos do produto e devem ser desativados
+            // Remove depósitos que foram desvinculados no processo de atualização
+            var depositosParaRemover = produtoExistente.ProdutoDeposito
+                .Where(pd => !depositosSelecionados.Any(ds => ds.DepositoId == pd.DepositoId))
+                .ToList();
 
-            var produtoAtualizado = new ProdutoGeral
+            foreach (var depositoRemover in depositosParaRemover)
             {
-                Id = produtoGeral.Id,
-                NomeProduto = produtoGeral.NomeProduto,
-                MarcaProduto = produtoGeral.MarcaProduto,
-                CodigoSistema = produtoGeral.CodigoSistema,
-                QuantidadeProd = quantidadeProdutoDepositoAtualizados.Sum(l => l.Quantidade),
-                QuantidadeProdutoDeposito = quantidadeProdutoDepositoAtualizados,
-                ImagemUrlGeral = registro.ImagemUrlGeral,
-                DataHoraCadastro = registro.DataHoraCadastro,
-                DataHoraAlteracao = DateTime.Now,
-                FornecedorGeralId = registro.FornecedorGeralId,
-                CategoriaId = registro.CategoriaId,
-                Un = produtoGeral.Un
-            };
-
-            if (registro.DataHoraCadastro == null)
-            {
-                produtoAtualizado.DataHoraCadastro = DateTime.Now;
+                produtoExistente.ProdutoDeposito.Remove(depositoRemover);
             }
 
-            _produtoGeralRepository?.Update(produtoAtualizado);
-            return _produtoGeralRepository?.GetById(produtoGeral.Id);
+            // Atualiza as associações de depósitos com o produto
+            produtoExistente.ProdutoDeposito = depositosAtualizados;
+
+            // Calcula a nova quantidade total do produto baseada nos depósitos atualizados
+            produtoExistente.QuantidadeProd = depositosAtualizados.Sum(pd => pd.Quantidade);
+
+            // Atualiza o produto no banco de dados
+            _produtoGeralRepository.Update(produtoExistente);
+
+            // Retorna o produto atualizado
+            return produtoExistente;
         }
 
-        public ProdutoGeral Cadastrar(ProdutoGeral produtoGeral, List<QuantidadeProdutosDepositos> quantidadeProdutosDepositos, string matricula)
+
+        public ProdutoGeral Cadastrar(ProdutoGeral produtoGeral, List<(int depositoId, int quantidade)> depositosSelecionados, string matricula)
         {
             if (produtoGeral == null)
                 throw new ArgumentNullException(nameof(produtoGeral));
 
-            if (quantidadeProdutosDepositos == null || !quantidadeProdutosDepositos.Any())
-                throw new ArgumentException("A lista de lotes não pode estar vazia.");
-
-            // Inicialize a lista de lotes se ainda não estiver inicializada
-            if (produtoGeral.QuantidadeProdutoDeposito == null)
-                produtoGeral.QuantidadeProdutoDeposito = new List<QuantidadeProdutosDepositos>();
-
-           
-            
-
-            // Associar os lotes restantes ao produto
-            foreach (var quantidadeProdutoDeposito in quantidadeProdutosDepositos)
-            {
-                // Verificar se já existe um depósito com o mesmo NomeDeposito
-                var quantidadeDepositoProdutoExistente = produtoGeral.QuantidadeProdutoDeposito
-                    .FirstOrDefault(l => l.NomeDeposito == quantidadeProdutoDeposito.NomeDeposito);
-
-                if (quantidadeDepositoProdutoExistente == null)
-                {
-                    // Se não existir, adicionar o lote à lista
-                    produtoGeral.QuantidadeProdutoDeposito.Add(quantidadeProdutoDeposito);
-                }
-                else
-                {
-                    // Se existir, atualizar a quantidade  existente
-                    quantidadeDepositoProdutoExistente.Quantidade = quantidadeProdutoDeposito.Quantidade;
-                }
-            }
-
-            // Atualiza os campos do ProdutoGeral nos itens de QuantidadeProdutoDepositos, incluindo o CodigoSistema
-            foreach (var quantidadeProdutoDeposito in produtoGeral.QuantidadeProdutoDeposito)
-            {
-                quantidadeProdutoDeposito.UsuarioId = matricula;
-                quantidadeProdutoDeposito.NomeProduto = produtoGeral.NomeProduto;
-                quantidadeProdutoDeposito.CodigoSistema = produtoGeral.CodigoSistema; // Adiciona o CódigoSistema
-            }
-
-            // Calcula a quantidade total dos Produto, excluindo o primeiro lote
-            int quantidadeTotalDepositoProduto = produtoGeral.QuantidadeProdutoDeposito.Sum(l => l.Quantidade);
-
-            // Atribui a quantidade total dos lotes à propriedade Quantidade do produto
-            produtoGeral.QuantidadeProd = quantidadeTotalDepositoProduto;
+            if (depositosSelecionados == null || !depositosSelecionados.Any())
+                throw new ArgumentException("A lista de depósitos não pode estar vazia.");
 
             try
             {
-                // Cadastre o produto com os lotes
-                _produtoGeralRepository.Add(produtoGeral); // Salva o produto no banco de dados
-                produtoGeral = _produtoGeralRepository?.GetById(produtoGeral.Id);
-                return produtoGeral; // Retorna o produto após ser salvo, caso precise usar mais tarde
+                // **Primeira correção**: Salva o ProdutoGeral primeiro para garantir que o ProdutoGeralId existe
+                _produtoGeralRepository.Add(produtoGeral);
+
+
+                // Agora que o ProdutoGeral foi salvo, podemos usar o produtoGeral.Id
+                // Inicializa a lista de ProdutoDepositos se não estiver inicializada
+                if (produtoGeral.ProdutoDeposito == null)
+                    produtoGeral.ProdutoDeposito = new List<ProdutoDeposito>();
+
+                // Para cada depósito selecionado, distribua a quantidade
+                foreach (var (depositoId, quantidade) in depositosSelecionados)
+                {
+                    // Verificar se o depósito já está associado ao produto
+                    var depositoExistente = produtoGeral.ProdutoDeposito
+                        .FirstOrDefault(pd => pd.DepositoId == depositoId);
+
+                    if (depositoExistente != null)
+                    {
+                        // Se o depósito já está associado, apenas atualiza a quantidade
+                        depositoExistente.Quantidade += quantidade;
+                        _produtoDepositoRepository.Update(depositoExistente);
+                    }
+                    else
+                    {
+                        // Buscar o nome do depósito usando o repositório de depósitos
+                        var deposito = _depositosRepository.GetById(depositoId);
+                        if (deposito == null)
+                        {
+                            throw new ArgumentException($"Depósito com ID {depositoId} não encontrado.");
+                        }
+
+                        // Se não estiver associado, crie a relação com a quantidade
+                        var novoProdutoDeposito = new ProdutoDeposito
+                        {
+                            ProdutoGeralId = produtoGeral.Id, // ProdutoGeralId agora está definido corretamente
+                            DepositoId = depositoId,
+                            Quantidade = quantidade,
+                            NomeDeposito = deposito.Nome, // Preenche o nome do depósito corretamente
+                            CodigoSistema = produtoGeral.CodigoSistema,
+                            NomeProduto = produtoGeral.NomeProduto,
+                        };
+                        produtoGeral.ProdutoDeposito.Add(novoProdutoDeposito);
+                        _produtoDepositoRepository.Add(novoProdutoDeposito);
+                    }
+                }
+
+                // Calcula a quantidade total do produto baseado nos depósitos
+                produtoGeral.QuantidadeProd = produtoGeral.ProdutoDeposito.Sum(pd => pd.Quantidade);
+
+                // **Salva o produto e os depósitos associados**
+                _produtoGeralRepository.Update(produtoGeral); // Agora atualiza o ProdutoGeral com as associações de depósitos
+                produtoGeral = _produtoGeralRepository.GetById(produtoGeral.Id);
+
+                // Retorna o produto após ser salvo
+                return produtoGeral;
             }
             catch (Exception ex)
             {
-                // Registre a exceção para fins de diagnóstico
                 Console.WriteLine($"Erro ao salvar o produto: {ex}");
                 throw; // Re-throw para que a exceção seja tratada no nível superior
             }
         }
 
 
-        public void ConfirmarVenda(int id, int quantidadeVendida, string matricula)
+
+
+
+
+        public void ConfirmarVenda(int depositoId, int quantidadeVendida, string matricula)
         {
-            var quantidadeProdutosDepositos = _quantidadeProdutosDepositosRepository.ObterPorId(id);
+            // Obtém o ProdutoDeposito pelo ID do depósito
+            var produtoDeposito = _produtoDepositoRepository.ObterPorId(depositoId);
 
-            if (quantidadeProdutosDepositos == null)
-            {
-                throw new ApplicationException("Deposito não encontrado.");
-            }
+            if (produtoDeposito == null)
+                throw new ApplicationException("ProdutoDepósito não encontrado.");
 
+            // Verifica se a quantidade no depósito é suficiente para a venda
+            if (produtoDeposito.Quantidade < quantidadeVendida)
+                throw new ApplicationException("Quantidade insuficiente no depósito.");
+
+            // Cria a venda associada ao ProdutoDeposito correto
             var venda = new VendaProdutoGeral
             {
-                QuantidadeProdutoID = quantidadeProdutosDepositos.Id,
+                ProdutoDepositoId = produtoDeposito.DepositoId, // Associa ao ProdutoDeposito
                 QuantidadeVendida = quantidadeVendida,
-                DataVenda = DateTime.Now,
+                DataVendaManual = DateTime.Now,
                 UsuarioId = matricula,
-                CodigoSistema = quantidadeProdutosDepositos.CodigoSistema,
-                NomeProduto = quantidadeProdutosDepositos.NomeProduto,
-               
-
-
+                CodigoSistema = produtoDeposito.CodigoSistema,
+                NomeProduto = produtoDeposito.NomeProduto,
+                Marca = produtoDeposito.ProdutoGeral.MarcaProduto, // Pega a marca do ProdutoGeral
+                NomeDeposito = produtoDeposito.NomeDeposito, 
             };
 
+            // Adiciona a venda no repositório
             _vendaProdutoGeralRepository.Add(venda);
 
-            quantidadeProdutosDepositos.Quantidade -= quantidadeVendida;
+            // Atualiza a quantidade de produtos no depósito
+            produtoDeposito.Quantidade -= quantidadeVendida;
+            _produtoDepositoRepository.Update(produtoDeposito);
 
-            _quantidadeProdutosDepositosRepository.Update(quantidadeProdutosDepositos);
+            // Atualiza o ProdutoGeral correspondente
+            var produtoGeral = _produtoGeralRepository.GetById(produtoDeposito.ProdutoGeralId);
 
-            var produtoGeral = _produtoGeralRepository.GetById(quantidadeProdutosDepositos.ProdutoGeralId);
             if (produtoGeral == null)
-            {
-                throw new ApplicationException("Produto não encontrado.");
-            }
+                throw new ApplicationException("ProdutoGeral não encontrado.");
 
-            produtoGeral.QuantidadeProd = _produtoGeralRepository.GetQuantidadeProdutosDepositosProdutoId
-                (produtoGeral.Id)
-                .Where(l => l.Quantidade >= 0)
-                .Sum(l => l.Quantidade);
+            // Recalcula a quantidade total do ProdutoGeral com base nos depósitos associados
+            produtoGeral.QuantidadeProd = _produtoDepositoRepository.GetByProdutoGeralId(produtoDeposito.ProdutoGeralId)
+                .Sum(p => p.Quantidade);
 
+            // Atualiza o ProdutoGeral
             _produtoGeralRepository.Update(produtoGeral);
         }
 
+
         public List<ProdutoGeral> Consultar()
         {
-            var produtoGeral = _produtoGeralRepository?.GetAll();
+            var produtos = _produtoGeralRepository?.GetAll();
 
-            if (produtoGeral == null)
+            if (produtos == null)
                 return new List<ProdutoGeral>();
 
-            // Carregar os lotes para cada produto, começando do segundo lote
-            foreach (var produtosGeral in produtoGeral)
+            foreach (var produto in produtos)
             {
-                produtosGeral.QuantidadeProdutoDeposito = _produtoGeralRepository?.GetQuantidadeProdutosDepositosProdutoId(produtosGeral.Id);
-
-               
-                produtosGeral.QuantidadeProd = produtosGeral.QuantidadeProdutoDeposito.Sum(l => l.Quantidade);
+                produto.QuantidadeProd = produto.ProdutoDeposito.Sum(l => l.Quantidade);
             }
 
-            return produtoGeral;
+            return produtos;
         }
 
-        public List<QuantidadeProdutosDepositos> ConsultarQuantidadeProdutoDeposito(int produtoGeralId)
+        public List<ProdutoDeposito> ConsultarQuantidadeProdutoDeposito(int produtoGeralId)
         {
-            var quantidadeProdutoDeposito = _produtoGeralRepository.GetQuantidadeProdutosDepositosProdutoId(produtoGeralId);
-            return quantidadeProdutoDeposito;
+            return _produtoDepositoRepository.GetByProdutoGeralId(produtoGeralId);
         }
 
         public void ExcluirQuantidadeProdutoDeposito(int produtoGeralId, int quantidadeProdutoDepositoId)
@@ -270,5 +292,60 @@ namespace CasaColomboApp.Domain.Services
 
             return produtoGeral;
         }
+
+
+        public void UploadVenda(int id, int quantidadeVendida, string matricula, string dataVenda)
+        {
+            // Obter o produto e depósito associado ao ID
+            var produtoDepositos = _produtoDepositoRepository.ObterPorId(id);
+
+            if (produtoDepositos == null)
+            {
+                throw new ApplicationException("Depósito não encontrado.");
+            }
+
+            // Validação do depósito com base no nome do depósito obtido do produto
+            if (produtoDepositos.NomeDeposito != "JC1" && produtoDepositos.NomeDeposito != "JC2" && produtoDepositos.NomeDeposito != "VA")
+            {
+                throw new ApplicationException($"Venda não permitida. Produto não pertence a um depósito permitido (JC1, JC2, VA).");
+            }
+
+            // Criar o registro de venda
+            var venda = new VendaProdutoGeral
+            {
+                ProdutoDepositoId = produtoDepositos.DepositoId,
+                QuantidadeVendida = quantidadeVendida,
+                UploadRelatorioVenda = DateTime.Now,
+                UsuarioId = matricula,
+                CodigoSistema = produtoDepositos.CodigoSistema,
+                NomeProduto = produtoDepositos.NomeProduto,
+                Marca = produtoDepositos.ProdutoGeral.MarcaProduto,
+                DataVenda = dataVenda,
+                NomeDeposito = produtoDepositos.NomeDeposito, 
+            };
+
+            // Registrar a venda
+            _vendaProdutoGeralRepository.Add(venda);
+
+            // Atualizar a quantidade no depósito
+            produtoDepositos.Quantidade -= quantidadeVendida;
+            _produtoDepositoRepository.Update(produtoDepositos);
+
+            // Atualizar a quantidade total do produto geral no sistema
+            var produtoGeral = _produtoGeralRepository.GetById(produtoDepositos.ProdutoGeralId);
+            if (produtoGeral == null)
+            {
+                throw new ApplicationException("Produto geral não encontrado.");
+            }
+
+            // Atualiza a quantidade total considerando todos os depósitos do produto
+            produtoGeral.QuantidadeProd = _produtoGeralRepository.GetProdutosDepositosProdutoId(produtoGeral.Id)
+                .Where(p => p.Quantidade >= 0)
+                .Sum(p => p.Quantidade);
+
+            // Atualizar o produto geral
+            _produtoGeralRepository.Update(produtoGeral);
+        }
+
     }
 }

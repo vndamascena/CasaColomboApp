@@ -24,20 +24,22 @@ namespace CasaColomboApp.Services.Controllers
         private int _nextImageId = 1;
         private readonly HttpClient _httpClient;
         private readonly IMapper _mapper;
-        private readonly IQuantidadeProdutosDepositosRepository _quantidadeProdutosDepositosRepository;
         private readonly string _imageFolderPath;
         private readonly IProdutoGeralDomainService _produtoGeralDomainService;
         private readonly IVendaProdutoGeralRepository _vendaProdutoGeralRepository;
+        private readonly IProdutoDepositoRepository _produtoDepositoRepository;
 
-        public ProdutoGeralController( IMapper mapper, IQuantidadeProdutosDepositosRepository quantidadeProdutosDepositosRepository, 
-            IVendaProdutoGeralRepository vendaProdutoGeralRepository, IProdutoGeralDomainService produtoGeralDomainService, IHttpClientFactory httpClientFactory)
+        public ProdutoGeralController( IMapper mapper, 
+            IVendaProdutoGeralRepository vendaProdutoGeralRepository, 
+            IProdutoGeralDomainService produtoGeralDomainService, IHttpClientFactory httpClientFactory,
+            IProdutoDepositoRepository produtoDepositoRepository)
 
 
         {
-            _imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            _imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagesProdutoGeral");
             _mapper = mapper;
             _vendaProdutoGeralRepository = vendaProdutoGeralRepository;
-            _quantidadeProdutosDepositosRepository = quantidadeProdutosDepositosRepository;
+            _produtoDepositoRepository = produtoDepositoRepository;
             _produtoGeralDomainService = produtoGeralDomainService;
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("http://colombo01-001-site2.gtempurl.com/usuarios/autenticar");
@@ -179,23 +181,25 @@ namespace CasaColomboApp.Services.Controllers
         {
             try
             {
-                // Verifique se o usuário está autorizado
+                // Verificar se o usuário está autorizado
                 if (!(await IsUserAuthorized(matricula, senha)))
                 {
                     return StatusCode(401, new { error = "Usuário não autorizado." });
                 }
 
-                // Mapear o modelo para a entidade Produto
+                // Mapear o modelo para a entidade ProdutoGeral
                 var produtoGeral = _mapper.Map<ProdutoGeral>(model);
 
-                // Mapear os modelos de lote para entidades de lote
-                var quantidadeProdutosDepositos = _mapper.Map<List<QuantidadeProdutosDepositos>>(model.QuantidadeProdutoDeposito);
+                // Criar a lista de depósitos com as quantidades
+                var depositosSelecionados = model.Depositos
+                    .Select(d => (d.DepositoId, d.Quantidade))
+                    .ToList();
 
-                // Cadastrar o produto juntamente com os lotes
-                var result = _produtoGeralDomainService.Cadastrar(produtoGeral, quantidadeProdutosDepositos, matricula);
+                // Chamar o serviço de domínio para cadastrar o produto e suas quantidades em depósitos
+                var resultado = _produtoGeralDomainService.Cadastrar(produtoGeral, depositosSelecionados, matricula);
 
                 // Mapear o resultado de volta para o modelo de resposta
-                var produtoGeralGetModel = _mapper.Map<ProdutoGeralGetModel>(result);
+                var produtoGeralGetModel = _mapper.Map<ProdutoGeralGetModel>(resultado);
 
                 // Retornar resposta HTTP 201 (CREATED) com o modelo de resposta
                 return StatusCode(201, new
@@ -206,34 +210,36 @@ namespace CasaColomboApp.Services.Controllers
             }
             catch (Exception e)
             {
-                //HTTP 500 (INTERNAL SERVER ERROR)
+                // Retornar erro HTTP 500 (INTERNAL SERVER ERROR)
                 return StatusCode(500, new { e.Message });
             }
         }
 
+
+
         [HttpPut]
-        [ProducesResponseType(typeof(ProdutoGeralGetModel), 201)]
+        [ProducesResponseType(typeof(ProdutoGeralGetModel), 200)]
         public async Task<IActionResult> Put([FromBody] ProdutoGeralPutModel model, string matricula, string senha)
         {
             try
             {
-                // Verifique se o usuário está autorizado
+                // Verificar se o usuário está autorizado
                 if (!(await IsUserAuthorized(matricula, senha)))
                 {
                     return StatusCode(401, new { error = "Usuário não autorizado." });
                 }
 
-                // Mapear o modelo para a entidade Produto
+                // Mapear o modelo para a entidade ProdutoGeral
                 var produtoGeral = _mapper.Map<ProdutoGeral>(model);
 
-                // Atualizar o produto
-                var result = _produtoGeralDomainService.Atualizar(produtoGeral, matricula);
+                // Chamar o serviço de domínio para atualizar o produto
+                var resultado = _produtoGeralDomainService.Atualizar(produtoGeral, matricula);
 
                 // Mapear o resultado de volta para o modelo de resposta
-                var produtoGeralGetModel = _mapper.Map<ProdutoGeralGetModel>(result);
+                var produtoGeralGetModel = _mapper.Map<ProdutoGeralGetModel>(resultado);
 
                 // Retornar resposta HTTP 200 (OK) com o modelo de resposta
-                return StatusCode(201, new
+                return StatusCode(200, new
                 {
                     Message = "Produto atualizado com sucesso",
                     produtoGeralGetModel
@@ -241,10 +247,11 @@ namespace CasaColomboApp.Services.Controllers
             }
             catch (Exception e)
             {
-                // Retornar resposta HTTP 500 (INTERNAL SERVER ERROR) em caso de exceção
+                // Retornar erro HTTP 500 (INTERNAL SERVER ERROR)
                 return StatusCode(500, new { e.Message });
             }
         }
+
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -265,19 +272,17 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { e.Message });
             }
         }
-
         [HttpGet]
         [ProducesResponseType(typeof(List<ProdutoGeralGetModel>), 200)]
         public IActionResult GetAll()
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("pt-BR");
             try
             {
                 // Consulta todos os produtos
                 var produtosGeral = _produtoGeralDomainService.Consultar();
 
-                // Mapeia os produtos para os modelos de resposta incluindo os lotes
-                var produtosGeralModel = _mapper.Map<List<ProdutoGeralGetModel>>(produtosGeral, opt => opt.Items["IncludeProdutosGeral"] = true);
+                // Mapeia os produtos para os modelos de resposta
+                var produtosGeralModel = _mapper.Map<List<ProdutoGeralGetModel>>(produtosGeral);
 
                 return Ok(produtosGeralModel);
             }
@@ -287,6 +292,7 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { e.Message });
             }
         }
+
 
         /// <summary>
         /// Serviço para consultar 1 produto através do ID
@@ -300,8 +306,8 @@ namespace CasaColomboApp.Services.Controllers
                 // Consulta o produto pelo ID
                 var produtoGeral = _produtoGeralDomainService.ObterPorId(id);
 
-                // Mapeia o produto para o modelo de resposta incluindo os lotes
-                var produtoGeralModel = _mapper.Map<ProdutoGeralGetModel>(produtoGeral, opt => opt.Items["IncludeProdutosGeral"] = true);
+                // Mapeia o produto para o modelo de resposta incluindo as quantidades em depósitos
+                var produtoGeralModel = _mapper.Map<ProdutoGeralGetModel>(produtoGeral);
 
                 return Ok(produtoGeralModel);
             }
@@ -312,60 +318,8 @@ namespace CasaColomboApp.Services.Controllers
             }
         }
 
-        [HttpGet("depositoQuantidade")]
-        [ProducesResponseType(typeof(QuantidadeProdutosDepositosGetModel), 200)]
-        public IActionResult GetLoteAll()
-        {
-            try
-            {
-                var quantidadeProdutodeposito = _quantidadeProdutosDepositosRepository.GetAll();
-                var quantidadeProdutoDepositoModel = _mapper.Map<List<QuantidadeProdutosDepositosGetModel>>(quantidadeProdutodeposito);
-                return Ok(quantidadeProdutoDepositoModel);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new { erro = e.Message });
-            }
-        }
 
-        [HttpGet("{id}/quantidadeDeposito")]
-        [ProducesResponseType(typeof(List<QuantidadeProdutosDepositosGetModel>), 200)]
-        public IActionResult GetLotesByProdutoId(int id)
-        {
-            try
-            {
-                // Consulta os lotes associados ao produto pelo ID do produto
-                var quantidadeProdutosDepositos = _produtoGeralDomainService.ConsultarQuantidadeProdutoDeposito(id);
-
-                // Mapeia os lotes para os modelos de resposta
-                var quantidadeProdutosDepositosGetModels = _mapper.Map<List<QuantidadeProdutosDepositosGetModel>>(quantidadeProdutosDepositos);
-
-                return Ok(quantidadeProdutosDepositosGetModels);
-            }
-            catch (Exception e)
-            {
-                //HTTP 500 (INTERNAL SERVER ERROR)
-                return StatusCode(500, new { e.Message });
-            }
-        }
-
-        [HttpDelete("{produtoGeralId}/quantidadeProdutoDeposito/{quantidadeProdutoDepositoId}")]
-        public IActionResult DeleteQuantidadeProdutoDeposito(int produtoGeralId, int quantidadeProdutoDepositoId)
-        {
-            try
-            {
-                // Chamar o serviço de domínio para excluir o lote do produto
-                _produtoGeralDomainService.ExcluirQuantidadeProdutoDeposito(produtoGeralId, quantidadeProdutoDepositoId); // Alterado para usar loteId
-
-                // Retornar resposta HTTP 200 (OK) em caso de sucesso
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                // Retornar resposta HTTP 500 (INTERNAL SERVER ERROR) em caso de exceção
-                return StatusCode(500, new { e.Message });
-            }
-        }
+      
 
 
         [HttpPost("venda")]
@@ -404,5 +358,101 @@ namespace CasaColomboApp.Services.Controllers
                 return StatusCode(500, new { erro = e.Message });
             }
         }
+
+        [HttpPost("upload-venda")]
+        public async Task<IActionResult> UploadVenda(string matricula, string senha, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new { error = "Arquivo inválido." });
+            }
+
+            try
+            {
+                // Log para verificar a solicitação recebida
+                Console.WriteLine($"Matricula: {matricula}, Senha: {senha}, Arquivo: {file.FileName}");
+
+                using (var reader = new StreamReader(file.OpenReadStream()))
+                {
+                    // Agora a lista inclui o campo Deposito, mas ele será usado apenas para validação
+                    var linhas = new List<(string Deposito, string DataVenda, string CodigoSistema, int QuantidadeVendida)>();
+                    var erros = new List<string>(); // Lista para armazenar os erros
+                    string linha;
+                    int linhaNumero = 0; // Para rastrear o número da linha
+
+                    // Ler o arquivo linha por linha
+                    while ((linha = reader.ReadLine()) != null)
+                    {
+                        linhaNumero++;
+                        var campos = linha.Split(',');
+
+                        // Validação do formato da linha (espera-se quatro campos: CodigoSistema, QuantidadeVendida, DataVenda, Deposito)
+                        if (campos.Length != 4)
+                        {
+                            erros.Add($"Erro na linha {linhaNumero}: Formato inválido. Esperado: Deposito, DataVenda, CodigoSistema, QuantidadeVendida.");
+                            continue; // Continua para a próxima linha
+                        }
+
+                        var deposito = campos[0].Trim().ToUpper();
+                        var dataVenda = campos[1].Trim();
+                        var codigoSistema = campos[2].Trim();
+
+                        // Validar se a quantidade vendida é um número inteiro
+                        if (!int.TryParse(campos[3], out int quantidadeVendida))
+                        {
+                            erros.Add($"Erro na linha {linhaNumero}: Quantidade inválida. Esperado um número inteiro.");
+                            continue; // Continua para a próxima linha
+                        }
+
+                        // Adicionar a venda à lista com o depósito (que será usado para validação)
+                        linhas.Add((deposito, dataVenda, codigoSistema, quantidadeVendida));
+                    }
+
+                    foreach (var venda in linhas)
+                    {
+                        try
+                        {
+                            var produtoDeposito = _produtoDepositoRepository.ObterPorCodigoSistemaEDeposito(venda.CodigoSistema, venda.Deposito);
+
+                            if (produtoDeposito == null)
+                            {
+                                erros.Add($"Erro: Produto {venda.CodigoSistema} não está associado ao depósito {venda.Deposito}.");
+                                continue; // Continua para a próxima venda
+                            }
+
+                            // Chamando o serviço de upload de venda
+                            _produtoGeralDomainService.UploadVenda(produtoDeposito.Id, venda.QuantidadeVendida, matricula, venda.DataVenda);
+                        }
+                        catch (Exception ex)
+                        {
+                            erros.Add($"Erro ao processar a venda do produto {venda.CodigoSistema}: {ex.Message}");
+                            // Continua para a próxima venda
+                        }
+                    }
+
+                    if (erros.Any())
+                    {
+                        // Retorna um status 207 (Multi-Status) para indicar que algumas operações falharam
+                        return StatusCode(207, new { message = "Vendas processadas com alguns erros.", erros });
+                    }
+                }
+
+                return Ok(new { message = "Vendas carregadas com sucesso!" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { error = e.Message });
+            }
+        }
+
+
+
+
+
+
     }
+
+
+
 }
+
