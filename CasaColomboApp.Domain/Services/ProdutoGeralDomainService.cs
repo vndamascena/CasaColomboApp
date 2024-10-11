@@ -1,6 +1,7 @@
 ﻿using CasaColomboApp.Domain.Entities;
 using CasaColomboApp.Domain.Interfaces.Repositories;
 using CasaColomboApp.Domain.Interfaces.Services;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,35 +37,36 @@ namespace CasaColomboApp.Domain.Services
         public ProdutoGeral Atualizar(ProdutoGeral produtoGeral, string matricula)
         {
             // Verifica se o produto já existe no banco de dados
-            var produtoExistente = _produtoGeralRepository.GetById(produtoGeral.Id);
+            var registro = ObterPorId(produtoGeral.Id);
 
-            if (produtoExistente == null)
+            if (registro == null)
                 throw new ApplicationException("Produto não encontrado para atualização.");
 
-            // Atualiza as propriedades básicas do produto
-            produtoExistente.NomeProduto = produtoGeral.NomeProduto;
-            produtoExistente.MarcaProduto = produtoGeral.MarcaProduto;
-            produtoExistente.Un = produtoGeral.Un;
-            produtoExistente.CodigoSistema = produtoGeral.CodigoSistema;
-            produtoExistente.ImagemUrlGeral = produtoGeral.ImagemUrlGeral;
-            produtoExistente.DataHoraAlteracao = DateTime.Now;
+            // Verifica se ProdutoDeposito está nulo e inicializa como lista vazia, se necessário
+            if (produtoGeral.ProdutoDeposito == null)
+            {
+                produtoGeral.ProdutoDeposito = new List<ProdutoDeposito>();
+            }
 
-            // Atualiza as associações com os depósitos
-            var depositosSelecionados = produtoGeral.ProdutoDeposito;
+            // Remove os depósitos que têm Quantidade 0 e CódigoSistema vazio
+            produtoGeral.ProdutoDeposito.RemoveAll(l => l.Quantidade == 0 && string.IsNullOrEmpty(l.CodigoSistema));
 
             // Inicializa uma lista para os depósitos que vão ser atualizados ou criados
             var depositosAtualizados = new List<ProdutoDeposito>();
 
-            foreach (var depositoSelecionado in depositosSelecionados)
+            foreach (var deposito in produtoGeral.ProdutoDeposito)
             {
-                // Verifica se o depósito já está associado ao produto
-                var depositoExistente = produtoExistente.ProdutoDeposito
-                    .FirstOrDefault(pd => pd.DepositoId == depositoSelecionado.DepositoId);
+                var depositoExistente = _produtoDepositoRepository.ObterPorId(deposito.Id);
 
                 if (depositoExistente != null)
                 {
                     // Se o depósito já está associado, apenas atualiza a quantidade
-                    depositoExistente.Quantidade = depositoSelecionado.Quantidade;
+                    depositoExistente.Quantidade = deposito.Quantidade;
+                    depositoExistente.ProdutoGeralId = depositoExistente.ProdutoGeralId;
+                    depositoExistente.NomeProduto = depositoExistente.NomeProduto;
+                    depositoExistente.CodigoSistema = depositoExistente.CodigoSistema;
+                    depositoExistente.DepositoId = deposito.DepositoId;
+                    depositoExistente.NomeDeposito = deposito.NomeDeposito;
 
                     depositosAtualizados.Add(depositoExistente);
                 }
@@ -74,40 +76,41 @@ namespace CasaColomboApp.Domain.Services
                     depositosAtualizados.Add(new ProdutoDeposito
                     {
                         ProdutoGeralId = produtoGeral.Id,
-                        DepositoId = depositoSelecionado.DepositoId,
-                        Quantidade = depositoSelecionado.Quantidade,
+                        DepositoId = deposito.DepositoId,
+                        Quantidade = deposito.Quantidade,
                         NomeProduto = produtoGeral.NomeProduto,
                         CodigoSistema = produtoGeral.CodigoSistema,
-                        NomeDeposito = depositoSelecionado.NomeDeposito,
-                        
-                        
-
+                        NomeDeposito = deposito.NomeDeposito,
                     });
                 }
             }
 
-            // Remove depósitos que foram desvinculados no processo de atualização
-            var depositosParaRemover = produtoExistente.ProdutoDeposito
-                .Where(pd => !depositosSelecionados.Any(ds => ds.DepositoId == pd.DepositoId))
-                .ToList();
-
-            foreach (var depositoRemover in depositosParaRemover)
+            var produtoAtualizado = new ProdutoGeral
             {
-                produtoExistente.ProdutoDeposito.Remove(depositoRemover);
+                NomeProduto = produtoGeral.NomeProduto,
+                MarcaProduto = produtoGeral.MarcaProduto,
+                Un = produtoGeral.Un,
+                CodigoSistema = produtoGeral.CodigoSistema,
+                ImagemUrlGeral = registro.ImagemUrlGeral,
+                DataHoraAlteracao = DateTime.Now,
+                DataHoraCadastro = registro.DataHoraCadastro,
+                QuantidadeProd = depositosAtualizados.Sum(d => d.Quantidade),
+                FornecedorGeralId = registro.FornecedorGeralId,
+                CategoriaId = registro.CategoriaId,
+            };
+
+            if (registro.DataHoraCadastro == null)
+            {
+                produtoAtualizado.DataHoraCadastro = DateTime.Now;
             }
 
-            // Atualiza as associações de depósitos com o produto
-            produtoExistente.ProdutoDeposito = depositosAtualizados;
-
-            // Calcula a nova quantidade total do produto baseada nos depósitos atualizados
-            produtoExistente.QuantidadeProd = depositosAtualizados.Sum(pd => pd.Quantidade);
-
             // Atualiza o produto no banco de dados
-            _produtoGeralRepository.Update(produtoExistente);
+            _produtoGeralRepository.Update(produtoAtualizado);
 
             // Retorna o produto atualizado
-            return produtoExistente;
+            return _produtoGeralRepository?.GetById(produtoGeral.Id);
         }
+
 
 
         public ProdutoGeral Cadastrar(ProdutoGeral produtoGeral, List<(int depositoId, int quantidade)> depositosSelecionados, string matricula)
