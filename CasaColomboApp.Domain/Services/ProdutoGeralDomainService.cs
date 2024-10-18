@@ -13,7 +13,7 @@ namespace CasaColomboApp.Domain.Services
 {
     public class ProdutoGeralDomainService : IProdutoGeralDomainService
     {
-        private readonly IProdutoGeralRepository? _produtoGeralRepository;
+        private readonly IProdutoGeralRepository? _produtoGeralRepository;  
 
         private readonly IVendaProdutoGeralRepository? _vendaProdutoGeralRepository;
         private readonly IProdutoDepositoRepository? _produtoDepositoRepository;
@@ -64,7 +64,7 @@ namespace CasaColomboApp.Domain.Services
                 if (depositoExistente != null)
                 {
                     // Se o depósito já está associado, apenas atualiza a quantidade
-                    depositoExistente.Quantidade = deposito.Quantidade;
+                    depositoExistente.Quantidade =  deposito.Quantidade;
                     depositoExistente.ProdutoGeralId = produtoGeral.Id;
                     depositoExistente.NomeProduto = produtoGeral.NomeProduto;
                     depositoExistente.CodigoSistema = produtoGeral.CodigoSistema;
@@ -78,7 +78,7 @@ namespace CasaColomboApp.Domain.Services
                 else
                 {
                     // Verifica se o depósito existe na tabela de depósitos
-                    var depositoEntidade = _depositosRepository.GetById(deposito.Id);
+                    var depositoEntidade = _depositosRepository.GetById(deposito.DepositoId);
                     if (depositoEntidade == null)
                     {
                         throw new ArgumentException($"Depósito com ID {deposito.Id} não encontrado.");
@@ -88,7 +88,7 @@ namespace CasaColomboApp.Domain.Services
                     var novoDeposito = new ProdutoDeposito
                     {
                         ProdutoGeralId = produtoGeral.Id,
-                        DepositoId = deposito.Id,
+                        DepositoId = deposito.DepositoId,
                         Quantidade = deposito.Quantidade,
                         NomeProduto = produtoGeral.NomeProduto,
                         CodigoSistema = produtoGeral.CodigoSistema,
