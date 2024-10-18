@@ -19,6 +19,8 @@ namespace CasaColomboApp.Domain.Entities
         #region Relacionamento
         public ProdutoGeral ProdutoGeral { get; set; }
         public Depositos Deposito { get; set; }
+        
+        public List<VendaProdutoGeral> VendaProdutoGeral { get; set; }
 
         #endregion
     }

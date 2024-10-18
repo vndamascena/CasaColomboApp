@@ -36,57 +36,75 @@ namespace CasaColomboApp.Domain.Services
 
         public ProdutoGeral Atualizar(ProdutoGeral produtoGeral, string matricula)
         {
+            Console.WriteLine($"Atualizando Produto ID: {produtoGeral.Id}, Nome: {produtoGeral.NomeProduto}");
+            Console.WriteLine($"Quantidade de depósitos recebidos: {produtoGeral.ProdutoDeposito?.Count}");
+
             // Verifica se o produto já existe no banco de dados
             var registro = ObterPorId(produtoGeral.Id);
 
             if (registro == null)
                 throw new ApplicationException("Produto não encontrado para atualização.");
 
-            // Verifica se ProdutoDeposito está nulo e inicializa como lista vazia, se necessário
-            if (produtoGeral.ProdutoDeposito == null)
+            // Verifica se há depósitos disponíveis
+            if (!produtoGeral.ProdutoDeposito.Any())
             {
-                produtoGeral.ProdutoDeposito = new List<ProdutoDeposito>();
+                throw new ApplicationException("Nenhum depósito disponível para atualizar.");
             }
-
-            // Remove os depósitos que têm Quantidade 0 e CódigoSistema vazio
-            produtoGeral.ProdutoDeposito.RemoveAll(l => l.Quantidade == 0 && string.IsNullOrEmpty(l.CodigoSistema));
 
             // Inicializa uma lista para os depósitos que vão ser atualizados ou criados
             var depositosAtualizados = new List<ProdutoDeposito>();
 
             foreach (var deposito in produtoGeral.ProdutoDeposito)
             {
-                var depositoExistente = _produtoDepositoRepository.ObterPorId(deposito.Id);
+                Console.WriteLine($"Processando depósito: DepositoId = {deposito.DepositoId}, Quantidade = {deposito.Quantidade}");
+
+                // Verificar se o depósito já existe no banco
+                var depositoExistente = _produtoDepositoRepository.ObterPorIdProduto(deposito.DepositoId, produtoGeral.Id);
 
                 if (depositoExistente != null)
                 {
                     // Se o depósito já está associado, apenas atualiza a quantidade
                     depositoExistente.Quantidade = deposito.Quantidade;
-                    depositoExistente.ProdutoGeralId = depositoExistente.ProdutoGeralId;
-                    depositoExistente.NomeProduto = depositoExistente.NomeProduto;
-                    depositoExistente.CodigoSistema = depositoExistente.CodigoSistema;
-                    depositoExistente.DepositoId = deposito.DepositoId;
-                    depositoExistente.NomeDeposito = deposito.NomeDeposito;
+                    depositoExistente.ProdutoGeralId = produtoGeral.Id;
+                    depositoExistente.NomeProduto = produtoGeral.NomeProduto;
+                    depositoExistente.CodigoSistema = produtoGeral.CodigoSistema;
+                    depositoExistente.DepositoId = deposito.DepositoId; // Usar DepositoId
+                    depositoExistente.NomeDeposito = depositoExistente.NomeDeposito; // Preservando o nome existente
 
+                    Console.WriteLine($"Atualizando depósito existente: DepositoId = {depositoExistente.DepositoId}, Nova Quantidade = {depositoExistente.Quantidade}");
+                    _produtoDepositoRepository.Update(depositoExistente);
                     depositosAtualizados.Add(depositoExistente);
                 }
                 else
                 {
-                    // Se não estiver associado, cria a relação com a quantidade
-                    depositosAtualizados.Add(new ProdutoDeposito
+                    // Verifica se o depósito existe na tabela de depósitos
+                    var depositoEntidade = _depositosRepository.GetById(deposito.Id);
+                    if (depositoEntidade == null)
+                    {
+                        throw new ArgumentException($"Depósito com ID {deposito.Id} não encontrado.");
+                    }
+
+                    // Se não estiver associado, cria um novo depósito
+                    var novoDeposito = new ProdutoDeposito
                     {
                         ProdutoGeralId = produtoGeral.Id,
-                        DepositoId = deposito.DepositoId,
+                        DepositoId = deposito.Id,
                         Quantidade = deposito.Quantidade,
                         NomeProduto = produtoGeral.NomeProduto,
                         CodigoSistema = produtoGeral.CodigoSistema,
-                        NomeDeposito = deposito.NomeDeposito,
-                    });
+                        NomeDeposito = depositoEntidade.Nome, // Preenche o nome do depósito corretamente
+                    };
+
+                    Console.WriteLine($"Criando novo depósito: DepositoId = {novoDeposito.DepositoId}, Quantidade = {novoDeposito.Quantidade}");
+                    _produtoDepositoRepository.Add(novoDeposito); // Salvar o novo depósito
+                    depositosAtualizados.Add(novoDeposito);
                 }
             }
 
+
             var produtoAtualizado = new ProdutoGeral
             {
+                Id = produtoGeral.Id,
                 NomeProduto = produtoGeral.NomeProduto,
                 MarcaProduto = produtoGeral.MarcaProduto,
                 Un = produtoGeral.Un,
@@ -104,12 +122,21 @@ namespace CasaColomboApp.Domain.Services
                 produtoAtualizado.DataHoraCadastro = DateTime.Now;
             }
 
-            // Atualiza o produto no banco de dados
+
+
+            
             _produtoGeralRepository.Update(produtoAtualizado);
+            Console.WriteLine($"Produto atualizado: {produtoAtualizado.NomeProduto}, Nova Quantidade Total = {produtoAtualizado.QuantidadeProd}");
 
             // Retorna o produto atualizado
             return _produtoGeralRepository?.GetById(produtoGeral.Id);
         }
+
+
+
+
+
+
 
 
 
@@ -193,27 +220,30 @@ namespace CasaColomboApp.Domain.Services
 
         public void ConfirmarVenda(int depositoId, int quantidadeVendida, string matricula)
         {
-            // Obtém o ProdutoDeposito pelo ID do depósito
-            var produtoDeposito = _produtoDepositoRepository.ObterPorId(depositoId);
+            // Obtém o ProdutoDeposito pelo ID do depósito, incluindo a entidade ProdutoGeral
+            var produtoDeposito = _produtoDepositoRepository.ObterId(depositoId);
 
             if (produtoDeposito == null)
                 throw new ApplicationException("ProdutoDepósito não encontrado.");
 
-            // Verifica se a quantidade no depósito é suficiente para a venda
             if (produtoDeposito.Quantidade < quantidadeVendida)
                 throw new ApplicationException("Quantidade insuficiente no depósito.");
+
+            // Verifica se ProdutoGeral está associado corretamente
+            if (produtoDeposito.ProdutoGeral == null)
+                throw new ApplicationException("ProdutoGeral não associado ao ProdutoDeposito.");
 
             // Cria a venda associada ao ProdutoDeposito correto
             var venda = new VendaProdutoGeral
             {
-                ProdutoDepositoId = produtoDeposito.DepositoId, // Associa ao ProdutoDeposito
+                ProdutoDepositoId = produtoDeposito.Id,
                 QuantidadeVendida = quantidadeVendida,
                 DataVendaManual = DateTime.Now,
                 UsuarioId = matricula,
                 CodigoSistema = produtoDeposito.CodigoSistema,
                 NomeProduto = produtoDeposito.NomeProduto,
-                Marca = produtoDeposito.ProdutoGeral.MarcaProduto, // Pega a marca do ProdutoGeral
-                NomeDeposito = produtoDeposito.NomeDeposito, 
+                Marca = produtoDeposito.ProdutoGeral.MarcaProduto, // Obtendo a marca corretamente
+                NomeDeposito = produtoDeposito.NomeDeposito,
             };
 
             // Adiciona a venda no repositório
@@ -230,12 +260,14 @@ namespace CasaColomboApp.Domain.Services
                 throw new ApplicationException("ProdutoGeral não encontrado.");
 
             // Recalcula a quantidade total do ProdutoGeral com base nos depósitos associados
-            produtoGeral.QuantidadeProd = _produtoDepositoRepository.GetByProdutoGeralId(produtoDeposito.ProdutoGeralId)
+            produtoGeral.QuantidadeProd = _produtoDepositoRepository
+                .GetByProdutoGeralId(produtoDeposito.ProdutoGeralId)
                 .Sum(p => p.Quantidade);
 
             // Atualiza o ProdutoGeral
             _produtoGeralRepository.Update(produtoGeral);
         }
+
 
 
         public List<ProdutoGeral> Consultar()
@@ -299,43 +331,50 @@ namespace CasaColomboApp.Domain.Services
 
         public void UploadVenda(int id, int quantidadeVendida, string matricula, string dataVenda)
         {
-            // Obter o produto e depósito associado ao ID
-            var produtoDepositos = _produtoDepositoRepository.ObterPorId(id);
+            // Obter o ProdutoDeposito associado ao ID, incluindo ProdutoGeral para garantir o acesso à marca
+            var produtoDeposito = _produtoDepositoRepository.ObterId(id);
 
-            if (produtoDepositos == null)
+            if (produtoDeposito == null)
             {
                 throw new ApplicationException("Depósito não encontrado.");
             }
 
             // Validação do depósito com base no nome do depósito obtido do produto
-            if (produtoDepositos.NomeDeposito != "JC1" && produtoDepositos.NomeDeposito != "JC2" && produtoDepositos.NomeDeposito != "VA")
+            if (produtoDeposito.NomeDeposito != "JC1" && produtoDeposito.NomeDeposito != "JC2" && produtoDeposito.NomeDeposito != "VA")
             {
                 throw new ApplicationException($"Venda não permitida. Produto não pertence a um depósito permitido (JC1, JC2, VA).");
+            }
+
+            // Verificar se ProdutoGeral está associado e não é nulo
+            if (produtoDeposito.ProdutoGeral == null)
+            {
+                throw new ApplicationException("ProdutoGeral não associado ao ProdutoDeposito.");
             }
 
             // Criar o registro de venda
             var venda = new VendaProdutoGeral
             {
-                ProdutoDepositoId = produtoDepositos.DepositoId,
+                ProdutoDepositoId = produtoDeposito.Id,
                 QuantidadeVendida = quantidadeVendida,
                 UploadRelatorioVenda = DateTime.Now,
                 UsuarioId = matricula,
-                CodigoSistema = produtoDepositos.CodigoSistema,
-                NomeProduto = produtoDepositos.NomeProduto,
-                Marca = produtoDepositos.ProdutoGeral.MarcaProduto,
+                CodigoSistema = produtoDeposito.CodigoSistema,
+                NomeProduto = produtoDeposito.NomeProduto,
+                Marca = produtoDeposito.ProdutoGeral.MarcaProduto, // Obtendo a marca do ProdutoGeral
                 DataVenda = dataVenda,
-                NomeDeposito = produtoDepositos.NomeDeposito, 
+                NomeDeposito = produtoDeposito.NomeDeposito,
             };
 
             // Registrar a venda
             _vendaProdutoGeralRepository.Add(venda);
 
             // Atualizar a quantidade no depósito
-            produtoDepositos.Quantidade -= quantidadeVendida;
-            _produtoDepositoRepository.Update(produtoDepositos);
+            produtoDeposito.Quantidade -= quantidadeVendida;
+            _produtoDepositoRepository.Update(produtoDeposito);
 
             // Atualizar a quantidade total do produto geral no sistema
-            var produtoGeral = _produtoGeralRepository.GetById(produtoDepositos.ProdutoGeralId);
+            var produtoGeral = _produtoGeralRepository.GetById(produtoDeposito.ProdutoGeralId);
+
             if (produtoGeral == null)
             {
                 throw new ApplicationException("Produto geral não encontrado.");
@@ -346,9 +385,10 @@ namespace CasaColomboApp.Domain.Services
                 .Where(p => p.Quantidade >= 0)
                 .Sum(p => p.Quantidade);
 
-            // Atualizar o produto geral
+            // Atualizar o ProdutoGeral
             _produtoGeralRepository.Update(produtoGeral);
         }
+
 
     }
 }

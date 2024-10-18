@@ -21,7 +21,7 @@ namespace CasaColomboApp.Services.Model.ProdutoGeral
         public string? ImagemUrlGeral { get; set; }
 
         // Lista de depósitos e suas quantidades para atualização
-        public List<ProdutoDepositoPutModel>? Depositos { get; set; }
+        public List<ProdutoDepositoPutModel> ProdutoDeposito { get; set; }
     }
 
     public class ProdutoDepositoPutModel
