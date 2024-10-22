@@ -146,7 +146,7 @@ namespace CasaColomboApp.Domain.Services
                 throw new ArgumentNullException(nameof(produtoGeral));
 
             if (depositosSelecionados == null || !depositosSelecionados.Any())
-                throw new ArgumentException("A lista de depósitos não pode estar vazia.");
+                    throw new ArgumentException("A lista de depósitos não pode estar vazia.");
 
             try
             {
@@ -340,7 +340,7 @@ namespace CasaColomboApp.Domain.Services
             }
 
             // Validação do depósito com base no nome do depósito obtido do produto
-            if (produtoDeposito.NomeDeposito != "JC1" && produtoDeposito.NomeDeposito != "JC2" && produtoDeposito.NomeDeposito != "VA")
+            if (produtoDeposito.NomeDeposito != "JC1" && produtoDeposito.NomeDeposito != "JC2" && produtoDeposito.NomeDeposito != "VA" && produtoDeposito.NomeDeposito != "G8")
             {
                 throw new ApplicationException($"Venda não permitida. Produto não pertence a um depósito permitido (JC1, JC2, VA).");
             }
