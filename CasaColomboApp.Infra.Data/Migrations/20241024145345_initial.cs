@@ -246,18 +246,23 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 name: "PRODUTODEPOSITO",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PRODUTOGERALID = table.Column<int>(type: "int", nullable: false),
                     DEPOSITOIID = table.Column<int>(type: "int", nullable: false),
                     QUANTIDADE = table.Column<int>(type: "int", nullable: false),
                     NOMEDEPOSITO = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CODIGOSISTEMA = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NOMEPRODUTO = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NOMEPRODUTO = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QTDENTRADA = table.Column<int>(type: "int", nullable: false),
+                    USUARIOIDCADASTRO = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    USUARIOID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DATAHORAALTERACAO = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DATAENTRADA = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PRODUTODEPOSITO", x => x.Id);
+                    table.PrimaryKey("PK_PRODUTODEPOSITO", x => x.ID);
                     table.ForeignKey(
                         name: "FK_PRODUTODEPOSITO_DEPOSITOS_DEPOSITOIID",
                         column: x => x.DEPOSITOIID,
@@ -351,7 +356,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     DATAUPLOADVENDA = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DATAVENDAMANUAL = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NOMEDEPOSITO = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DEPOSITOID = table.Column<int>(type: "int", nullable: false)
+                    DEPOSITOID = table.Column<int>(type: "int", nullable: false),
+                    ProdutoDepositoId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -360,8 +366,13 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         name: "FK_VENDAPRODUTOGERAL_PRODUTODEPOSITO_DEPOSITOID",
                         column: x => x.DEPOSITOID,
                         principalTable: "PRODUTODEPOSITO",
-                        principalColumn: "Id",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VENDAPRODUTOGERAL_PRODUTODEPOSITO_ProdutoDepositoId1",
+                        column: x => x.ProdutoDepositoId1,
+                        principalTable: "PRODUTODEPOSITO",
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -498,6 +509,11 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 name: "IX_VENDAPRODUTOGERAL_DEPOSITOID",
                 table: "VENDAPRODUTOGERAL",
                 column: "DEPOSITOID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VENDAPRODUTOGERAL_ProdutoDepositoId1",
+                table: "VENDAPRODUTOGERAL",
+                column: "ProdutoDepositoId1");
         }
 
         /// <inheritdoc />

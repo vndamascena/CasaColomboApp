@@ -19,15 +19,20 @@ namespace CasaColomboApp.Infra.Data.Mappings
 
             // Definir 'Id' como chave primária única
             builder.HasKey(pd => pd.Id);
-
+            builder.Property(l => l.Id).HasColumnName("ID");
             // Definir as propriedades
             builder.Property(pd => pd.Quantidade).HasColumnName("QUANTIDADE").IsRequired();
-
+            builder.Property(v => v.UsuarioIdCadastro).HasColumnName("USUARIOIDCADASTRO").IsRequired();
+            builder.Property(v => v.UsuarioIdAlteracao).HasColumnName("USUARIOIDALTERACAO");
             builder.Property(pd => pd.NomeDeposito).HasColumnName("NOMEDEPOSITO").IsRequired();
             builder.Property(pd => pd.ProdutoGeralId).HasColumnName("PRODUTOGERALID").IsRequired();
             builder.Property(pd => pd.DepositoId).HasColumnName("DEPOSITOIID").IsRequired();
             builder.Property(p => p.CodigoSistema).HasColumnName("CODIGOSISTEMA").IsRequired();
             builder.Property(p => p.NomeProduto).HasColumnName("NOMEPRODUTO").IsRequired();
+            builder.Property(v => v.Marca).HasColumnName("MARCA");
+            builder.Property(l => l.QtdEntrada).HasColumnName("QTDENTRADA");
+            builder.Property(l => l.DataEntrada).HasColumnName("DATAENTRADA");
+            builder.Property(l => l.DataUltimaAlteracao).HasColumnName("DATAHORAALTERACAO");
 
             // Mapeamento de relacionamentos
             builder.HasOne(pd => pd.ProdutoGeral)

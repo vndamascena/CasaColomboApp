@@ -93,15 +93,7 @@ namespace CasaColomboApp.Services.Mappings
             CreateMap<TipoOcorrencia, TipoOcorrenciaGetModel>();
 
 
-            // Fornecedor
-            CreateMap<FornecedorPostModel, Fornecedor>()
-                .AfterMap((model, entity) =>
-                {
-                    entity.DataHoraCadastro = DateTime.Now;
-                    entity.DataHoraAlteracao = DateTime.Now;
-                });
-
-            CreateMap<Fornecedor, FornecedorGetModel>();
+          
 
             // FornecedorGeral
             CreateMap<FornecedorGeralPostModel, FornecedorGeral>()

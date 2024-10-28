@@ -63,13 +63,18 @@ namespace CasaColomboApp.Domain.Services
 
                 if (depositoExistente != null)
                 {
-                    // Se o depósito já está associado, apenas atualiza a quantidade
+                    
                     depositoExistente.Quantidade =  deposito.Quantidade;
                     depositoExistente.ProdutoGeralId = produtoGeral.Id;
                     depositoExistente.NomeProduto = produtoGeral.NomeProduto;
                     depositoExistente.CodigoSistema = produtoGeral.CodigoSistema;
                     depositoExistente.DepositoId = deposito.DepositoId; // Usar DepositoId
                     depositoExistente.NomeDeposito = depositoExistente.NomeDeposito; // Preservando o nome existente
+                    depositoExistente.QtdEntrada = depositoExistente.QtdEntrada;
+                    depositoExistente.UsuarioIdAlteracao = matricula;
+                    depositoExistente.UsuarioIdCadastro = depositoExistente.UsuarioIdCadastro;
+                    depositoExistente.DataUltimaAlteracao = DateTime.Now;
+                    depositoExistente.Marca = produtoGeral.MarcaProduto;
 
                     Console.WriteLine($"Atualizando depósito existente: DepositoId = {depositoExistente.DepositoId}, Nova Quantidade = {depositoExistente.Quantidade}");
                     _produtoDepositoRepository.Update(depositoExistente);
@@ -93,6 +98,11 @@ namespace CasaColomboApp.Domain.Services
                         NomeProduto = produtoGeral.NomeProduto,
                         CodigoSistema = produtoGeral.CodigoSistema,
                         NomeDeposito = depositoEntidade.Nome, // Preenche o nome do depósito corretamente
+                        QtdEntrada = deposito.QtdEntrada,
+                        DataEntrada = DateTime.Now,
+                        UsuarioIdCadastro = matricula,
+                        Marca = produtoGeral.MarcaProduto,
+                        
                     };
 
                     Console.WriteLine($"Criando novo depósito: DepositoId = {novoDeposito.DepositoId}, Quantidade = {novoDeposito.Quantidade}");
@@ -168,8 +178,10 @@ namespace CasaColomboApp.Domain.Services
 
                     if (depositoExistente != null)
                     {
-                        // Se o depósito já está associado, apenas atualiza a quantidade
+                        // Se o depósito já está associado, apenas atualiza a quantidade 
                         depositoExistente.Quantidade += quantidade;
+                        depositoExistente.UsuarioIdAlteracao = matricula;
+                        depositoExistente.DataUltimaAlteracao = DateTime.Now;
                         _produtoDepositoRepository.Update(depositoExistente);
                     }
                     else
@@ -190,6 +202,12 @@ namespace CasaColomboApp.Domain.Services
                             NomeDeposito = deposito.Nome, // Preenche o nome do depósito corretamente
                             CodigoSistema = produtoGeral.CodigoSistema,
                             NomeProduto = produtoGeral.NomeProduto,
+                            DataEntrada = DateTime.Now,
+                            QtdEntrada = quantidade,
+                            UsuarioIdCadastro = matricula,
+                            Marca = produtoGeral.MarcaProduto
+                            
+                            
                         };
                         produtoGeral.ProdutoDeposito.Add(novoProdutoDeposito);
                         _produtoDepositoRepository.Add(novoProdutoDeposito);
@@ -244,6 +262,7 @@ namespace CasaColomboApp.Domain.Services
                 NomeProduto = produtoDeposito.NomeProduto,
                 Marca = produtoDeposito.ProdutoGeral.MarcaProduto, // Obtendo a marca corretamente
                 NomeDeposito = produtoDeposito.NomeDeposito,
+                DataVenda = DateTime.Now.ToString("yyyy-MM-dd")
             };
 
             // Adiciona a venda no repositório
@@ -287,7 +306,8 @@ namespace CasaColomboApp.Domain.Services
 
         public List<ProdutoDeposito> ConsultarQuantidadeProdutoDeposito(int produtoGeralId)
         {
-            return _produtoDepositoRepository.GetByProdutoGeralId(produtoGeralId);
+            var produtodeposito = _produtoGeralRepository.GetProdutosDepositosProdutoId(produtoGeralId);
+            return produtodeposito;
         }
 
         public void ExcluirQuantidadeProdutoDeposito(int produtoGeralId, int quantidadeProdutoDepositoId)
@@ -361,7 +381,8 @@ namespace CasaColomboApp.Domain.Services
                 CodigoSistema = produtoDeposito.CodigoSistema,
                 NomeProduto = produtoDeposito.NomeProduto,
                 Marca = produtoDeposito.ProdutoGeral.MarcaProduto, // Obtendo a marca do ProdutoGeral
-                DataVenda = dataVenda,
+                DataVenda = DateTime.ParseExact(dataVenda, "dd/MM/yyyy", null).ToString("yyyy-MM-dd"),
+
                 NomeDeposito = produtoDeposito.NomeDeposito,
             };
 

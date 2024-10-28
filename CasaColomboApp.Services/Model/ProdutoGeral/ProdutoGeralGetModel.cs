@@ -27,7 +27,15 @@ namespace CasaColomboApp.Services.Model.ProdutoGeral
     {
         public int Id { get; set; }
         public int DepositoId { get; set; }
-        public string? NomeDeposito { get; set; } // Para incluir o nome do depósito
+        public string? UsuarioIdCadastro { get; set; }
+        public string? UsuarioIdAlteracao { get; set; }
+        public string? NomeDeposito { get; set; } 
         public int Quantidade { get; set; }
+        public string? NomeProduto { get; set; }
+        public string? CodigoSistema { get; set; }
+        public int? QtdEntrada { get; set; }
+        public string? Marca { get; set; }
+        public DateTime? DataEntrada { get; set; }
+        public DateTime? DataUltimaAlteracao { get; set; }
     }
 }

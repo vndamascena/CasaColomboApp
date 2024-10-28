@@ -15,6 +15,12 @@ namespace CasaColomboApp.Domain.Entities
         public string NomeDeposito { get; set; }
         public string? CodigoSistema { get; set; }
         public string? NomeProduto { get; set; }
+        public int QtdEntrada { get; set; }
+        public string? UsuarioIdCadastro { get; set; }
+        public string? UsuarioIdAlteracao { get; set; }
+        public string? Marca { get; set; }
+        public DateTime? DataUltimaAlteracao { get; set; }
+        public DateTime? DataEntrada { get; set; }
 
         #region Relacionamento
         public ProdutoGeral ProdutoGeral { get; set; }

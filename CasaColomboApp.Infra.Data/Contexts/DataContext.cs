@@ -13,7 +13,7 @@ namespace CasaColomboApp.Infra.Data.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Substitua a string de conexão padrão pelo MySQL
-           optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BDPRODUTOGERAL;Integrated Security=True;");
+           optionsBuilder.UseSqlServer(@"Data Source=SQL8010.site4now.net;Initial Catalog=db_aa8a78_casacol;User Id=db_aa8a78_casacol_admin;Password=colombo24");
 
         }
 
@@ -21,7 +21,6 @@ namespace CasaColomboApp.Infra.Data.Contexts
         {
             modelBuilder.ApplyConfiguration(new CategoriaMap());
             modelBuilder.ApplyConfiguration(new ProdutoPisoMap());
-            modelBuilder.ApplyConfiguration(new FornecedorMap());
             modelBuilder.ApplyConfiguration(new DepositoMap());
             modelBuilder.ApplyConfiguration(new DepositosMap());
             modelBuilder.ApplyConfiguration(new LoteMap());

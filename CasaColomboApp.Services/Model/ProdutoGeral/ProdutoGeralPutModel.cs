@@ -31,5 +31,11 @@ namespace CasaColomboApp.Services.Model.ProdutoGeral
 
         [Required(ErrorMessage = "Por favor, informe a quantidade.")]
         public int Quantidade { get; set; }
+        public int QtdEntrada { get; private set; }
+        public ProdutoDepositoPutModel(int quantidade)
+        {
+            Quantidade = quantidade;
+            QtdEntrada = quantidade;
+        }
     }
 }

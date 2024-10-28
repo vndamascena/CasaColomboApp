@@ -87,7 +87,7 @@ namespace CasaColomboApp.Services.Controllers
 
         private async Task SalvarCaminhoImagemNoBanco(int produtoGeralId, string relativeFilePath)
         {
-            string connectionString = @"Data Source=SQL8010.site4now.net;Initial Catalog=db_aa8a78_casacol;User Id=db_aa8a78_casacol_admin;Password=colombo24";
+            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BDPRODUTOGERAL;Integrated Security=True;";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = "UPDATE PRODUTOGERAL SET IMAGEMURL = @FilePath WHERE ID = @ID";
@@ -319,7 +319,43 @@ namespace CasaColomboApp.Services.Controllers
         }
 
 
-      
+        [HttpGet("produtoDepositos")]
+        [ProducesResponseType(typeof(ProdutoDepositoGetModel), 200)]
+        public IActionResult GetLoteAll()
+        {
+            try
+            {
+                var deposito = _produtoDepositoRepository.GetAll();
+                var depositoModel = _mapper.Map<List<ProdutoDepositoGetModel>>(deposito);
+                return Ok(depositoModel);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { erro = e.Message });
+            }
+        }
+
+        [HttpGet("{id}/produtoDeposito")]
+        [ProducesResponseType(typeof(List<ProdutoDepositoGetModel>), 200)]
+        public IActionResult GetLotesByProdutoId(int id)
+        {
+            try
+            {
+                // Consulta os lotes associados ao produto pelo ID do produto
+                var lotes = _produtoGeralDomainService.ConsultarQuantidadeProdutoDeposito(id);
+
+                // Mapeia os lotes para os modelos de resposta
+                var lotesModel = _mapper.Map<List<ProdutoDepositoGetModel>>(lotes);
+
+                return Ok(lotesModel);
+            }
+            catch (Exception e)
+            {
+                //HTTP 500 (INTERNAL SERVER ERROR)
+                return StatusCode(500, new { e.Message });
+            }
+        }
+
 
 
         [HttpPost("venda")]

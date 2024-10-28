@@ -4,6 +4,7 @@ using CasaColomboApp.Infra.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241024151404_updateInitial")]
+    partial class updateInitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -431,10 +434,6 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.Property<int>("DepositoId")
                         .HasColumnType("int")
                         .HasColumnName("DEPOSITOIID");
-
-                    b.Property<string>("Marca")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("MARCA");
 
                     b.Property<string>("NomeDeposito")
                         .IsRequired()

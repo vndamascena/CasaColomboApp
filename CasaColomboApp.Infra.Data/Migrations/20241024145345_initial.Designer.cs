@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CasaColomboApp.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241009185827_initial")]
+    [Migration("20241024145345_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -413,7 +413,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -421,6 +422,14 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("CODIGOSISTEMA");
+
+                    b.Property<DateTime?>("DataEntrada")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DATAENTRADA");
+
+                    b.Property<DateTime?>("DataUltimaAlteracao")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DATAHORAALTERACAO");
 
                     b.Property<int>("DepositoId")
                         .HasColumnType("int")
@@ -440,9 +449,23 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("PRODUTOGERALID");
 
+                    b.Property<int>("QtdEntrada")
+                        .HasColumnType("int")
+                        .HasColumnName("QTDENTRADA");
+
                     b.Property<int>("Quantidade")
                         .HasColumnType("int")
                         .HasColumnName("QUANTIDADE");
+
+                    b.Property<string>("UsuarioIdAlteracao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("USUARIOID");
+
+                    b.Property<string>("UsuarioIdCadastro")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("USUARIOIDCADASTRO");
 
                     b.HasKey("Id");
 
@@ -726,6 +749,9 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("DEPOSITOID");
 
+                    b.Property<int?>("ProdutoDepositoId1")
+                        .HasColumnType("int");
+
                     b.Property<int?>("QuantidadeVendida")
                         .IsRequired()
                         .HasColumnType("int")
@@ -743,6 +769,8 @@ namespace CasaColomboApp.Infra.Data.Migrations
                     b.HasKey("VendaProdutoGeralId");
 
                     b.HasIndex("ProdutoDepositoId");
+
+                    b.HasIndex("ProdutoDepositoId1");
 
                     b.ToTable("VENDAPRODUTOGERAL", (string)null);
                 });
@@ -892,6 +920,10 @@ namespace CasaColomboApp.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CasaColomboApp.Domain.Entities.ProdutoDeposito", null)
+                        .WithMany("VendaProdutoGeral")
+                        .HasForeignKey("ProdutoDepositoId1");
+
                     b.Navigation("ProdutoDeposito");
                 });
 
@@ -939,6 +971,11 @@ namespace CasaColomboApp.Infra.Data.Migrations
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.Ocorrencia", b =>
                 {
                     b.Navigation("BaixaOcorrencias");
+                });
+
+            modelBuilder.Entity("CasaColomboApp.Domain.Entities.ProdutoDeposito", b =>
+                {
+                    b.Navigation("VendaProdutoGeral");
                 });
 
             modelBuilder.Entity("CasaColomboApp.Domain.Entities.ProdutoGeral", b =>
