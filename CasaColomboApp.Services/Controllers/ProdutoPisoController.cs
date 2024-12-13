@@ -79,7 +79,7 @@ namespace CasaColomboApp.Services.Controllers
             string connectionString = @"Data Source=SQL8010.site4now.net;Initial Catalog=db_aa8a78_casacol;User Id=db_aa8a78_casacol_admin;Password=colombo24";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "UPDATE PRODUTO SET IMAGEMURL = @FilePath WHERE ID = @ID";
+                string query = "UPDATE PRODUTOPISO SET IMAGEMURL = @FilePath WHERE ID = @ID";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {

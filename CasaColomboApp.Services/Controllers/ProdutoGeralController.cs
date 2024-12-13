@@ -469,7 +469,7 @@ namespace CasaColomboApp.Services.Controllers
                     if (erros.Any())
                     {
                         // Retorna um status 207 (Multi-Status) para indicar que algumas operações falharam
-                        return StatusCode(207, new { message = "Vendas processadas com alguns erros.", erros });
+                        return StatusCode(207, new { message = "Vendas processadas.", erros });
                     }
                 }
 
